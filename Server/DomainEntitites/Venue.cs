@@ -2,7 +2,7 @@
 
 namespace DomainEntities
 {
-    class Venue
+    public class Venue
     {
         [Key]
         public int Id { get; set; }
