@@ -17,6 +17,7 @@ namespace DataServices
         public MsSqlDataRepository(SportifyDbContext dbContext)
         {
             _dbContext = dbContext;
+            _entities = _dbContext.Set<T>();
         }
 
 

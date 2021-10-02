@@ -27,7 +27,7 @@ namespace SportifyWebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SportifyWebApi", Version = "v1" });
             });
 
-            services.AddDbContext<SportifyDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Local")));
+            services.AddDbContext<SportifyDbContext>();
             services.AddScoped(typeof(IDataRepository<>), typeof(MsSqlDataRepository<>));
         }
 

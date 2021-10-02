@@ -20,15 +20,7 @@ namespace SportifyWebApi.Controllers
         public ActionResult<Event> Get(int id)
         {
             var @event = _eventsDataRepository.Read(id);
-            if (@event != null)
-            {
-                return new JsonResult(@event) { StatusCode = StatusCodes.Status200OK };
-            }
-
-            return new JsonResult($"Fail to find user with id {id}") 
-            { 
-                StatusCode = StatusCodes.Status404NotFound 
-            };
+            return @event != null ? Ok(@event) : NotFound();
         }
 
         [HttpPost]
