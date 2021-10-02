@@ -6,11 +6,8 @@ namespace DomainEntities
     /// <summary>
     /// Class that represents event model
     /// </summary>
-    public class Event
+    public class Event : EntityBase
     {
-        [Key]
-        public int Id { get; set; }
-
         public string Title { get; set; }
 
         public string Description { get; set; }

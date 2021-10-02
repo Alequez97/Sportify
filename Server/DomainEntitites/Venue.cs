@@ -2,11 +2,8 @@
 
 namespace DomainEntities
 {
-    public class Venue
+    public class Venue : EntityBase
     {
-        [Key]
-        public int Id { get; set; }
-
         public string Country { get; set; }
 
         public string City { get; set; }

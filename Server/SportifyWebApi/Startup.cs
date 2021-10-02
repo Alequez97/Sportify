@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using DataServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace SportifyWebApi
@@ -26,12 +21,14 @@ namespace SportifyWebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SportifyWebApi", Version = "v1" });
             });
+
+            services.AddDbContext<SportifyDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Local")));
+            services.AddScoped(typeof(IDataRepository<>), typeof(MsSqlDataRepository<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
