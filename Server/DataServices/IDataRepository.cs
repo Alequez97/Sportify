@@ -17,6 +17,6 @@ namespace DataServices
 
         bool Delete(T entity);
 
-        List<T> FindByExpression(Expression<Func<T, bool>> expression);
+        List<T> FindByExpression(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] properties);
     }
 }
