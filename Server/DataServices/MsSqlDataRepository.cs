@@ -11,13 +11,12 @@ namespace DataServices
 {
     public class MsSqlDataRepository<T> : IDataRepository<T> where T : EntityBase, new()
     {
-        private readonly DbContext _dbContext;
+        private readonly SportifyDbContext _dbContext;
         private readonly DbSet<T> _entities;
 
-        public MsSqlDataRepository(DbContext dbContext)
+        public MsSqlDataRepository(SportifyDbContext dbContext)
         {
             _dbContext = dbContext;
-            _entities = _dbContext.Set<T>();
         }
 
 
