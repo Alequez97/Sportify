@@ -47,7 +47,7 @@ namespace SportifyWebApi.Controllers
         [HttpGet]
         public ActionResult<Event> Get([FromQuery] string title)
         {
-            var events = _eventsDataRepository.FindByExpression(e => e.Title == title);
+            var events = _eventsDataRepository.FindByExpression(e => e.Title == title, e => e.Venue);
             if (events != null && events.Count > 0)
             {
                 return new JsonResult(events) { StatusCode = StatusCodes.Status200OK };

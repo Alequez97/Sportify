@@ -27,7 +27,7 @@ namespace DataServices
             throw new NotImplementedException();
         }
 
-        public List<T> FindByExpression(Expression<Func<T, bool>> expression)
+        public List<T> FindByExpression(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] properties)
         {
             throw new NotImplementedException();
         }

@@ -90,10 +90,12 @@ namespace DataServices
             }
         }
 
-        public List<T> FindByExpression(Expression<Func<T, bool>> expression)
+        public List<T> FindByExpression(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] properties)
         {
-            var result = _entities.Where(expression);
-            return result.ToList();
+            var query = _entities as IQueryable<T>;
+            query = properties?.Aggregate(query, (current, property) => current.Include(property));
+            var result = query.Where(expression).ToList();
+            return result;
         }
     }
 }
