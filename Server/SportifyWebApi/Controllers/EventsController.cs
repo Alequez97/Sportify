@@ -1,60 +1,43 @@
-﻿using DataServices;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using DomainEntities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using BusinessLogic.Events;
 
 namespace SportifyWebApi.Controllers
 {
     public class EventsController : BaseApiController
     {
-        private readonly IDataRepository<Event> _eventsDataRepository;
-
-        public EventsController(IDataRepository<Event> dataRepository)
+        [HttpGet]
+        public async Task<ActionResult<List<Event>>> GetEvents()
         {
-            _eventsDataRepository = dataRepository;
+            return await Mediator.Send(new List.Query());
         }
 
-        [HttpGet]
-        public ActionResult<Event> Get(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Event>> GetEvent(int id)
         {
-            var @event = _eventsDataRepository.Read(id);
-            return @event != null ? Ok(@event) : NotFound();
+            return await Mediator.Send(new Details.Query { Id = id });
         }
 
         [HttpPost]
-        public ActionResult<Event> Post([FromBody] Event @event)
+        public async Task<IActionResult> CreateEvent(Event @event)
         {
-            if (@event == null)
-            {
-                return new JsonResult("Provide correct information about event") { StatusCode = StatusCodes.Status400BadRequest };
-            }
-
-            var resultIsSuccess = _eventsDataRepository.Create(@event);
-            if (resultIsSuccess)
-            {
-                return new JsonResult("Event successefully saved") { StatusCode = StatusCodes.Status200OK };
-            }
-
-            return new JsonResult($"Failed to save event")
-            {
-                StatusCode = StatusCodes.Status500InternalServerError
-            };
+            return Ok(await Mediator.Send(new Create.Command { Event = @event }));
         }
 
-        [Route("api/events/find-by-title")]
-        [HttpGet]
-        public ActionResult<Event> Get([FromQuery] string title)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditEvent(int id, Event @event)
         {
-            var events = _eventsDataRepository.FindByExpression(e => e.Title == title, e => e.Venue);
-            if (events != null && events.Count > 0)
-            {
-                return new JsonResult(events) { StatusCode = StatusCodes.Status200OK };
-            }
+            @event.Id = id;
 
-            return new JsonResult($"Fail to find user with title {title}")
-            {
-                StatusCode = StatusCodes.Status404NotFound
-            };
+            return Ok(await Mediator.Send(new Edit.Command { Event = @event }));
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEvent(int id)
+        {
+            return Ok(await Mediator.Send(new Delete.Command { Id = id }));
         }
     }
 }
