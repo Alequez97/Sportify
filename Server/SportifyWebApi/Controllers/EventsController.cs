@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SportifyWebApi.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class EventsController : ControllerBase
+    public class EventsController : BaseApiController
     {
         private readonly IDataRepository<Event> _eventsDataRepository;
 

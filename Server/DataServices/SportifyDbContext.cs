@@ -1,6 +1,5 @@
 ﻿using DomainEntities;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
 
 namespace DataServices
 {
