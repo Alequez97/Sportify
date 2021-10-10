@@ -22,7 +22,7 @@ namespace BusinessLogic.Events
 
             public async Task<List<Event>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Events.ToListAsync();
+                return await _context.Events.Include(v => v.Venue).ToListAsync();
             }
         }
     }

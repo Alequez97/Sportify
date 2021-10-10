@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SportifyWebApi.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class EventsController : BaseApiController
     {
         [HttpGet]
