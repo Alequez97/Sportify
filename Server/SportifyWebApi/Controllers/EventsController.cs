@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using DomainEntities;
 using BusinessLogic.Events;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SportifyWebApi.Controllers
 {
+    [Authorize]
     public class EventsController : BaseApiController
     {
         [HttpGet]
