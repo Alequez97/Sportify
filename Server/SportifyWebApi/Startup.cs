@@ -88,7 +88,7 @@ namespace SportifyWebApi
 
             app.UseCors("CorsPolicy");
 
-			app.UseAuthentication();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
