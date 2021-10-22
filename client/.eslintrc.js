@@ -16,6 +16,11 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
-    'semi': 0
+    "space-before-function-paren": ["off", "always"],
+    "semi": "off",
+    "indent": "off",
+    "arrow-spacing": "off",
+    "quotes": "off",
+    "vue/max-attributes-per-line": "off"
   }
 }

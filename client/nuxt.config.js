@@ -16,6 +16,12 @@ export default {
     ]
   },
 
+  //Uncomment this if you want to test on mobile/tablet. As URL use: {yourIPaddress}:8000
+  // server: {
+  //   port: 8000,
+  //   host: '0.0.0.0'
+  // },
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],
@@ -30,7 +36,8 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/eslint
-    '@nuxtjs/eslint-module'
+    '@nuxtjs/eslint-module',
+    '@nuxtjs/vuetify'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
