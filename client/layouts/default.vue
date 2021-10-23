@@ -2,7 +2,7 @@
   <v-app>
     <AppBar/>
 
-    <v-main>
+    <v-main class="deep-purple lighten-5">
       <Nuxt/>
     </v-main>
 

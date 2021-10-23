@@ -1,7 +1,16 @@
 <template>
-  <div>
-    <h1>Landing Page</h1>
-  </div>
+  <v-container fluid class="pa-0">
+    <v-row no-gutters justify="center" align="center" class="deep-purple lighten-4 py-15">
+      <v-col col="12">
+        <div class="text-lg-h1 text-h4 text-center mb-4">
+          Welcome to Sportify
+        </div>
+        <div class="text-lg-h3 text-h5 text-center">
+          The best place to share sports
+        </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>

@@ -1,8 +1,7 @@
 <template>
-  <!-- <v-container class="grey lighten-5" fluid> -->
   <v-container fluid>
     <v-row v-for="event in events" :key="event.id" no-gutters>
-      <v-col sm="12">
+      <v-col col="12">
         <Event :event="event" />
       </v-col>
     </v-row>
@@ -10,7 +9,7 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 import Event from "../../components/Event";
 
 export default {
@@ -22,7 +21,7 @@ export default {
       events: []
     };
   },
-  async created() {
+  created() {
     // const config = {
     //   headers: {
     //     Accept: 'application/json'
@@ -40,7 +39,7 @@ export default {
           address: 'Skolas iela 1'
         },
         timeOfTheEvent: '30/12/1999',
-        description: 'We are going to play street basketball 3x3. Wanna play with us?',
+        description: 'We are going to play street basketball 3x3. Wanna play with us?'
       },
       {
         id: 2,
@@ -70,14 +69,14 @@ export default {
       }
     ];
 
-    await axios
-      .get("https://localhost:44314/api/events")
-      .then((response) => {
-        this.events = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // await axios
+    //   .get("https://localhost:44314/api/events")
+    //   .then((response) => {
+    //     this.events = response.data;
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   },
   head() {
     return {
