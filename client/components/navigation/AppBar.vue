@@ -2,12 +2,9 @@
   <nav>
     <v-app-bar color="deep-purple" dense dark app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title class="pl-0" app
-        ><NuxtLink to="/">Sportify</NuxtLink></v-toolbar-title
-      >
-      <v-toolbar-items>
-        <v-btn nuxt to="/events" text>Events</v-btn>
-      </v-toolbar-items>
+      <v-toolbar-title class="pl-0" app>
+        <NuxtLink to="/">Sportify</NuxtLink>
+      </v-toolbar-title>
 
       <v-spacer />
 
@@ -20,21 +17,13 @@
     <v-navigation-drawer class="deep-purple lighten-5" disable-resize-watcher v-model="drawer" absolute temporary app>
       <v-list nav dense>
         <v-list-item-group
-          v-model="group"
           active-class="deep-purple--text text--accent-4"
         >
-          <v-list-item>
+          <v-list-item v-for="link in links" :key="link.text" router :to="link.route">
             <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
+              <v-icon>{{ link.icon }}</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Home</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Account</v-list-item-title>
+            <v-list-item-title>{{ link.text }}</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
       </v-list>
@@ -48,7 +37,10 @@ export default {
   name: "AppBar",
   data: () => ({
     drawer: false,
-    group: null
+    links: [
+      { icon: 'mdi-soccer', text: 'Events', route: '/events' },
+      { icon: 'mdi-dumbbell', text: 'Sports Grounds & Gyms', route: '/map' }
+    ]
   })
 }
 </script>
