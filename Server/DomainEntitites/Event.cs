@@ -30,7 +30,7 @@ namespace DomainEntities
         public DateTime TimeOfTheEvent { get; set; }
 
         [Required]
-        public User CreatorId { get; set; }
+        public User Creator { get; set; }
 
         public List<User> Contributors { get; set; }
     }
