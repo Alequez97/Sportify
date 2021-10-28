@@ -164,7 +164,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"title\": \"Event_{{iterationNumber}}\",\r\n  \"description\": \"Description of Event_{{iterationNumber}}\",\r\n  \"venue\": {\r\n    \"country\": \"Country_{{iterationNumber}}\",\r\n    \"city\": \"City_{{iterationNumber}}\",\r\n    \"address\": \"Address_{{iterationNumber}}\"\r\n  },\r\n  \"timeOfTheEvent\": \"2021-12-12\"\r\n}",
+									"raw": "{\r\n  \"title\": \"Event_{{iterationNumber}}\",\r\n  \"category\": \"basketball\",\r\n  \"briefDesc\": \"Brief description {{iterationNumber}}\",\r\n  \"description\": \"Description of Event_{{iterationNumber}}\",\r\n  \"venue\": {\r\n    \"country\": \"Country_{{iterationNumber}}\",\r\n    \"city\": \"City_{{iterationNumber}}\",\r\n    \"address\": \"Address_{{iterationNumber}}\"\r\n  },\r\n  \"timeOfTheEvent\": \"2021-12-12\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -193,7 +193,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"title\": \"Event_{{iterationNumber}}\",\r\n  \"description\": \"Description of Event_{{iterationNumber}}\",\r\n  \"venue\": {\r\n    \"country\": \"Country_{{iterationNumber}}\",\r\n    \"city\": \"City_{{iterationNumber}}\",\r\n    \"address\": \"Address_{{iterationNumber}}\"\r\n  },\r\n  \"timeOfTheEvent\": \"2021-12-12\"\r\n}",
+									"raw": "{\r\n  \"title\": \"Event_{{iterationNumber}}\",\r\n  \"category\": \"basketball\",\r\n  \"briefDesc\": \"Brief description {{iterationNumber}}\",\r\n  \"description\": \"Description of Event_{{iterationNumber}}\",\r\n  \"venue\": {\r\n    \"country\": \"Country_{{iterationNumber}}\",\r\n    \"city\": \"City_{{iterationNumber}}\",\r\n    \"address\": \"Address_{{iterationNumber}}\"\r\n  },\r\n  \"timeOfTheEvent\": \"2021-12-12\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -305,6 +305,10 @@
 		{
 			"key": "iterationNumber",
 			"value": "0"
+		},
+		{
+			"key": "username",
+			"value": ""
 		}
 	]
 }
