@@ -57,7 +57,7 @@ function Install-Ef-Tool-If-Not-Exists
 
 function Seed-Countries
 {
-    Set-Location ./ConfigFiles/CountrySeedScript
+    Set-Location ./ConfigFiles/SeedScript
     dotnet run -c Release
     Set-Location ../..
 }
