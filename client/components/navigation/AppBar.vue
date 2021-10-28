@@ -15,6 +15,17 @@
     </v-app-bar>
 
     <v-navigation-drawer class="deep-purple lighten-5" disable-resize-watcher v-model="drawer" absolute temporary app>
+      <v-container>
+        <v-row>
+          <v-col col="12" justify="center" align="center" class="mt-5">
+            <v-avatar size="100">
+              <img src="kot_fleks.jpg">
+            </v-avatar>
+            <p color="black" class="mt-1 mb-0">JS</p>
+          </v-col>
+        </v-row>
+      </v-container>
+
       <v-list nav dense>
         <v-list-item-group
           active-class="deep-purple--text text--accent-4"
