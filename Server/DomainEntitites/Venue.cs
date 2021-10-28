@@ -4,9 +4,9 @@ namespace DomainEntities
 {
     public class Venue : EntityBase
     {
-        public string Country { get; set; }
+        public Country Country { get; set; }
 
-        public string City { get; set; }
+        public City City { get; set; }
 
         public string Address { get; set; }
     }
