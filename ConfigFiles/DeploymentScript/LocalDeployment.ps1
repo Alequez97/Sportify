@@ -55,15 +55,24 @@ function Install-Ef-Tool-If-Not-Exists
     }
 }
 
+function Seed-Countries
+{
+    Set-Location ./ConfigFiles/CountrySeedScript
+    dotnet run -c Release
+    Set-Location ../..
+}
+
 function Write-Help
 {
     Write-Output "*** Local Deployment avaliable commands ***"
     Write-Output "am           (Add-Migration)      Creates migration in DataServices project"
     Write-Output "um           (Undo-Migration)     Removes last migration"
     Write-Output "db-update    (Database-Update)    Updates database from migration in DataServices project"
+    Write-Output "seed         (Seed-Countries)     Seeds countries and cities in database"
 }
 
 Set-Alias am Add-Migration
 Set-Alias um Undo-Migration
 Set-Alias db-update Database-Update
+Set-Alias seed Seed-Countries
 Write-Help
