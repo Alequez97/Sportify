@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
@@ -24,13 +23,12 @@ namespace SportifyWebApi.Endpoints.Events
             _mapper = mapper;
         }
 
-        [HttpPut("api/events/edit/{id}")]
+        [HttpPut("api/event/edit/{id}")]
         public override async Task<ActionResult> HandleAsync([FromBody] EditEventRequest request, CancellationToken cancellationToken = default)
         {
-            request.Event.Id = request.Id;
             var @event = await _context.Events.FindAsync(request.Id);
 
-            _mapper.Map(request.Event, @event);
+            _mapper.Map(request, @event);
 
             try
             {
@@ -49,7 +47,29 @@ namespace SportifyWebApi.Endpoints.Events
     {
         [FromRoute] 
         public int Id { get; set; }
+
         [FromBody]
-        public Event Event { get; set; }
+        public string Title { get; set; }
+
+        [FromBody]
+        public int CategoryId { get; set; }
+
+        [FromBody]
+        public string BriefDesc { get; set; }
+
+        [FromBody]
+        public string Description { get; set; }
+
+        [FromBody]
+        public int CountryId { get; set; }
+
+        [FromBody]
+        public int CityId { get; set; }
+
+        [FromBody]
+        public string Address { get; set; }
+
+        [FromBody]
+        public DateTime TimeOfTheEvent { get; set; }
     }
 }

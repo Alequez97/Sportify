@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
@@ -22,13 +19,23 @@ namespace SportifyWebApi.Endpoints.Events
             _context = context;
         }
 
-        [HttpPost("api/events/create")]
+        [HttpPost("api/event/create")]
         public override async Task<ActionResult> HandleAsync([FromBody] CreateEventRequest request, CancellationToken cancellationToken = default)
         {
             var @event = new Event()
             {
-                BriefDesc = request.BriefDesc,
+                Title = request.Title,
                 CategoryId = request.CategoryId,
+                BriefDesc = request.BriefDesc,
+                Description = request.Description,
+                Venue = new Venue
+                {
+                    CountryId = request.CountryId,
+                    CityId = request.CityId,
+                    Address = request.Address
+                },
+                TimeOfTheEvent = request.TimeOfTheEvent
+
             };
 
             _context.Events.Add(@event);
@@ -48,27 +55,22 @@ namespace SportifyWebApi.Endpoints.Events
 
     public class CreateEventRequest
     {
-        [Required]
         public string Title { get; set; }
 
-        [Required]
         public int CategoryId { get; set; }
 
-        [Required]
-        [MaxLength(50)]
         public string BriefDesc { get; set; }
 
-        [Required]
-        [MaxLength(1000)]
         public string Description { get; set; }
 
-        [Required]
-        public int VenueId { get; set; }
+        public int CountryId { get; set; }
 
-        [Required]
+        public int CityId { get; set; }
+
+        public string Address { get; set; }
+
         public DateTime TimeOfTheEvent { get; set; }
 
-        [Required]
         public int CreatorId { get; set; }
     }
 }

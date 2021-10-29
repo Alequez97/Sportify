@@ -1,7 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace DomainEntities
 {
+    /// <summary>
+    /// Base class with Id field
+    /// </summary>
     public class EntityBase
     {
         [Key]

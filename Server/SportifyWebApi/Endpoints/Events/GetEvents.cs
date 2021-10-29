@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using DataServices;
-using DomainEntities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +12,7 @@ namespace SportifyWebApi.Endpoints.Events
 {
     public class GetEvents : BaseAsyncEndpoint
         .WithRequest<GetEventsRequest>
-        .WithResponse<List<Event>>
+        .WithResponse<GetEventsResponse>
     {
         private readonly SportifyDbContext _context;
 
@@ -23,14 +22,34 @@ namespace SportifyWebApi.Endpoints.Events
         }
 
         [HttpGet("/api/events")]
-        public override async Task<ActionResult<List<Event>>> HandleAsync([FromRoute] GetEventsRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<GetEventsResponse>> HandleAsync([FromRoute] GetEventsRequest request, CancellationToken cancellationToken = default)
         {
             //var q = _context.Events.Include(v => v.Venue);
             //if (!string.IsNullOrEmpty(request.SortBy))
             //{
             //    //q = q.OrderBy(x=)
             //}
-            return await _context.Events.Include(v => v.Venue).ToListAsync();
+
+            var result = await _context.Events
+                .Select(x => new GetEventsResponse()
+                {
+                    CategoryName = x.Category.Name,
+                    BriefDesc = x.BriefDesc,
+                    CreatorId = x.CreatorId,
+                    Contributors = x.Contributors.Select(xx => new GetEventsResponse.ContributorDto()
+                    {
+                        Email = xx.Email
+                    }).ToList(),
+                    Venue = new GetEventsResponse.VenueDto()
+                    {
+                        Country = x.Venue.Country.Name,
+                        City = x.Venue.City.Name,
+                        Address = x.Venue.Address
+                    }
+                })
+                .ToListAsync();
+
+            return Ok(result);
         }
     }
 
@@ -38,5 +57,37 @@ namespace SportifyWebApi.Endpoints.Events
     {
         [FromQuery(Name ="sortBy")] public string SortBy { get; set; }
         [FromQuery(Name = "sortDesc")] public bool SortDesc { get; set; }
+    }
+
+    public class GetEventsResponse
+    {
+        public string Title { get; set; }
+
+        public string CategoryName { get; set; }
+
+        public string BriefDesc { get; set; }
+
+        public VenueDto Venue { get; set; }
+
+        public DateTime TimeOfTheEvent { get; set; }
+
+        public int CreatorId { get; set; }
+
+        public List<ContributorDto> Contributors { get; set; }
+
+        public class ContributorDto
+        {
+            public string Email { get; set; }
+            //and so on
+        }
+
+        public class VenueDto
+        {
+            public string Country { get; set; }
+
+            public string City { get; set; }
+
+            public string Address { get; set; }
+        }
     }
 }
