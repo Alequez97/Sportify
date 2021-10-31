@@ -20,7 +20,7 @@ namespace SportifyWebApi.Endpoints.Events
         }
 
         [HttpGet("api/event/{id}")]
-        public override async Task<ActionResult<GetEventResponse>> HandleAsync(GetEventRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<GetEventResponse>> HandleAsync([FromRoute] GetEventRequest request, CancellationToken cancellationToken = default)
         {
             var @event = await _context.Events.FindAsync(request.Id);
 
@@ -44,21 +44,21 @@ namespace SportifyWebApi.Endpoints.Events
 
         public string Description { get; set; }
 
-        public VenueDto Venue { get; set; }
+        public GetEventVenueDto Venue { get; set; }
 
         public DateTime TimeOfTheEvent { get; set; }
 
         public int CreatorId { get; set; }
 
-        public List<ContributorDto> Contributors { get; set; }
+        public List<GetEventContributorDto> Contributors { get; set; }
 
-        public class ContributorDto
+        public class GetEventContributorDto
         {
             public string Email { get; set; }
             //and so on
         }
 
-        public class VenueDto
+        public class GetEventVenueDto
         {
             public string Country { get; set; }
 

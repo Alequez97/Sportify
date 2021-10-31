@@ -16,6 +16,7 @@
 
     <v-navigation-drawer class="deep-purple lighten-5" disable-resize-watcher v-model="drawer" absolute temporary app>
       <v-container>
+
         <v-row>
           <v-col col="12" justify="center" align="center" class="mt-5">
             <v-avatar size="100">
@@ -24,6 +25,9 @@
             <p color="black" class="mt-1 mb-0">JS</p>
           </v-col>
         </v-row>
+
+        <PopupEventForm />
+
       </v-container>
 
       <v-list nav dense>
@@ -43,9 +47,15 @@
 </template>
 
 <script>
+import PopupEventForm from "../events/PopupEventForm"
 
 export default {
   name: "AppBar",
+
+  components: {
+    PopupEventForm
+  },
+
   data: () => ({
     drawer: false,
     links: [

@@ -1,8 +1,6 @@
-using BusinessLogic;
-using BusinessLogic.Events;
 using DataServices;
 using DomainEntities;
-using MediatR;
+//using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SportifyWebApi.Endpoints.MappingProfiles;
 using System.Text;
 
 namespace SportifyWebApi
@@ -59,7 +58,7 @@ namespace SportifyWebApi
                     };
                 });
 
-            services.AddMediatR(typeof(List.Handler).Assembly);
+            //services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
 

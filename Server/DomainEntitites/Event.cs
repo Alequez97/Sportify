@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -35,6 +35,6 @@ namespace DomainEntities
         public int CreatorId { get; set; }
         public User Creator { get; set; }
 
-        public List<User> Contributors { get; set; }
+        public List<EventUser> EventUsers { get; set; }
     }
 }

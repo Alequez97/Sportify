@@ -36,11 +36,12 @@ namespace SportifyWebApi.Endpoints.Events
                     CategoryName = x.Category.Name,
                     BriefDesc = x.BriefDesc,
                     CreatorId = x.CreatorId,
-                    Contributors = x.Contributors.Select(xx => new GetEventsResponse.ContributorDto()
+                    Contributors = x.EventUsers.Where(u => u.Event.Id == x.Id).Select(xx => new GetEventsResponse.GetEventsContributorDto()
                     {
-                        Email = xx.Email
+                        Id = xx.User.Id,
+                        UserName = xx.User.UserName
                     }).ToList(),
-                    Venue = new GetEventsResponse.VenueDto()
+                    Venue = new GetEventsResponse.GetEventsVenueDto()
                     {
                         Country = x.Venue.Country.Name,
                         City = x.Venue.City.Name,
@@ -67,21 +68,21 @@ namespace SportifyWebApi.Endpoints.Events
 
         public string BriefDesc { get; set; }
 
-        public VenueDto Venue { get; set; }
+        public GetEventsVenueDto Venue { get; set; }
 
         public DateTime TimeOfTheEvent { get; set; }
 
         public int CreatorId { get; set; }
 
-        public List<ContributorDto> Contributors { get; set; }
+        public List<GetEventsContributorDto> Contributors { get; set; }
 
-        public class ContributorDto
+        public class GetEventsContributorDto
         {
-            public string Email { get; set; }
-            //and so on
+            public string Id { get; set; }
+            public string UserName { get; set; }
         }
 
-        public class VenueDto
+        public class GetEventsVenueDto
         {
             public string Country { get; set; }
 

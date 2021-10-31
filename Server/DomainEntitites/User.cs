@@ -8,6 +8,6 @@ namespace DomainEntities
     /// </summary>
     public class User : IdentityUser
     {   
-        public List<Event> Events { get; set; }
+        public List<EventUser> EventUsers { get; set; }
     }
 }

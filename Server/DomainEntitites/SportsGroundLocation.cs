@@ -3,7 +3,7 @@ namespace DomainEntities
     /// <summary>
     /// Class that represents SportsGroundsLocation model
     /// </summary>
-    class SportsGroundsLocation : EntityBase
+    public class SportsGroundLocation : EntityBase
     {
         public string Country { get; set; }
 
