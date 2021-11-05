@@ -35,7 +35,7 @@ namespace SportifyWebApi
 
             services.AddDbContext<SportifyDbContext>();
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole<int>>()
                 .AddEntityFrameworkStores<SportifyDbContext>()
                 .AddDefaultTokenProviders();
 
