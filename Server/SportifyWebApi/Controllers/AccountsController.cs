@@ -1,4 +1,5 @@
-﻿using DomainEntities;
+using DomainEntities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,7 @@ namespace SportifyWebApi.Controllers
 
                 var authClaims = new List<Claim>
                 {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
@@ -118,6 +120,20 @@ namespace SportifyWebApi.Controllers
             }
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+        }
+
+        [HttpGet]
+        [Route("info")]
+        [Authorize]
+        public IActionResult GetLogedInUserInfo()
+        {
+            var info = new InfoModel()
+            { 
+                Id = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                Username = User.FindFirst(ClaimTypes.Name).Value
+            };
+
+            return Ok(info);
         }
     }
 }

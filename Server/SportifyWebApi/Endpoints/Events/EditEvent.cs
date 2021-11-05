@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using AutoMapper;
 using DataServices;
-using DomainEntities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SportifyWebApi.Endpoints.Events
