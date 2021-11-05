@@ -1,22 +1,27 @@
+var newLocationMarker;
 let map;
-let newLocationMarker;
+// export { newLocationMarker };
+
+google.maps.event.addDomListener(window, 'load', initMap);
 
 function initMap() {
     const jurecLat = 56.81543608008677;
     const jurecLng = 24.599863529284583;
 
-    const mapCenter = { lat: jurecLat, lng: jurecLng};
+    const mapCenter = { lat: jurecLat, lng: jurecLng };
 
     map = new google.maps.Map(document.getElementById("google-map"), {
         zoom: 15,
         center: mapCenter,
     });
+
+    addMarker(jurecLat, jurecLng);
 }
 
 function addMarker(lat, lng) {
     const markerPosition = { lat: lat, lng: lng };
-    
-    let marker = new google.maps.Marker({
+
+    const marker = new google.maps.Marker({
         position: markerPosition,
       });
     //   mapMarkers.push(marker1);
@@ -37,20 +42,19 @@ function addNewLocationMarker() {
     newLocationMarker.setMap(map);
 
     map.addListener('center_changed', () => {
-        if (newLocationMarker != undefined)
-        {
-          newLocationMarker.setPosition(map.getCenter());
+        if (newLocationMarker !== undefined) {
+          console.log(newLocationMarker);
         }
     });
 
     showSaveAndCancelButton();
 }
 
-function openLocationInfoForm() {
-    axios.get("https://randomuser.me/api/").then(response => {
-        console.log(response);
-    });
-}
+// function openLocationInfoForm() {
+//     axios.get("https://randomuser.me/api/").then(response => {
+//         console.log(response);
+//     });
+// }
 
 function storeNewLocation() {
     

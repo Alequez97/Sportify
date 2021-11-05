@@ -1,22 +1,14 @@
 <template>
     <div>
-        <GoogleMap />
+        <GoogleMap :geolocations="geolocations" ref="map" />
         <div class="centered-div">
             <div id="add-new-location-container">
-                <button id="add-new-location-button" onclick="addNewLocationMarker()">Add new location</button>
+                <button id="add-new-location-button" @click="addNewLocationMarker">Add new location</button>
+                <button id="add-new-location-button" @click="saveNewLocation">Save</button>
+                <button id="add-new-location-button" @click="cancelAddingNewLocation">Cancel</button>
             </div>
             <div id="cancel-new-location-container" style="position:relative; bottom:130px;">
-                <RoundedButton
-                  id="save-new-location-button"
-                  text="Save"
-                  @btn-click="methodName()"
-                  color="#00FF00"
-                />
-                <RoundedButton
-                  id="cancel-new-location-button"
-                  text="Cancel"
-                  color="#FF0000"
-                />
+                <p>hello</p>
             </div>
         </div>
     </div>
@@ -24,16 +16,28 @@
 
 <script>
 import GoogleMap from "../components/GoogleMap";
-import RoundedButton from "../components/buttons/RoundedButton";
 
 export default {
   components: {
-    GoogleMap,
-    RoundedButton
+    GoogleMap
+  },
+  data() {
+    return {
+      geolocations: [
+        { lat: 56.80, lng: 24.58 },
+        { lat: 56.81, lng: 24.59 }
+      ]
+    }
   },
   methods: {
-    methodName() {
-      console.log("method name test");
+    addNewLocationMarker() {
+      this.$refs.map.addNewLocationMarker();
+    },
+    saveNewLocation() {
+      this.$refs.map.saveNewLocation();
+    },
+    cancelAddingNewLocation() {
+      this.$refs.map.cancelAddingNewLocation();
     }
   }
 }
