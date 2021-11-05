@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DomainEntities
 {
     /// <summary>
-    /// Class that represents event model
+    /// Class that represents Event model
     /// </summary>
     public class Event : EntityBase
     {
@@ -13,6 +13,7 @@ namespace DomainEntities
         public string Title { get; set; }
 
         [Required]
+        public int CategoryId { get; set; }
         public Category Category { get; set; }
 
         [Required]
@@ -24,14 +25,16 @@ namespace DomainEntities
         public string Description { get; set; }
 
         [Required]
+        public int VenueId { get; set; }
         public Venue Venue { get; set; }
 
         [Required]
         public DateTime TimeOfTheEvent { get; set; }
 
         [Required]
-        public User CreatorId { get; set; }
+        public int CreatorId { get; set; }
+        public User Creator { get; set; }
 
-        public List<User> Contributors { get; set; }
+        public List<EventUser> EventUsers { get; set; }
     }
 }

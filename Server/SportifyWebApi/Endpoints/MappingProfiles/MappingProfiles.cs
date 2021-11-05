@@ -1,7 +1,8 @@
-﻿using AutoMapper;
+//using AutoMapper;
+using AutoMapper;
 using DomainEntities;
 
-namespace BusinessLogic
+namespace SportifyWebApi.Endpoints.MappingProfiles
 {
     public class MappingProfiles : Profile
     {

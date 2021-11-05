@@ -16,8 +16,8 @@ namespace CountriesCitiesJsonModifier
             var countries = JsonConvert.DeserializeObject<List<Country>>(json);
 
             var connectionString = "Server=(localdb)\\mssqllocaldb;Database=sportify_db;Trusted_Connection=True";
-            var countrySqlTemplate = "INSERT INTO Country (Name, Iso2, Iso3) VALUES ('{0}', '{1}', '{2}'); SELECT SCOPE_IDENTITY();";
-            var citySqlTemplate = "INSERT INTO City (Name, CountryId) VALUES ('{0}', {1})";
+            var countrySqlTemplate = "INSERT INTO Countries (Name, Iso2, Iso3) VALUES ('{0}', '{1}', '{2}'); SELECT SCOPE_IDENTITY();";
+            var citySqlTemplate = "INSERT INTO Cities (Name, CountryId) VALUES ('{0}', {1})";
 
             using (var sqlConnection = new SqlConnection(connectionString))
             {

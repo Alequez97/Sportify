@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainEntities", "DomainEnt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataServices", "DataServices\DataServices.csproj", "{F94399E7-2989-48EE-9668-B2E591C1377A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "BusinessLogic\BusinessLogic.csproj", "{853DBA88-8C62-4066-8B46-86EDA4D32BD5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3103A156-50EE-496D-9DB9-EDDF79A09B3E}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -62,18 +60,6 @@ Global
 		{F94399E7-2989-48EE-9668-B2E591C1377A}.Release|x64.Build.0 = Release|Any CPU
 		{F94399E7-2989-48EE-9668-B2E591C1377A}.Release|x86.ActiveCfg = Release|Any CPU
 		{F94399E7-2989-48EE-9668-B2E591C1377A}.Release|x86.Build.0 = Release|Any CPU
-		{853DBA88-8C62-4066-8B46-86EDA4D32BD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{853DBA88-8C62-4066-8B46-86EDA4D32BD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{853DBA88-8C62-4066-8B46-86EDA4D32BD5}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{853DBA88-8C62-4066-8B46-86EDA4D32BD5}.Debug|x64.Build.0 = Debug|Any CPU
-		{853DBA88-8C62-4066-8B46-86EDA4D32BD5}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{853DBA88-8C62-4066-8B46-86EDA4D32BD5}.Debug|x86.Build.0 = Debug|Any CPU
-		{853DBA88-8C62-4066-8B46-86EDA4D32BD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{853DBA88-8C62-4066-8B46-86EDA4D32BD5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{853DBA88-8C62-4066-8B46-86EDA4D32BD5}.Release|x64.ActiveCfg = Release|Any CPU
-		{853DBA88-8C62-4066-8B46-86EDA4D32BD5}.Release|x64.Build.0 = Release|Any CPU
-		{853DBA88-8C62-4066-8B46-86EDA4D32BD5}.Release|x86.ActiveCfg = Release|Any CPU
-		{853DBA88-8C62-4066-8B46-86EDA4D32BD5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
