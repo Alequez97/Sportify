@@ -1,10 +1,11 @@
 using DomainEntities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataServices
 {
-    public class SportifyDbContext : IdentityDbContext<User>
+    public class SportifyDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
