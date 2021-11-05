@@ -14,10 +14,11 @@ namespace DataServices
         }
         public DbSet<Event> Events { get; set; }
         public DbSet<Venue> Venues { get; set; }
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<EventCategory> Categories { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Geolocation> Geolocations { get; set; }
         public DbSet<SportsGroundLocation> SportsGroundLocations { get; set; }
+        public DbSet<SportsGroundCategory> SportsGroundCategories { get; set; }
     }
 }

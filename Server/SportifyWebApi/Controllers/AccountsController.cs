@@ -128,6 +128,7 @@ namespace SportifyWebApi.Controllers
         [Authorize]
         public IActionResult GetLogedInUserInfo()
         {
+            var infoa = 2;
             var info = new InfoModel()
             {
                 Id = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value),

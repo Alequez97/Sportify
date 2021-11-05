@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace DomainEntities
 {
     /// <summary>
     /// Class that represents Category model
     /// </summary>
-    public class Category : EntityBase
+    public class EventCategory : EntityBase
     {
         [Required]
         public string Name { get; set; }
