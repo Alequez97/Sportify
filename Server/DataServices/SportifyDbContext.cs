@@ -17,6 +17,6 @@ namespace DataServices
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Geolocation> Geolocations { get; set; }
-        public DbSet<SportsGroundLocation> SportsGroundsLocations { get; set; }
+        public DbSet<SportsGroundLocation> SportsGroundLocations { get; set; }
     }
 }
