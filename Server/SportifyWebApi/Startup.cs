@@ -4,6 +4,7 @@ using DomainEntities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SportifyWebApi.Endpoints.MappingProfiles;
+using SportifyWebApi.Services;
+using System.Security.Claims;
 using System.Text;
 
 namespace SportifyWebApi
@@ -38,6 +41,7 @@ namespace SportifyWebApi
             services.AddIdentity<User, IdentityRole<int>>()
                 .AddEntityFrameworkStores<SportifyDbContext>()
                 .AddDefaultTokenProviders();
+            services.AddTransient<AuthenticationService>();
 
             services.AddAuthentication(options =>
             {

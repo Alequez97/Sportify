@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 using DomainEntities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -6,13 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SportifyWebApi.Authentication;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+using SportifyWebApi.Services;
 
 namespace SportifyWebApi.Controllers
 {
@@ -23,12 +23,14 @@ namespace SportifyWebApi.Controllers
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly AuthenticationService _authenticationService;
 
-        public AccountsController(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, IConfiguration configuration)
+        public AccountsController(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, IConfiguration configuration, AuthenticationService authenticationService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _authenticationService = authenticationService;
         }
 
         [HttpPost]
@@ -128,13 +130,7 @@ namespace SportifyWebApi.Controllers
         [Authorize]
         public IActionResult GetLogedInUserInfo()
         {
-            var info = new InfoModel()
-            {
-                Id = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value),
-                Username = User.FindFirst(ClaimTypes.Name).Value,
-                IsAdmin = User.FindAll(ClaimTypes.Role).Any(role => role.Value == UserRoles.Admin)
-            };
-
+            var info = _authenticationService.GetAuthenticatedUserInfo(HttpContext.User);
             return Ok(info);
         }
     }
