@@ -38,8 +38,6 @@
 </template>
 
 <script>
-// import axios from "axios";
-
 export default {
   data() {
     return {
@@ -61,7 +59,6 @@ export default {
   },
   computed: {
     countrySelected() {
-      // console.log(this.cities.length > 0);
       return !this.cities.length;
     }
   },
@@ -84,19 +81,22 @@ export default {
         address: this.address
       }
 
+      // const config = {
+      //     headers: { Authorization: `Bearer ${token}` }
+      // };
       await this.$axios.post("https://localhost:44314/api/event/create", data);
     },
     async getCategories() {
-      const res = await axios.get("https://localhost:44314/api/categories");
+      const res = await this.$axios.get("https://localhost:44314/api/categories");
       return res.data;
     },
     async getCountries() {
-      const res = await axios.get("https://localhost:44314/api/countries");
+      const res = await this.$axios.get("https://localhost:44314/api/countries");
       return res.data;
     },
     async onCountrySelect() {
-      const res = await axios.get(
-        "https://localhost:44314/api/cities/" + this.countryId
+      const res = await this.$axios.get(
+        "https://localhost:44314/api/cities/" + this.countryId,
       );
       this.cities = res.data;
     }

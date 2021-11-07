@@ -7,13 +7,13 @@
             <p class="text-lg-h5 text-h6 my-0">{{ event.title }}</p>
           </v-card-title>
           <v-card-text class="py-0">
-            <p class="my-0 text-lg-subtitle-1 text-subtitle-2 font-weight-regular">
+            <div class="my-0 text-lg-subtitle-1 text-subtitle-2 font-weight-regular">
               {{ event.venue.country }}, {{ event.venue.city }}, {{ event.venue.address }}
-            </p>
-            <p class="text-lg-subtitle-1 font-weight-regular my-0">{{ event.timeOfTheEvent }}</p>
-            <p class="text-lg-subtitle-1 font-weight-regular mb-2">Creator: {{ event.creator }}</p>
-            <p class="text-lg-subtitle-1 font-weight-regular mb-2">{{ event.description }}</p>
-            <p class="text-lg-h5 text-h6 mb-0">Contributors</p>
+            </div>
+            <div class="text-lg-subtitle-1 font-weight-regular my-0">{{ event.timeOfTheEvent }}</div>
+            <div class="text-lg-subtitle-1 font-weight-regular mb-2">Creator: {{ event.creator }}</div>
+            <div class="text-lg-subtitle-1 font-weight-regular mb-2">{{ event.description }}</div>
+            <div class="text-lg-h5 text-h6 mb-0">Contributors</div>
             <v-avatar v-for="n in 4" :key="n" size="40" color="indigo" class="mb-2 mr-1">
               <img
                 src="kot_fleks.jpg"

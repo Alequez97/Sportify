@@ -9,7 +9,6 @@
 </template>
 
 <script>
-// import axios from "axios";
 import Event from "../../components/events/Event";
 
 export default {
