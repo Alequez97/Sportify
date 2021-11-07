@@ -20,7 +20,7 @@
         <v-row>
           <v-col col="12" justify="center" align="center" class="mt-5">
             <v-avatar size="100">
-              <img src="kot_fleks.jpg">
+              <img src="/kot_fleks.jpg">
             </v-avatar>
             <p color="black" class="mt-1 mb-0">JS</p>
           </v-col>
