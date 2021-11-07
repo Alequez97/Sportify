@@ -20,62 +20,59 @@ export default {
       events: []
     };
   },
-  created() {
+  async created() {
     // const config = {
     //   headers: {
     //     Accept: 'application/json'
     //   }
     // };
-    this.events = [
-      {
-        id: 1,
-        title: 'Basketball in Ogre',
-        creator: 'JS',
-        category: 'basketball',
-        venue: {
-          country: 'Latvia',
-          city: 'Ogre',
-          address: 'Skolas iela 1'
-        },
-        timeOfTheEvent: '30/12/1999',
-        description: 'We are going to play street basketball 3x3. Wanna play with us?'
-      },
-      {
-        id: 2,
-        title: 'Basketball in Ogre',
-        creator: 'JS',
-        category: 'basketball',
-        venue: {
-          country: 'Latvia',
-          city: 'Ogre',
-          address: 'Skolas iela 1'
-        },
-        timeOfTheEvent: '30/12/1999',
-        description: 'We are going to play street basketball 3x3. Wanna play with us?'
-      },
-      {
-        id: 3,
-        title: 'Basketball in Ogre',
-        creator: 'JS',
-        category: 'basketball',
-        venue: {
-          country: 'Latvia',
-          city: 'Ogre',
-          address: 'Skolas iela 1'
-        },
-        timeOfTheEvent: '30/12/1999',
-        description: 'We are going to play street basketball 3x3. Wanna play with us?'
-      }
-    ];
+    // this.events = [
+    //   {
+    //     id: 1,
+    //     title: 'Basketball in Ogre',
+    //     creator: 'JS',
+    //     category: 'basketball',
+    //     venue: {
+    //       country: 'Latvia',
+    //       city: 'Ogre',
+    //       address: 'Skolas iela 1'
+    //     },
+    //     timeOfTheEvent: '30/12/1999',
+    //     description: 'We are going to play street basketball 3x3. Wanna play with us?'
+    //   },
+    //   {
+    //     id: 2,
+    //     title: 'Basketball in Ogre',
+    //     creator: 'JS',
+    //     category: 'basketball',
+    //     venue: {
+    //       country: 'Latvia',
+    //       city: 'Ogre',
+    //       address: 'Skolas iela 1'
+    //     },
+    //     timeOfTheEvent: '30/12/1999',
+    //     description: 'We are going to play street basketball 3x3. Wanna play with us?'
+    //   },
+    //   {
+    //     id: 3,
+    //     title: 'Basketball in Ogre',
+    //     creator: 'JS',
+    //     category: 'basketball',
+    //     venue: {
+    //       country: 'Latvia',
+    //       city: 'Ogre',
+    //       address: 'Skolas iela 1'
+    //     },
+    //     timeOfTheEvent: '30/12/1999',
+    //     description: 'We are going to play street basketball 3x3. Wanna play with us?'
+    //   }
+    // ];
 
-    // await axios
-    //   .get("https://localhost:44314/api/events")
-    //   .then((response) => {
-    //     this.events = response.data;
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    await this.$axios.get("https://localhost:44314/api/events").then((response) => {
+        this.events = response.data;
+      }).catch((error) => {
+        console.log(error);
+      });
   },
   head() {
     return {

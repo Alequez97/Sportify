@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <v-app-bar color="deep-purple" dense dark app>
+    <v-app-bar color="teal" dense dark app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="pl-0" app>
         <NuxtLink to="/">Sportify</NuxtLink>
@@ -14,7 +14,7 @@
       </v-btn>
     </v-app-bar>
 
-    <v-navigation-drawer class="deep-purple lighten-5" disable-resize-watcher v-model="drawer" absolute temporary app>
+    <v-navigation-drawer class="teal lighten-5" disable-resize-watcher v-model="drawer" absolute temporary app>
       <v-container>
 
         <v-row>
@@ -32,7 +32,7 @@
 
       <v-list nav dense>
         <v-list-item-group
-          active-class="deep-purple--text text--accent-4"
+          active-class="teal--text"
         >
           <v-list-item v-for="link in links" :key="link.text" router :to="link.route">
             <v-list-item-icon>
