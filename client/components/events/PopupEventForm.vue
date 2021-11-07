@@ -91,7 +91,10 @@ export default {
       await this.$axios.post("https://localhost:44314/api/event/create", data, config);
     },
     async onCountrySelect() {
-      this.cities = await this.$store.dispatch('events/fetchCities', this.countryId);
+      const res = await this.$axios.get(
+        "https://localhost:44314/api/cities/" + this.countryId,
+      );
+      this.cities = res.data;
     }
   }
 }

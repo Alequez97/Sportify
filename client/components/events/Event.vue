@@ -22,8 +22,8 @@
             </v-avatar>
           </v-card-text>
           <v-card-actions class="py-0">
-            <v-btn class="text-subtitle-1" nuxt :to="'/events/' + event.id" color="teal" text rounded>Show</v-btn>
-            <v-btn class="text-subtitle-1" color="blue" text rounded>Join</v-btn>
+            <v-btn class="text-subtitle-1" nuxt :to="'/events/' + event.id" color="deep-purple" text rounded>Show</v-btn>
+            <v-btn class="text-subtitle-1" color="green" text rounded>Join</v-btn>
           </v-card-actions>
         </v-col>
         <v-col cols="4">
