@@ -29,7 +29,7 @@
 										"exec": [
 											"let timestamp = Date.now();\r",
 											"let username = \"username\" + timestamp;\r",
-											"pm.collectionVariables.set(\"username\", username);"
+											"pm.collectionVariables.set(\"localhostUsername\", username);"
 										],
 										"type": "text/javascript"
 									}
@@ -61,6 +61,36 @@
 										"api",
 										"accounts",
 										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RegisterAdmin",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"{{localhostUsername}}\",\r\n  \"email\": \"{{localhostUsername}}@example.com\",\r\n  \"password\": \"P@ssword1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:44314/api/accounts/register-admin",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44314",
+									"path": [
+										"api",
+										"accounts",
+										"register-admin"
 									]
 								}
 							},
@@ -106,6 +136,27 @@
 										"api",
 										"accounts",
 										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Info",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:44314/api/accounts/info",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "44314",
+									"path": [
+										"api",
+										"accounts",
+										"info"
 									]
 								}
 							},
@@ -305,10 +356,6 @@
 		{
 			"key": "iterationNumber",
 			"value": "0"
-		},
-		{
-			"key": "username",
-			"value": ""
 		}
 	]
 }

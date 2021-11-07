@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 
 export default {
   data() {
@@ -70,14 +70,21 @@ export default {
     this.countries = await this.getCountries();
   },
   methods: {
-    createEvent() {
+    async createEvent() {
       this.dialog = false;
-      // console.log(
-      //   this.title,
-      //   this.briefDesc,
-      //   this.description,
-      //   this.categoryId
-      // );
+
+      const data = {
+        title: this.title,
+        categoryId: this.categoryId,
+        briefDesc: this.briefDesc,
+        description: this.description,
+        timeOfTheEvent: this.timeOfTheEvent,
+        countryId: this.countryId,
+        cityId: this.cityId,
+        address: this.address
+      }
+
+      await this.$axios.post("https://localhost:44314/api/event/create", data);
     },
     async getCategories() {
       const res = await axios.get("https://localhost:44314/api/categories");

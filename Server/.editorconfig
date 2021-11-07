@@ -118,4 +118,6 @@ csharp_preserve_single_line_blocks = true
 # Code Conventions
 # IDE0005: Unnecessary using directive
 dotnet_diagnostic.IDE0005.severity = error
+# CS0219: The variable 'variable' is assigned but its value is never used
+dotnet_diagnostic.CS0219.severity = error
 ###############################
