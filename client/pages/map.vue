@@ -6,7 +6,7 @@
     </v-row>
     <v-row class="move-top" justify="center" v-else>
       <v-btn rounded color="red accent-2" dark @click="cancelAddingNewLocation">Cancel</v-btn>
-      <v-btn rounded color="primary" dark @click="cancelAddingNewLocation" class="ml-2">Save</v-btn>
+      <v-btn rounded color="primary" dark @click="saveNewLocation" class="ml-2">Save</v-btn>
     </v-row>
   </v-card>
 </template>
@@ -46,6 +46,6 @@ export default {
 <style scoped>
   .move-top {
     position: relative;
-    bottom: 50px;
+    bottom: 60px;
   }
 </style>

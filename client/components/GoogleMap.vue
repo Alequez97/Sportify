@@ -68,7 +68,9 @@ export default {
       });
     },
     saveNewLocation() {
-      console.log(this.newLocationMarker.getPosition().lat() + "; " + this.newLocationMarker.getPosition().lng());
+      const lat = this.newLocationMarker.getPosition().lat();
+      const lng = this.newLocationMarker.getPosition().lng();
+      console.log(lat + "; " + lng);
     },
     cancelAddingNewLocation() {
       this.newLocationMarker.setMap(null);
