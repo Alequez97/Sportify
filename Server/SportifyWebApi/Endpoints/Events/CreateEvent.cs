@@ -1,9 +1,11 @@
 using System;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using DataServices;
 using DomainEntities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SportifyWebApi.Endpoints.Events
@@ -19,6 +21,7 @@ namespace SportifyWebApi.Endpoints.Events
             _context = context;
         }
 
+        [Authorize]
         [HttpPost("api/event/create")]
         public override async Task<ActionResult> HandleAsync([FromBody] CreateEventRequest request, CancellationToken cancellationToken = default)
         {
@@ -34,8 +37,8 @@ namespace SportifyWebApi.Endpoints.Events
                     CityId = request.CityId,
                     Address = request.Address
                 },
-                TimeOfTheEvent = request.TimeOfTheEvent
-
+                TimeOfTheEvent = request.TimeOfTheEvent,
+                CreatorId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)
             };
 
             _context.Events.Add(@event);
@@ -44,9 +47,9 @@ namespace SportifyWebApi.Endpoints.Events
             {
                 await _context.SaveChangesAsync();
             }
-            catch(Exception)
+            catch(Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex);
             }
 
             return Ok();
@@ -70,7 +73,5 @@ namespace SportifyWebApi.Endpoints.Events
         public string Address { get; set; }
 
         public DateTime TimeOfTheEvent { get; set; }
-
-        public int CreatorId { get; set; }
     }
 }

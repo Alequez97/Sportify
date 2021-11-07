@@ -33,9 +33,12 @@ namespace SportifyWebApi.Endpoints.Events
             var result = await _context.Events
                 .Select(x => new GetEventsResponse()
                 {
+                    Title = x.Title,
                     CategoryName = x.Category.Name,
                     BriefDesc = x.BriefDesc,
+                    CreatorName = x.Creator.UserName,
                     CreatorId = x.CreatorId,
+                    TimeOfTheEvent = x.TimeOfTheEvent.ToShortDateString(),
                     Contributors = x.EventUsers.Where(u => u.Event.Id == x.Id).Select(xx => new GetEventsResponse.GetEventsContributorDto()
                     {
                         Id = xx.User.Id,
@@ -70,8 +73,9 @@ namespace SportifyWebApi.Endpoints.Events
 
         public GetEventsVenueDto Venue { get; set; }
 
-        public DateTime TimeOfTheEvent { get; set; }
+        public string TimeOfTheEvent { get; set; }
 
+        public string CreatorName { get; set; }
         public int CreatorId { get; set; }
 
         public List<GetEventsContributorDto> Contributors { get; set; }

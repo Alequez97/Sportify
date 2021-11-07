@@ -21,6 +21,8 @@ module.exports = {
     "indent": "off",
     "arrow-spacing": "off",
     "quotes": "off",
-    "vue/max-attributes-per-line": "off"
+    "vue/max-attributes-per-line": "off",
+    "space-before-blocks": "off",
+    "object-curly-spacing": "off"
   }
 }

@@ -11,7 +11,7 @@
               {{ event.venue.country }}, {{ event.venue.city }}, {{ event.venue.address }}
             </div>
             <div class="text-lg-subtitle-1 font-weight-regular my-0">{{ event.timeOfTheEvent }}</div>
-            <div class="text-lg-subtitle-1 font-weight-regular mb-2">Creator: {{ event.creator }}</div>
+            <div class="text-lg-subtitle-1 font-weight-regular mb-2">Creator: {{ event.creatorName }}</div>
             <div class="text-lg-subtitle-1 font-weight-regular mb-2">{{ event.description }}</div>
             <div class="text-lg-h5 text-h6 mb-0">Contributors</div>
             <v-avatar v-for="n in 4" :key="n" size="40" color="indigo" class="mb-2 mr-1">
@@ -22,12 +22,12 @@
             </v-avatar>
           </v-card-text>
           <v-card-actions class="py-0">
-            <v-btn class="text-subtitle-1" nuxt :to="'/events/' + event.id" color="deep-purple" text rounded>Show</v-btn>
-            <v-btn class="text-subtitle-1" color="green" text rounded>Join</v-btn>
+            <v-btn class="text-subtitle-1" nuxt :to="'/events/' + event.id" color="teal" text rounded>Show</v-btn>
+            <v-btn class="text-subtitle-1" color="blue" text rounded>Join</v-btn>
           </v-card-actions>
         </v-col>
         <v-col cols="4">
-          <v-img lazy-src="lazy-load.png" :src="event.category + '.png'" />
+          <v-img lazy-src="lazy-load.png" :src="event.categoryName + '.png'" />
         </v-col>
       </v-row>
     </v-container>
