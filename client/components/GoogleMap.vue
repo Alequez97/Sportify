@@ -67,10 +67,13 @@ export default {
         }
       });
     },
-    saveNewLocation() {
-      const lat = this.newLocationMarker.getPosition().lat();
-      const lng = this.newLocationMarker.getPosition().lng();
-      console.log(lat + "; " + lng);
+    saveNewLocation(properties) {
+      const allProperties = {
+        ...properties,
+        lat: this.newLocationMarker.getPosition().lat(),
+        lng: this.newLocationMarker.getPosition().lng()
+      }
+      console.log(allProperties);
     },
     cancelAddingNewLocation() {
       this.newLocationMarker.setMap(null);
