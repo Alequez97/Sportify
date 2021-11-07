@@ -1,17 +1,14 @@
 <template>
-    <div>
-        <GoogleMap :geolocations="geolocations" ref="map" />
-        <div class="centered-div">
-            <div id="add-new-location-container">
-                <button id="add-new-location-button" @click="addNewLocationMarker">Add new location</button>
-                <button id="add-new-location-button" @click="saveNewLocation">Save</button>
-                <button id="add-new-location-button" @click="cancelAddingNewLocation">Cancel</button>
-            </div>
-            <div id="cancel-new-location-container" style="position:relative; bottom:130px;">
-                <p>hello</p>
-            </div>
-        </div>
-    </div>
+  <v-card height="100%" width="100%" class="mx-auto">
+    <GoogleMap :geolocations="geolocations" ref="map" />
+    <v-row class="move-top" justify="center" v-if="showAddNewLocation">
+      <v-btn rounded color="primary" dark @click="addNewLocationMarker">Add new location</v-btn>
+    </v-row>
+    <v-row class="move-top" justify="center" v-else>
+      <v-btn rounded color="red accent-2" dark @click="cancelAddingNewLocation">Cancel</v-btn>
+      <v-btn rounded color="primary" dark @click="cancelAddingNewLocation" class="ml-2">Save</v-btn>
+    </v-row>
+  </v-card>
 </template>
 
 <script>
@@ -26,30 +23,29 @@ export default {
       geolocations: [
         { lat: 56.80, lng: 24.58 },
         { lat: 56.81, lng: 24.59 }
-      ]
+      ],
+      showAddNewLocation: true
     }
   },
   methods: {
     addNewLocationMarker() {
       this.$refs.map.addNewLocationMarker();
+      this.showAddNewLocation = false;
     },
     saveNewLocation() {
       this.$refs.map.saveNewLocation();
     },
     cancelAddingNewLocation() {
       this.$refs.map.cancelAddingNewLocation();
+      this.showAddNewLocation = true;
     }
   }
 }
 </script>
 
-<style>
-    .centered-div {
-        margin: 0 auto;
-        display: table;
-    }
-
-    #cancel-new-location-container {
-        display: none;
-    }
+<style scoped>
+  .move-top {
+    position: relative;
+    bottom: 50px;
+  }
 </style>

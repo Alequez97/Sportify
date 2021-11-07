@@ -1,5 +1,5 @@
 <template>
-  <div id="google-map" class="align-center" />
+  <div id="google-map" />
 </template>
 
 <script>
@@ -13,7 +13,7 @@ export default {
       map: null,
       google: null,
       newLocationMarker: null,
-      currentPosition: null
+      currentLocation: null
     }
   },
   async mounted() {
@@ -21,44 +21,26 @@ export default {
       apiKey: "AIzaSyD_u7kDh3P6m58MutrCTCDsF2Oiy-jPMf0"
     });
 
-    // const currentObject = this;
+    this.currentLocation = await this.getCurrentLocation();
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        debugger;
-        const positionLat = position.coords.latitude;
-        const positionLng = position.coords.longitude;
-        this.currentPosition = { lat: positionLat, lng: positionLng };
-        // const infoWindowHTML = "Latitude: " + currentLatitude + "<br>Longitude: " + currentLongitude;
-        // const infoWindow = new this.google.maps.InfoWindow({ map: this.map, content: infoWindowHTML });
-        // const currentLocation = { lat: currentLatitude, lng: currentLongitude };
-        // infoWindow.setPosition(currentLocation);
-        // document.getElementById("btnAction").style.display = 'none';
-      });
-    } else {
-      const currentPositionLat = 56.81543608008677;
-      const currentPositionLng = 24.599863529284583;
-      this.currentPosition = { lat: currentPositionLat, lng: currentPositionLng };
-    }
-    debugger;
-    console.log(this.currentPosition);
     const mapOptions = {
       center: {
-        lat: this.currentPosition.lat,
-        lng: this.currentPosition.lng
+        lat: this.currentLocation.lat,
+        lng: this.currentLocation.lng
       },
-      zoom: 15
+      zoom: 14
     };
 
     await loader
-        .load()
-        .then((google) => {
-          this.google = google;
-          this.map = new google.maps.Map(document.getElementById("google-map"), mapOptions);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      .load()
+      .then((google) => {
+        this.google = google;
+        this.map = new google.maps.Map(document.getElementById("google-map"), mapOptions);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
     if (this.geolocations !== undefined && this.geolocations.length > 0) {
       this.geolocations.forEach((g) => {
         const markerPosition = { lat: g.lat, lng: g.lng };
@@ -92,33 +74,29 @@ export default {
       this.newLocationMarker.setMap(null);
       this.newLocationMarker = null;
     },
-    currentLocation() {
-      // document.getElementById("btnAction").disabled = true;
-      // document.getElementById("btnAction").innerHTML = "Processing...";
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const currentLatitude = position.coords.latitude;
-          const currentLongitude = position.coords.longitude;
-
-          const infoWindowHTML = "Latitude: " + currentLatitude + "<br>Longitude: " + currentLongitude;
-          const infoWindow = new this.google.maps.InfoWindow({ map: this.map, content: infoWindowHTML });
-          const currentLocation = { lat: currentLatitude, lng: currentLongitude };
-          infoWindow.setPosition(currentLocation);
-          // document.getElementById("btnAction").style.display = 'none';
-        });
-      }
+    getCurrentLocation() {
+      return new Promise((resolve) => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            const currentPosition = { lat: position.coords.latitude, lng: position.coords.longitude };
+            resolve(currentPosition);
+          });
+        } else {
+          // Implement other logic if geolocation is disabled
+          const currentPositionLat = 56.81543608008677;
+          const currentPositionLng = 24.599863529284583;
+          const currentPosition = { lat: currentPositionLat, lng: currentPositionLng };
+          resolve(currentPosition);
+        }
+      });
     }
   }
 };
 </script>
 
 <style scoped>
-    #google-map {
-        width: 80%;
-        height: 400px;
-    }
-
-    .align-center {
-        margin: 0 auto;
-    }
+  #google-map {
+      width: 100%;
+      height: 100%;
+  }
 </style>
