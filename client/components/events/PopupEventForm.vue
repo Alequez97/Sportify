@@ -96,7 +96,7 @@ export default {
     },
     async onCountrySelect() {
       const res = await this.$axios.get(
-        "https://localhost:44314/api/cities/" + this.countryId,
+        "https://localhost:44314/api/cities/" + this.countryId
       );
       this.cities = res.data;
     }
