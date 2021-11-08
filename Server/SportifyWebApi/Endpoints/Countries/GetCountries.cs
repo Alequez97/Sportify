@@ -20,7 +20,7 @@ namespace SportifyWebApi.Endpoints.Country
             _context = context;
         }
 
-        [HttpGet("api/countries")]
+        [HttpGet("/api/countries")]
         [SwaggerOperation(Tags = new[] { "Countries" })]
         public override async Task<ActionResult<GetCountriesResponse>> HandleAsync(CancellationToken cancellationToken = default)
         {

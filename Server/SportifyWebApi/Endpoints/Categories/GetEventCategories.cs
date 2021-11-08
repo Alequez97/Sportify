@@ -20,7 +20,7 @@ namespace SportifyWebApi.Endpoints.Category
             _context = context;
         }
 
-        [HttpGet("api/categories")]
+        [HttpGet("/api/event-categories")]
         [SwaggerOperation(Tags = new[] { "Categories" })]
         public override async Task<ActionResult<GetCategoriesResponse>> HandleAsync(CancellationToken cancellationToken = default)
         {

@@ -7,6 +7,7 @@ using DomainEntities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Accounts
 {
@@ -22,7 +23,8 @@ namespace SportifyWebApi.Endpoints.Accounts
 
         }
 
-        [HttpPost("api/accounts/register-admin")]
+        [HttpPost("/api/accounts/register-admin")]
+        [SwaggerOperation(Tags = new[] { "Accounts" })]
         public override async Task<ActionResult<RegisterAdminResponse>> HandleAsync([FromBody]RegisterAdmimRequest request, CancellationToken cancellationToken = default)
         {
             var userExists = await _userManager.FindByNameAsync(request.Username);

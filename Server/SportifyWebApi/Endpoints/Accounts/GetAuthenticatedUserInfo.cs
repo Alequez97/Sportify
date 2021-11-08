@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Accounts
 {
@@ -14,7 +15,8 @@ namespace SportifyWebApi.Endpoints.Accounts
         .WithResponse<GetAuthenticatedUserInfoResponse>
     {
         [Authorize]
-        [HttpGet("api/accounts/info")]
+        [HttpGet("/api/accounts/info")]
+        [SwaggerOperation(Tags = new[] { "Accounts" })]
         public override async Task<ActionResult<GetAuthenticatedUserInfoResponse>> HandleAsync(CancellationToken cancellationToken = default)
         {
             var info = new GetAuthenticatedUserInfoResponse()

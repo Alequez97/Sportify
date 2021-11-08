@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Accounts
 {
@@ -29,6 +30,7 @@ namespace SportifyWebApi.Endpoints.Accounts
         }
 
         [HttpPost("/api/accounts/login")]
+        [SwaggerOperation(Tags = new[] { "Accounts" })]
         public override async Task<ActionResult> HandleAsync(LoginRequest request, CancellationToken cancellationToken = default)
         {
             var user = await _userManager.FindByNameAsync(request.Username);

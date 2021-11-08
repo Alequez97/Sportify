@@ -22,7 +22,7 @@ namespace SportifyWebApi.Endpoints.Events
             _mapper = mapper;
         }
 
-        [HttpPut("api/event/edit/{id}")]
+        [HttpPut("/api/event/edit/{id}")]
         [SwaggerOperation(Tags = new[] { "Events" })]
         public override async Task<ActionResult> HandleAsync([FromBody] EditEventRequest request, CancellationToken cancellationToken = default)
         {
