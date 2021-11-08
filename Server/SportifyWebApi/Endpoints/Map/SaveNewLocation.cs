@@ -24,12 +24,13 @@ namespace SportifyWebApi.Endpoints.Map
         [HttpPost("api/map/save")]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Map })]
         public override async Task<ActionResult> HandleAsync([FromBody] SportsGroundLocationtRequest request, CancellationToken cancellationToken = default)
-        {
+       {
             var geolocation = new Geolocation()
             {
-                Latitude = request.Lat,
-                Longitude = request.Lng
+                Latitude = request.Lat.ToString(),
+                Longitude = request.Lng.ToString()
             };
+            _context.Geolocations.Add(geolocation);
 
             var location = new SportsGroundLocation()
             {
@@ -60,7 +61,7 @@ namespace SportifyWebApi.Endpoints.Map
     {
         public int TypeId { get; set; }
 
-        public int Description { get; set; }
+        public string Description { get; set; }
 
         public string Country { get; set; }
 
@@ -72,8 +73,8 @@ namespace SportifyWebApi.Endpoints.Map
 
         public string HouseNumber { get; set; }
 
-        public string Lat { get; set; }
+        public double Lat { get; set; }
 
-        public string Lng { get; set; }
+        public double Lng { get; set; }
     }
 }
