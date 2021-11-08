@@ -1,10 +1,10 @@
+using System.Text;
 using DataServices;
 using DomainEntities;
 //using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,8 +13,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SportifyWebApi.Endpoints.MappingProfiles;
 using SportifyWebApi.Services;
-using System.Security.Claims;
-using System.Text;
 
 namespace SportifyWebApi
 {
@@ -34,6 +32,7 @@ namespace SportifyWebApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SportifyWebApi", Version = "v1" });
+                c.EnableAnnotations();
             });
 
             services.AddDbContext<SportifyDbContext>();
