@@ -6,6 +6,7 @@ using Ardalis.ApiEndpoints;
 using DataServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.City
 {
@@ -21,6 +22,7 @@ namespace SportifyWebApi.Endpoints.City
         }
 
         [HttpGet("/api/cities/{countryId}")]
+        [SwaggerOperation(Tags = new[] { "Cities" })]
         public override async Task<ActionResult<GetCitiesResponse>> HandleAsync([FromRoute] GetCitiesRequest request, CancellationToken cancellationToken = default)
         {
             var res = await _context.Cities.Where(c => c.Country.Id == request.CountryId).Select(c => new GetCitiesResponse.CityDto()

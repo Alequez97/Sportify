@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using DataServices;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Events
 {
@@ -20,6 +21,7 @@ namespace SportifyWebApi.Endpoints.Events
         }
 
         [HttpGet("api/event/{id}")]
+        [SwaggerOperation(Tags = new[] { "Events" })]
         public override async Task<ActionResult<GetEventResponse>> HandleAsync([FromRoute] GetEventRequest request, CancellationToken cancellationToken = default)
         {
             var @event = await _context.Events.FindAsync(request.Id);

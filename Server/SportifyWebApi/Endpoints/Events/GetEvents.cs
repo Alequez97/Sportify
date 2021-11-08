@@ -6,6 +6,7 @@ using Ardalis.ApiEndpoints;
 using DataServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Events
 {
@@ -21,6 +22,7 @@ namespace SportifyWebApi.Endpoints.Events
         }
 
         [HttpGet("/api/events")]
+        [SwaggerOperation(Tags = new[] { "Events" })]
         public override async Task<ActionResult<GetEventsResponse>> HandleAsync([FromRoute] GetEventsRequest request, CancellationToken cancellationToken = default)
         {
             //var q = _context.Events.Include(v => v.Venue);

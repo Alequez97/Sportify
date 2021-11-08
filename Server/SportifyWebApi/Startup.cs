@@ -1,3 +1,4 @@
+using System.Text;
 using DataServices;
 using DomainEntities;
 //using MediatR;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SportifyWebApi.Endpoints.MappingProfiles;
-using System.Text;
 
 namespace SportifyWebApi
 {
@@ -31,6 +31,7 @@ namespace SportifyWebApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SportifyWebApi", Version = "v1" });
+                c.EnableAnnotations();
             });
 
             services.AddDbContext<SportifyDbContext>();

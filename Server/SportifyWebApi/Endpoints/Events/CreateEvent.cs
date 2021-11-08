@@ -7,6 +7,7 @@ using DataServices;
 using DomainEntities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Events
 {
@@ -23,6 +24,7 @@ namespace SportifyWebApi.Endpoints.Events
 
         [Authorize]
         [HttpPost("api/event/create")]
+        [SwaggerOperation(Tags = new[] { "Events" })]
         public override async Task<ActionResult> HandleAsync([FromBody] CreateEventRequest request, CancellationToken cancellationToken = default)
         {
             var @event = new Event()
