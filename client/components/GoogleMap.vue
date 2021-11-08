@@ -67,13 +67,18 @@ export default {
         }
       });
     },
-    saveNewLocation(properties) {
-      const allProperties = {
+    async saveNewLocation(properties) {
+      const latLng = { lat: this.newLocationMarker.getPosition().lat(), lng: this.newLocationMarker.getPosition().lng() };
+      const fullAddress = await this.getAddressFromGeolocation(latLng);
+
+      const data = {
         ...properties,
-        lat: this.newLocationMarker.getPosition().lat(),
-        lng: this.newLocationMarker.getPosition().lng()
+        lat: latLng.lat,
+        lng: latLng.lng,
+        ...fullAddress
       }
-      console.log(allProperties);
+      console.log(data);
+      // await this.$axios.post("https://localhost:44314/api/map/save", data);
     },
     cancelAddingNewLocation() {
       this.newLocationMarker.setMap(null);
@@ -93,6 +98,36 @@ export default {
           const currentPosition = { lat: currentPositionLat, lng: currentPositionLng };
           resolve(currentPosition);
         }
+      });
+    },
+    getAddressFromGeolocation(latLng) {
+      return new Promise((resolve, reject) => {
+        const geocoder = new this.google.maps.Geocoder();
+        geocoder
+          .geocode({ location: latLng })
+          .then((response) => {
+            if (response.results[0]) {
+              const addressComponents = response.results[0].address_components;
+              const fullAddress = {
+                country: addressComponents.filter(c => c.types.includes("country"))[0]?.long_name,
+                city: addressComponents.filter(c => c.types.includes("locality"))[0]?.long_name,
+                district: addressComponents.filter(c => c.types.includes("sublocality"))[0]?.long_name,
+                street: addressComponents.filter(c => c.types.includes("route"))[0]?.long_name,
+                houseNumber: addressComponents.filter(c => c.types.includes("street_number"))[0]?.long_name
+              };
+              resolve(fullAddress);
+            } else {
+              const fullAddress = {
+                country: null,
+                city: null,
+                district: null,
+                street: null,
+                houseNumber: null
+              };
+              resolve(fullAddress);
+            }
+          })
+          .catch(e => reject(e));
       });
     }
   }

@@ -1,6 +1,6 @@
 namespace DomainEntities
 {
-    public class SportsGroundCategory : EntityBase
+    public class SportsGroundType : EntityBase
     {
         public string Name { get; set; }
     }
