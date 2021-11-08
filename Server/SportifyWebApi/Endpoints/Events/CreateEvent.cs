@@ -24,7 +24,7 @@ namespace SportifyWebApi.Endpoints.Events
         }
 
         [Authorize]
-        [HttpPost("api/event/create")]
+        [HttpPost("/api/event/create")]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult> HandleAsync([FromBody] CreateEventRequest request, CancellationToken cancellationToken = default)
         {

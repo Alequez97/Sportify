@@ -12,7 +12,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SportifyWebApi.Endpoints.MappingProfiles;
-using SportifyWebApi.Services;
 
 namespace SportifyWebApi
 {
@@ -40,7 +39,6 @@ namespace SportifyWebApi
             services.AddIdentity<User, IdentityRole<int>>()
                 .AddEntityFrameworkStores<SportifyDbContext>()
                 .AddDefaultTokenProviders();
-            services.AddTransient<AuthenticationService>();
 
             services.AddAuthentication(options =>
             {
