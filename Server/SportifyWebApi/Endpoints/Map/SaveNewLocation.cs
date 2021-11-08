@@ -5,6 +5,7 @@ using Ardalis.ApiEndpoints;
 using DataServices;
 using DomainEntities;
 using Microsoft.AspNetCore.Mvc;
+using SportifyWebApi.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Map
@@ -21,7 +22,7 @@ namespace SportifyWebApi.Endpoints.Map
         }
 
         [HttpPost("api/map/save")]
-        [SwaggerOperation(Tags = new[] { "Map" })]
+        [SwaggerOperation(Tags = new[] { SwaggerGroup.Map })]
         public override async Task<ActionResult> HandleAsync([FromBody] SportsGroundLocationtRequest request, CancellationToken cancellationToken = default)
         {
             var geolocation = new Geolocation()

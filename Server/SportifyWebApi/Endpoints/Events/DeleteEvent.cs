@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using DataServices;
 using Microsoft.AspNetCore.Mvc;
+using SportifyWebApi.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Events
@@ -20,7 +21,7 @@ namespace SportifyWebApi.Endpoints.Events
         }
 
         [HttpDelete("api/event/delete/{id}")]
-        [SwaggerOperation(Tags = new[] { "Events" })]
+        [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult> HandleAsync([FromRoute] DeleteEventRequest request, CancellationToken cancellationToken = default)
         {
             var @event = _context.Events.FindAsync(request.Id);
