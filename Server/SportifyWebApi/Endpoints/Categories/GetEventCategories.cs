@@ -5,6 +5,7 @@ using Ardalis.ApiEndpoints;
 using DataServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SportifyWebApi.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Category
@@ -21,7 +22,7 @@ namespace SportifyWebApi.Endpoints.Category
         }
 
         [HttpGet("/api/event-categories")]
-        [SwaggerOperation(Tags = new[] { "Categories" })]
+        [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult<GetCategoriesResponse>> HandleAsync(CancellationToken cancellationToken = default)
         {
             var res = await _context.Categories.Select(x => new GetCategoriesResponse()

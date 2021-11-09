@@ -11,11 +11,15 @@ namespace DomainEntities
 
         public string City { get; set; }
 
-        public string Address { get; set; }
+        public string District { get; set; }
+
+        public string Street { get; set; }
+
+        public string HouseNumber { get; set; }
 
         [Required]
-        public int CategoryId { get; set; }
-        public SportsGroundCategory Category { get; set; }
+        public int TypeId { get; set; }
+        public SportsGroundType Type { get; set; }
 
         public int GeolocationId { get; set; }
         public Geolocation Geolocation { get; set; }

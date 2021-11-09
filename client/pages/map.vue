@@ -1,10 +1,10 @@
 <template>
   <v-card height="100%" width="100%" class="mx-auto">
-    <GoogleMap :geolocations="geolocations" ref="map" />
-    <v-row class="move-top" justify="center" v-if="showAddNewLocation">
+    <GoogleMap :geolocations="geolocations" ref="map" v-on:mapOnLoad="mapOnLoad"/>
+    <v-row class="move-top" justify="center" v-if="showAddNewLocation && mapIsLoaded">
       <v-btn rounded color="primary" dark @click="addNewLocationMarker">Add new location</v-btn>
     </v-row>
-    <v-row class="move-top" justify="center" v-else>
+    <v-row class="move-top" justify="center" v-else-if="!showAddNewLocation">
       <v-btn rounded color="red accent-2" dark @click="cancelAddingNewLocation">Cancel</v-btn>
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template #activator="{ on, attrs }">
@@ -19,16 +19,16 @@
           </v-card-title>
           <v-card-text>
             <v-form>
-              <v-select v-model="typeId" :items="types" label="Type" item-text="name" item-value="id" color="deep-purple" />
-              <v-textarea v-model="description" label="Description" color="deep-purple" />
+              <v-select v-model="typeId" :items="types" label="Type" item-text="name" item-value="id" color="teal" />
+              <v-textarea v-model="description" label="Description" color="teal" />
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="deep-purple" text @click="dialog = false">
+            <v-btn color="teal" text @click="dialog = false">
               Cancel
             </v-btn>
-            <v-btn color="deep-purple" text @click="saveNewLocation()">
+            <v-btn color="teal" text @click="saveNewLocation()">
               Save
             </v-btn>
           </v-card-actions>
@@ -47,12 +47,9 @@ export default {
   },
   data() {
     return {
-      geolocations: [
-        { lat: 56.80, lng: 24.58 },
-        { lat: 56.81, lng: 24.59 },
-        { lat: 56.9475072, lng: 24.1401856 }
-      ],
+      geolocations: [],
       showAddNewLocation: true,
+      mapIsLoaded: false,
       dialog: false,
       typeId: '',
       description: '',
@@ -73,14 +70,29 @@ export default {
         typeId: this.typeId,
         description: this.description
       }
-      this.$refs.map.saveNewLocation(properties);
+      const typeName = this.types.filter(t => t.id === this.typeId)[0].name.replace(" ", "_");
+      this.$refs.map.saveNewLocation(properties, typeName);
+      this.dialog = false;
+      this.showAddNewLocation = true;
     },
     cancelAddingNewLocation() {
       this.$refs.map.cancelAddingNewLocation();
       this.showAddNewLocation = true;
     },
     getTypes() {
-      return [{ name: 'Basketball', id: 1 }, { name: 'Tennis', id: 2 }];
+      return [{ name: 'Basketball field', id: 2 }, { name: 'Tenniss court', id: 1 }];
+    },
+    async mapOnLoad() {
+      await this.getLocationsAround();
+      this.mapIsLoaded = true;
+    },
+    async getLocationsAround() {
+      // Identify where user is located
+      await this.$axios.get("https://localhost:44314/api/map", { params: { country: 'Latvia' } }).then((response) => {
+          this.geolocations = response.data;
+        }).catch((error) => {
+          console.log(error);
+        });
     }
   }
 }

@@ -5,6 +5,7 @@ using Ardalis.ApiEndpoints;
 using DataServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SportifyWebApi.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Country
@@ -21,7 +22,7 @@ namespace SportifyWebApi.Endpoints.Country
         }
 
         [HttpGet("/api/countries")]
-        [SwaggerOperation(Tags = new[] { "Countries" })]
+        [SwaggerOperation(Tags = new[] { SwaggerGroup.Countries })]
         public override async Task<ActionResult<GetCountriesResponse>> HandleAsync(CancellationToken cancellationToken = default)
         {
             var res = await _context.Countries.Select(x => new GetCountriesResponse()
