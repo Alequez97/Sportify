@@ -19,16 +19,16 @@
           </v-card-title>
           <v-card-text>
             <v-form>
-              <v-select v-model="typeId" :items="types" label="Type" item-text="name" item-value="id" color="deep-purple" />
-              <v-textarea v-model="description" label="Description" color="deep-purple" />
+              <v-select v-model="typeId" :items="types" label="Type" item-text="name" item-value="id" color="teal" />
+              <v-textarea v-model="description" label="Description" color="teal" />
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="deep-purple" text @click="dialog = false">
+            <v-btn color="teal" text @click="dialog = false">
               Cancel
             </v-btn>
-            <v-btn color="deep-purple" text @click="saveNewLocation()">
+            <v-btn color="teal" text @click="saveNewLocation()">
               Save
             </v-btn>
           </v-card-actions>
@@ -70,7 +70,8 @@ export default {
         typeId: this.typeId,
         description: this.description
       }
-      this.$refs.map.saveNewLocation(properties);
+      const typeName = this.types.filter(t => t.id === this.typeId)[0].name.replace(" ", "_");
+      this.$refs.map.saveNewLocation(properties, typeName);
       this.dialog = false;
       this.showAddNewLocation = true;
     },
@@ -79,7 +80,7 @@ export default {
       this.showAddNewLocation = true;
     },
     getTypes() {
-      return [{ name: 'Basketball', id: 1 }, { name: 'Tennis', id: 2 }];
+      return [{ name: 'Basketball field', id: 2 }, { name: 'Tenniss court', id: 1 }];
     },
     async mapOnLoad() {
       await this.getLocationsAround();

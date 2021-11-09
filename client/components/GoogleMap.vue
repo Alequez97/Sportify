@@ -62,7 +62,7 @@ export default {
         }
       });
     },
-    async saveNewLocation(properties) {
+    async saveNewLocation(properties, type = 'Default') {
       if (this.newLocationMarker !== undefined && this.newLocationMarker !== null) {
         const latLng = { lat: this.newLocationMarker.getPosition().lat(), lng: this.newLocationMarker.getPosition().lng() };
         const fullAddress = await this.getAddressFromGeolocation(latLng);
@@ -75,7 +75,7 @@ export default {
         }
 
         // this.geolocations.push(latLng);
-        this.addMarkerToMap(latLng);
+        this.addMarkerToMap(latLng, type);
         this.newLocationMarker.setMap(null);
         this.newLocationMarker = null;
 
