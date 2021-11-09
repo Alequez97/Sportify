@@ -13,7 +13,7 @@ namespace DomainEntities
 
         public string Address { get; set; }
 
-        public int GeolocationId { get; set; }
+        public int? GeolocationId { get; set; }
         public Geolocation Geolocation { get; set; }
     }
 }

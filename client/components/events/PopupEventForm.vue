@@ -20,7 +20,7 @@
             <v-select v-model="countryId" :items="countries" label="Country" item-text="name" item-value="id" color="teal" @change="onCountrySelect()" />
             <v-select v-model="cityId" :items="cities" label="City" item-text="name" item-value="id" color="teal" :disabled="countrySelected" />
             <v-text-field v-model="address" label="Address" color="teal" />
-            <v-date-picker v-model="timeOfTheEvent" class="mt-4" full-width />
+            <v-date-picker v-model="timeOfTheEvent" color="teal" class="mt-4" full-width />
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -43,28 +43,23 @@ export default {
     return {
       dialog: false,
 
-      title: "",
+      title: '',
       categoryId: null,
-      briefDesc: "",
-      description: "",
+      briefDesc: '',
+      description: '',
       countryId: null,
       cityId: null,
-      address: "",
-      timeOfTheEvent: null,
-
-      categories: [],
-      countries: [],
-      cities: []
+      address: '',
+      timeOfTheEvent: null
     };
   },
   computed: {
+    categories() { return this.$store.getters['events/getCategories'] },
+    countries() { return this.$store.getters['events/getCountries'] },
+    cities() { return this.$store.getters['events/getCities'] },
     countrySelected() {
       return !this.cities.length;
     }
-  },
-  async created() {
-    this.categories = await this.$store.dispatch('events/fetchCategories');
-    this.countries = await this.$store.dispatch('events/fetchCountries')
   },
   methods: {
     async createEvent() {
@@ -81,20 +76,10 @@ export default {
         address: this.address
       }
 
-      // const config = {
-      //     headers: { Authorization: `Bearer ${token}` }
-      // };
-      const config = {
-          headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidXNlcm5hbWUxNjM2MzE2MTc4MTMyIiwianRpIjoiZjJhZTNmMGEtMjc2OS00NTdkLWIxZGEtZGVlYzNkMjI2OTAzIiwiZXhwIjoxNjM2MzI2OTg0LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjYxOTU1IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo0MjAwIn0.ZZd2DQS7yloETShX3vWhG4SXQzNJDsGaVymb1MNRTr8` }
-      };
-      debugger;
-      await this.$axios.post("https://localhost:44314/api/event/create", data, config);
+      await this.$axios.post("https://localhost:44314/api/event/create", data);
     },
     async onCountrySelect() {
-      const res = await this.$axios.get(
-        "https://localhost:44314/api/cities/" + this.countryId,
-      );
-      this.cities = res.data;
+      await this.$store.dispatch('events/fetchCities', this.countryId);
     }
   }
 }

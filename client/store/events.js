@@ -5,39 +5,38 @@ export const state = () => ({
 });
 
 export const mutations = {
-    SET_CATEGORIES() {
-
+    SET_CATEGORIES(state, value) {
+        state.categories = value;
     },
-    SET_COUNTRIES() {
-
+    SET_COUNTRIES(state, value) {
+        state.countries = value;
     },
-    SET_CITIES() {
-
+    SET_CITIES(state, value) {
+        state.cities = value;
     }
 }
 
 export const actions = {
-    async fetchCategories() {
+    async fetchCategories({commit}) {
         try {
-            const resp = await this.$axios.get('/api/categories');
-            return resp.data;
+            const resp = await this.$axios.get('/api/event-categories');
+            commit('SET_CATEGORIES', resp.data)
         } catch (err) {
             console.log(err);
         }
     },
-    async fetchCountries() {
+    async fetchCountries({commit}) {
         try {
             const resp = await this.$axios.get('/api/countries');
-            return resp.data;
+            commit('SET_COUNTRIES', resp.data);
         } catch (err) {
             console.log(err);
         }
     },
-    async fetchCities({ commit }, countryId) {
+    async fetchCities({commit}, countryId) {
         try {
-            debugger;
             const resp = await this.$axios.get('/api/cities/' + countryId);
-            return resp.data;
+            commit('SET_CITIES', resp.data);
         } catch (err) {
             console.log(err);
         }
