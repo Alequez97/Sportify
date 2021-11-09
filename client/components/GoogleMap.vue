@@ -44,9 +44,10 @@ export default {
       });
   },
   methods: {
-    addMarkerToMap(latLng) {
+    addMarkerToMap(latLng, iconName = 'Default') {
       const marker = new this.google.maps.Marker({
-        position: latLng
+        position: latLng,
+        icon: `/icons/map/${iconName}.png`
       });
 
       marker.setMap(this.map);
@@ -139,7 +140,7 @@ export default {
       if (this.map !== undefined && this.map !== null) {
         newGeolocations.forEach((g) => {
           const markerPosition = { lat: g.lat, lng: g.lng };
-          this.addMarkerToMap(markerPosition);
+          this.addMarkerToMap(markerPosition, g.type);
         });
       }
     }
