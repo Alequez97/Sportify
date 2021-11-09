@@ -13,7 +13,9 @@ namespace DomainEntities
 
         public string District { get; set; }
 
-        public string Address { get; set; }
+        public string Street { get; set; }
+
+        public string HouseNumber { get; set; }
 
         [Required]
         public int TypeId { get; set; }

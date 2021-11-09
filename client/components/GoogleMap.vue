@@ -12,6 +12,7 @@ export default {
     return {
       map: null,
       google: null,
+      markers: [],
       newLocationMarker: null,
       currentLocation: null
     }
@@ -36,31 +37,24 @@ export default {
       .then((google) => {
         this.google = google;
         this.map = new google.maps.Map(document.getElementById("google-map"), mapOptions);
+        this.$emit('mapOnLoad');
       })
       .catch((e) => {
         console.log(e);
       });
-
-    if (this.geolocations !== undefined && this.geolocations.length > 0) {
-      this.geolocations.forEach((g) => {
-        const markerPosition = { lat: g.lat, lng: g.lng };
-
-        const marker = new this.google.maps.Marker({
-          position: markerPosition
-        });
-
-        marker.setMap(this.map);
-      });
-    }
   },
   methods: {
-    addNewLocationMarker() {
-      this.newLocationMarker = new this.google.maps.Marker({
-          position: this.map.getCenter()
+    addMarkerToMap(latLng) {
+      const marker = new this.google.maps.Marker({
+        position: latLng
       });
 
-      this.newLocationMarker.setMap(this.map);
-
+      marker.setMap(this.map);
+      this.markers.push(marker);
+      return marker;
+    },
+    addNewLocationMarker() {
+      this.newLocationMarker = this.addMarkerToMap(this.map.getCenter());
       this.map.addListener('center_changed', () => {
         if (this.newLocationMarker !== undefined && this.newLocationMarker !== null) {
           this.newLocationMarker.setPosition(this.map.getCenter());
@@ -68,21 +62,30 @@ export default {
       });
     },
     async saveNewLocation(properties) {
-      const latLng = { lat: this.newLocationMarker.getPosition().lat(), lng: this.newLocationMarker.getPosition().lng() };
-      const fullAddress = await this.getAddressFromGeolocation(latLng);
+      if (this.newLocationMarker !== undefined && this.newLocationMarker !== null) {
+        const latLng = { lat: this.newLocationMarker.getPosition().lat(), lng: this.newLocationMarker.getPosition().lng() };
+        const fullAddress = await this.getAddressFromGeolocation(latLng);
 
-      const data = {
-        ...properties,
-        lat: latLng.lat,
-        lng: latLng.lng,
-        ...fullAddress
+        const data = {
+          ...properties,
+          lat: latLng.lat,
+          lng: latLng.lng,
+          ...fullAddress
+        }
+
+        // this.geolocations.push(latLng);
+        this.addMarkerToMap(latLng);
+        this.newLocationMarker.setMap(null);
+        this.newLocationMarker = null;
+
+        await this.$axios.post("/api/map/save", data);
       }
-      console.log(data);
-      // await this.$axios.post("https://localhost:44314/api/map/save", data);
     },
     cancelAddingNewLocation() {
-      this.newLocationMarker.setMap(null);
-      this.newLocationMarker = null;
+      if (this.newLocationMarker !== undefined && this.newLocationMarker !== null) {
+        this.newLocationMarker.setMap(null);
+        this.newLocationMarker = null;
+      }
     },
     getCurrentLocation() {
       return new Promise((resolve) => {
@@ -129,6 +132,16 @@ export default {
           })
           .catch(e => reject(e));
       });
+    }
+  },
+  watch: {
+    geolocations(newGeolocations) {
+      if (this.map !== undefined && this.map !== null) {
+        newGeolocations.forEach((g) => {
+          const markerPosition = { lat: g.lat, lng: g.lng };
+          this.addMarkerToMap(markerPosition);
+        });
+      }
     }
   }
 };

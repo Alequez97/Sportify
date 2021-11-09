@@ -11,7 +11,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace SportifyWebApi.Endpoints.Map
 {
     public class SaveNewLocation : BaseAsyncEndpoint
-        .WithRequest<SportsGroundLocationtRequest>
+        .WithRequest<SportsGroundSaveNewLocationRequest>
         .WithoutResponse
     {
         private readonly SportifyDbContext _context;
@@ -23,8 +23,8 @@ namespace SportifyWebApi.Endpoints.Map
 
         [HttpPost("api/map/save")]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Map })]
-        public override async Task<ActionResult> HandleAsync([FromBody] SportsGroundLocationtRequest request, CancellationToken cancellationToken = default)
-       {
+        public override async Task<ActionResult> HandleAsync([FromBody] SportsGroundSaveNewLocationRequest request, CancellationToken cancellationToken = default)
+        {
             var geolocation = new Geolocation()
             {
                 Latitude = request.Lat.ToString(),
@@ -37,7 +37,8 @@ namespace SportifyWebApi.Endpoints.Map
                 Country = request.Country,
                 City = request.City,
                 District = request.District,
-                Address = $"{request.Street}, {request.HouseNumber}",
+                Street = request.Street,
+                HouseNumber = request.HouseNumber,
                 TypeId = request.TypeId,
                 Geolocation = geolocation
             };
@@ -57,7 +58,7 @@ namespace SportifyWebApi.Endpoints.Map
         }
     }
 
-    public class SportsGroundLocationtRequest
+    public class SportsGroundSaveNewLocationRequest
     {
         public int TypeId { get; set; }
 
