@@ -1,0 +1,40 @@
+﻿{
+  "TableName": "Categories",
+  "ColumnNames": "Name",
+  "InsertOnlyIfEmpty": true,
+  "ListOfRows": [
+    {
+      "Row": "Badminton"
+    },
+    {
+      "Row": "Basketball"
+    },
+    {
+      "Row": "Dancing"
+    },
+    {
+      "Row": "Football"
+    },
+    {
+      "Row": "Running"
+    },
+    {
+      "Row": "Squash"
+    },
+    {
+      "Row": "Swimming"
+    },
+    {
+      "Row": "Tennis"
+    },
+    {
+      "Row": "Volleyball"
+    },
+    {
+      "Row": "Workout"
+    },
+    {
+      "Row": "Yoga"
+    }
+  ]
+}
