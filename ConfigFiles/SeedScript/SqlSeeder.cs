@@ -37,6 +37,7 @@ namespace SeedScript
                     }
                 }
 
+                Console.WriteLine($"Seeding {seedModel.TableName} table...");
                 foreach (var row in seedModel.ListOfRows)
                 {
                     var rowValues = row.Row.Split(";").Select(v => $"'{v.Replace("'", "''")}'").ToList();

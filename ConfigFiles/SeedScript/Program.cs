@@ -10,7 +10,7 @@ namespace SeedScript
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Seed start...");
+            Console.WriteLine("Seed started...");
             var seedConfigs = Directory.GetFiles("SeedConfigs").Where(file => Path.GetExtension(file) == ".json").ToList();
             var seedModels = seedConfigs.Select(sc => {
                 var json = File.ReadAllText(sc);
