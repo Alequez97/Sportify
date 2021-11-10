@@ -1,21 +1,16 @@
 <template>
-  <v-container>
+  <v-container fluid fill-height class="background">
     <v-row justify="center" align="center">
-      <v-col class="col-12">
-        <v-card
-          class="mx-auto rounded-lg"
-          outlined
-          elevation="24"
-          max-width="600px"
-        >
-          <v-card-title class="justify-center">
-            <div class="text-lg-h4">
-              Register
+      <v-col>
+        <v-card class="mx-auto" outlined elevation="24" max-width="400px">
+          <v-card-text class="text-center pt-0 mt-5">
+            <div class="text-lg-h5 text-h5">
+              Sign up to Sportify
             </div>
-          </v-card-title>
+          </v-card-text>
 
-          <v-card-text>
-            <v-form>
+          <v-card-text class="pt-0">
+            <v-form class="px-6">
               <v-text-field v-model="email" label="Email" color="teal" />
               <v-text-field v-model="username" label="Username" color="teal" />
               <v-text-field
@@ -27,9 +22,9 @@
             </v-form>
           </v-card-text>
 
-          <v-card-actions>
+          <v-card-actions class="px-10 mb-5">
             <v-btn color="teal" block outlined @click="register()">
-              Register
+              Sign Up
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -40,25 +35,26 @@
 
 <script>
 export default {
-    data() {
-        return {
-            email: '',
-            username: '',
-            password: ''
-        }
-    },
-    methods: {
-        async register() {
-            const user = {
-                email: this.email,
-                username: this.username,
-                password: this.password
-            }
-
-            await this.$store.dispatch('auth/register', user)
-            .then(this.$router.push('/'));
-        }
+  data() {
+    return {
+      email: '',
+      username: '',
+      password: ''
     }
+  },
+  methods: {
+    async register() {
+      const user = {
+        email: this.email,
+        username: this.username,
+        password: this.password
+      };
+
+      await this.$store
+        .dispatch("auth/register", user)
+        .then(this.$router.push("/"));
+    }
+  }
 };
 </script>
 
