@@ -1,0 +1,31 @@
+﻿{
+  "TableName": "SportsGroundTypes",
+  "ColumnNames": "Name",
+  "InsertOnlyIfEmpty": true,
+  "ListOfRows": [
+    {
+      "Row": "Basketball field"
+    },
+    {
+      "Row": "Football pitch"
+    },
+    {
+      "Row": "Ice hockey field"
+    },
+    {
+      "Row": "Skatepark"
+    },
+    {
+      "Row": "Sports complex"
+    },
+    {
+      "Row": "Street workout"
+    },
+    {
+      "Row": "Tennis court"
+    },
+    {
+      "Row": "Voleyball net"
+    }
+  ]
+}
