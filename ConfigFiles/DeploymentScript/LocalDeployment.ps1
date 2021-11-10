@@ -68,7 +68,7 @@ function Write-Help
     Write-Output "am           (Add-Migration)      Creates migration in DataServices project"
     Write-Output "um           (Undo-Migration)     Removes last migration"
     Write-Output "db-update    (Database-Update)    Updates database from migration in DataServices project"
-    Write-Output "seed         (Seed-Database)      Seeds countries and cities in database"
+    Write-Output "seed         (Seed-Database)      Seeds database"
 }
 
 Set-Alias am Add-Migration
