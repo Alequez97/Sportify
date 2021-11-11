@@ -17,7 +17,7 @@ namespace SeedScript
             queryTemplate = queryTemplate.Substring(0, queryTemplate.Length - 1) + "{0}); SELECT SCOPE_IDENTITY();";
         }
 
-        public void Execute(SqlSeedModel seedModel, int insertId = 0)
+        public SeedReport Execute(SqlSeedModel seedModel, ProgressBar progressBar, SeedReport seedReport, int insertId = 0)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
@@ -31,13 +31,13 @@ namespace SeedScript
                         var rowCount = Convert.ToInt32(command.ExecuteScalar());
                         if (rowCount > 0)
                         {
-                            Console.WriteLine($"Skipping {seedModel.TableName} seed because table is not empty");
-                            return;
+                            progressBar.DecreaseOperationsCount(seedModel.TotalRowsCount);
+                            seedReport.SkipedSeedsMessages.Add($"Skipped {seedModel.TableName} seed because table is not empty");
+                            return seedReport;
                         }
                     }
                 }
 
-                Console.WriteLine($"Seeding {seedModel.TableName} table...");
                 foreach (var row in seedModel.ListOfRows)
                 {
                     var rowValues = row.Row.Split(";").Select(v => $"'{v.Replace("'", "''")}'").ToList();
@@ -52,11 +52,18 @@ namespace SeedScript
                         try
                         {
                             var insertedId = Convert.ToInt32(command.ExecuteScalar());
+                            progressBar.UpdateProgressBar();
+
                             //command.ExecuteNonQuery();
                             if (row.InnerInsertModel != null && seedModel.InsertInnerData == true)
                             {
                                 var innerSqlSeeder = new SqlSeeder(row.InnerInsertModel.TableName, row.InnerInsertModel.ColumnNames.Split(";").ToList());
-                                innerSqlSeeder.Execute(row.InnerInsertModel, insertedId);
+                                innerSqlSeeder.Execute(row.InnerInsertModel, progressBar, seedReport, insertedId);
+                            }
+
+                            if (row.InnerInsertModel != null && seedModel.InsertInnerData == false)
+                            {
+                                seedReport.SkipedSeedsMessages.Add($"Skipped {row.InnerInsertModel.TableName} seed because inner insert is disabled for table {seedModel.TableName}");
                             }
                         }
                         catch (Exception e)
@@ -66,6 +73,8 @@ namespace SeedScript
                     }
                 }
             }
+
+            return seedReport;
         }
     }
 }
