@@ -17,7 +17,8 @@ $InformationPreference = "Continue"
 function Add-Migration
 {
     param(
-        [String]$MigrationName = $(throw 'Migration name parameter is mandatory')
+        [Parameter(Position=0,mandatory=$true)]
+        [String]$MigrationName
     )
 
     Install-Ef-Tool-If-Not-Exists
