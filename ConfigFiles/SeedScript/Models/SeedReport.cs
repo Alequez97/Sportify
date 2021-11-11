@@ -21,7 +21,7 @@ namespace SeedScript.Models
                     stringBuilder.AppendLine("  Skipped seeds: ");
                     foreach (var skeepSeedMessage in SkipedSeedsMessages)
                     {
-                        stringBuilder.AppendLine($"   *   {skeepSeedMessage}");
+                        stringBuilder.AppendLine($"   * {skeepSeedMessage}");
                     }
                 }
 
