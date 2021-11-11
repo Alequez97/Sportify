@@ -58,7 +58,7 @@ export default {
     }
   },
   created() {
-    this.types = this.getTypes();
+    this.getTypes();
   },
   methods: {
     addNewLocationMarker() {
@@ -70,7 +70,7 @@ export default {
         typeId: this.typeId,
         description: this.description
       }
-      const typeName = this.types.filter(t => t.id === this.typeId)[0].name.replace(" ", "_");
+      const typeName = this.types.filter(t => t.id === this.typeId)[0].name.replaceAll(" ", "_");
       this.$refs.map.saveNewLocation(properties, typeName);
       this.dialog = false;
       this.showAddNewLocation = true;
@@ -79,8 +79,12 @@ export default {
       this.$refs.map.cancelAddingNewLocation();
       this.showAddNewLocation = true;
     },
-    getTypes() {
-      return [{ name: 'Basketball field', id: 2 }, { name: 'Tenniss court', id: 1 }];
+    async getTypes() {
+      await this.$axios.get("https://localhost:44314/api/map/types").then((response) => {
+          this.types = response.data;
+        }).catch((error) => {
+          console.log(error);
+        });
     },
     async mapOnLoad() {
       await this.getLocationsAround();
