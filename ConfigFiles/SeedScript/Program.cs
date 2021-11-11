@@ -45,7 +45,8 @@ namespace SeedScript
 
     public class ProgressBar
     {
-        private int _barLength = 40;
+        private double _barLengthDouble = 40;
+        private int _barLengthInt = 40;
 
         private int _progress = 0;
         private int _operationsCount;
@@ -63,9 +64,9 @@ namespace SeedScript
 
             _progress++;
             var precentDone = (double) _progress / _operationsCount * 100;
-            var filledBarsCount = (double)_barLength / 100 * precentDone;
+            var filledBarsCount = (int)(_barLengthDouble / 100 * precentDone);
 
-            var progressBar = $"[{new string('#', (int)filledBarsCount)}{new string('-', _barLength - (int)filledBarsCount)}]";
+            var progressBar = $"[{new string('#', filledBarsCount)}{new string('-', _barLengthInt - filledBarsCount)}] {string.Format("{0:N2}%", precentDone)}";
             Console.Write(progressBar);
         }
 
