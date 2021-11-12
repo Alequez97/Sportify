@@ -4,7 +4,7 @@
     <v-row class="move-top" justify="center" v-if="showAddNewLocation && mapIsLoaded">
       <v-btn rounded color="primary" dark @click="addNewLocationMarker">Add new location</v-btn>
     </v-row>
-    <v-row class="move-top" justify="center" v-else-if="!showAddNewLocation">
+    <v-row class="move-top" justify="center" v-if="showCancelButton">
       <v-btn rounded color="red accent-2" dark @click="cancelAddingNewLocation">Cancel</v-btn>
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template #activator="{ on, attrs }">
@@ -49,6 +49,7 @@ export default {
     return {
       geolocations: [],
       showAddNewLocation: true,
+      showCancelButton: false,
       mapIsLoaded: false,
       dialog: false,
       typeId: '',
@@ -64,6 +65,7 @@ export default {
     addNewLocationMarker() {
       this.$refs.map.addNewLocationMarker();
       this.showAddNewLocation = false;
+      this.showCancelButton = true;
     },
     saveNewLocation() {
       const properties = {
@@ -74,10 +76,12 @@ export default {
       this.$refs.map.saveNewLocation(properties, typeName);
       this.dialog = false;
       this.showAddNewLocation = true;
+      this.showCancelButton = false;
     },
     cancelAddingNewLocation() {
       this.$refs.map.cancelAddingNewLocation();
       this.showAddNewLocation = true;
+      this.showCancelButton = false;
     },
     async getTypes() {
       await this.$axios.get("https://localhost:44314/api/map/types").then((response) => {

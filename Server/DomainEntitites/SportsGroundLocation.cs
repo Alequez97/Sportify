@@ -17,6 +17,8 @@ namespace DomainEntities
 
         public string HouseNumber { get; set; }
 
+        public string Description { get; set; }
+
         [Required]
         public int TypeId { get; set; }
         public SportsGroundType Type { get; set; }

@@ -44,18 +44,35 @@ export default {
       });
   },
   methods: {
-    addMarkerToMap(latLng, iconName = 'Default') {
+    addMarkerToMap(geolocation, iconName = 'Default') {
+      const markerPosition = { lat: geolocation.lat, lng: geolocation.lng };
       const marker = new this.google.maps.Marker({
-        position: latLng,
+        position: markerPosition,
         icon: `/icons/map/${iconName}.png`
       });
+
+      if (geolocation.description !== undefined && geolocation.description !== null) {
+        const infoWindow = new this.google.maps.InfoWindow({
+          content: geolocation.description
+        });
+
+        const map = this.map;
+        marker.addListener("click", () => {
+          infoWindow.open({
+            anchor: marker,
+            map,
+            shouldFocus: false
+          });
+        });
+      }
 
       marker.setMap(this.map);
       this.markers.push(marker);
       return marker;
     },
     addNewLocationMarker() {
-      this.newLocationMarker = this.addMarkerToMap(this.map.getCenter());
+      const geolocation = { lat: this.map.getCenter().lat(), lng: this.map.getCenter().lng() };
+      this.newLocationMarker = this.addMarkerToMap(geolocation);
       this.map.addListener('center_changed', () => {
         if (this.newLocationMarker !== undefined && this.newLocationMarker !== null) {
           this.newLocationMarker.setPosition(this.map.getCenter());
@@ -139,8 +156,7 @@ export default {
     geolocations(newGeolocations) {
       if (this.map !== undefined && this.map !== null) {
         newGeolocations.forEach((g) => {
-          const markerPosition = { lat: g.lat, lng: g.lng };
-          this.addMarkerToMap(markerPosition, g.type);
+          this.addMarkerToMap(g, g.type);
         });
       }
     }

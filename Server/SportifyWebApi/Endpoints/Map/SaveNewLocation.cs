@@ -40,7 +40,8 @@ namespace SportifyWebApi.Endpoints.Map
                 Street = request.Street,
                 HouseNumber = request.HouseNumber,
                 TypeId = request.TypeId,
-                Geolocation = geolocation
+                Geolocation = geolocation,
+                Description = request.Description
             };
 
             _context.SportsGroundLocations.Add(location);
