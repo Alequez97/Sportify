@@ -17,6 +17,15 @@ export default {
       currentLocation: null
     }
   },
+  watch: {
+    geolocations(newGeolocations) {
+      if (this.map !== undefined && this.map !== null) {
+        newGeolocations.forEach((g) => {
+          this.addMarkerToMap(g, g.type.replaceAll(" ", "_"));
+        });
+      }
+    }
+  },
   async mounted() {
     const loader = new Loader({
       apiKey: "AIzaSyD_u7kDh3P6m58MutrCTCDsF2Oiy-jPMf0"
@@ -53,7 +62,7 @@ export default {
 
       if (geolocation.description !== undefined && geolocation.description !== null) {
         const infoWindow = new this.google.maps.InfoWindow({
-          content: geolocation.description
+          content: this.getLocationInfoHtml(geolocation)
         });
 
         const map = this.map;
@@ -150,23 +159,46 @@ export default {
           })
           .catch(e => reject(e));
       });
-    }
-  },
-  watch: {
-    geolocations(newGeolocations) {
-      if (this.map !== undefined && this.map !== null) {
-        newGeolocations.forEach((g) => {
-          this.addMarkerToMap(g, g.type);
-        });
-      }
+    },
+    getLocationInfoHtml(geolocation) {
+      const infoHtml =
+      "<div class=\"info-window-wrapper\">" +
+        "<div class=\"info-window-information-wrapper\">" +
+          "<h3 class=\"infow-window-header\">" + geolocation.type + "</h3>" +
+          "<p class=\"infow-window-description\">" + geolocation.description + "</h3>" +
+        "</div>" +
+        "<div class=\"info-window-images-wrapper\">" +
+          "<img class=\"info-window-image\" src=\"https://previews.123rf.com/images/qiujusong/qiujusong1710/qiujusong171001039/88228911-the-runway-on-the-sports-ground.jpg\">" +
+          "<img class=\"info-window-image\" src=\"https://images.unsplash.com/photo-1581588535512-4dbe198fbbee?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c3BvcnRzJTIwZ3JvdW5kfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80\">" +
+          "<img class=\"info-window-image\" src=\"https://images.unsplash.com/photo-1544376798-89aa6b82c6cd?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dmVydGljYWwlMjBsYW5kc2NhcGV8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80\">" +
+        "</div>" +
+      "</div>"
+
+      return infoHtml;
     }
   }
 };
 </script>
 
-<style scoped>
+<style>
   #google-map {
-      width: 100%;
-      height: 100%;
+    width: 100%;
+    height: 100%;
+  }
+  .info-window-wrapper {
+    width: 300px;
+    height: 300px;
+  }
+  .info-window-information-wrapper {
+    text-align: center;
+  }
+  .info-window-information-wrapper h3 {
+    margin-bottom: 10px;
+  }
+  .info-window-images-wrapper {
+    width: 100%;
+  }
+  .info-window-image {
+    width: 100%;
   }
 </style>
