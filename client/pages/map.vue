@@ -21,6 +21,7 @@
             <v-form>
               <v-select v-model="typeId" :items="types" label="Type" item-text="name" item-value="id" color="teal" />
               <v-textarea v-model="description" label="Description" color="teal" />
+              <v-file-input v-model="images" multiple chips counter />
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -54,6 +55,7 @@ export default {
       dialog: false,
       typeId: '',
       description: '',
+      images: [],
 
       types: []
     }
