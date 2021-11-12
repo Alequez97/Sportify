@@ -12,7 +12,7 @@ namespace SportifyWebApi.Endpoints.Map
 {
     public class GetSportsGroundTypes : BaseAsyncEndpoint
         .WithoutRequest
-        .WithoutResponse
+        .WithResponse<SportsGroundTypeResponse>
     {
         private readonly SportifyDbContext _context;
 
@@ -23,7 +23,7 @@ namespace SportifyWebApi.Endpoints.Map
 
         [HttpGet("api/map/types")]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Map })]
-        public override async Task<ActionResult> HandleAsync(CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<SportsGroundTypeResponse>> HandleAsync(CancellationToken cancellationToken = default)
         {
             var sportsGroundTypes = await _context.SportsGroundTypes.ToListAsync();
             var response = sportsGroundTypes.Select(s => new SportsGroundTypeResponse() { Id = s.Id, Name = s.Name }).ToList();
