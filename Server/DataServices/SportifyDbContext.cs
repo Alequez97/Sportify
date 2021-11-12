@@ -1,4 +1,6 @@
 using DomainEntities;
+using DomainEntities.EventEntities;
+using DomainEntities.SportsGroundEntities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +21,7 @@ namespace DataServices
         public DbSet<City> Cities { get; set; }
         public DbSet<Geolocation> Geolocations { get; set; }
         public DbSet<SportsGroundLocation> SportsGroundLocations { get; set; }
+        public DbSet<SportsGroundImage> SportsGroundImages { get; set; }
         public DbSet<SportsGroundType> SportsGroundTypes { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DomainEntities
+namespace DomainEntities.EventEntities
 {
     /// <summary>
     /// Class that represents Category model

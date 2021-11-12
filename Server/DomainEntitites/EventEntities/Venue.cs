@@ -1,4 +1,4 @@
-namespace DomainEntities
+namespace DomainEntities.EventEntities
 {
     /// <summary>
     /// Class that represents Venue model

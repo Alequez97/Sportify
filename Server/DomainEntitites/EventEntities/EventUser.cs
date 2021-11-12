@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DomainEntities
+namespace DomainEntities.EventEntities
 {
     public class EventUser : EntityBase
     {

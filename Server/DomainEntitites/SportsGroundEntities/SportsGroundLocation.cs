@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace DomainEntities
+namespace DomainEntities.SportsGroundEntities
 {
     /// <summary>
     /// Class that represents SportsGroundsLocation model
@@ -25,5 +26,7 @@ namespace DomainEntities
 
         public int GeolocationId { get; set; }
         public Geolocation Geolocation { get; set; }
+
+        public List<SportsGroundImage> Images { get; set; }
     }
 }

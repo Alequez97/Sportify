@@ -1,4 +1,4 @@
-namespace DomainEntities
+namespace DomainEntities.SportsGroundEntities
 {
     public class SportsGroundType : EntityBase
     {

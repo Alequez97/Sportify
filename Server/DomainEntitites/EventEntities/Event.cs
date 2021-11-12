@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace DomainEntities
+namespace DomainEntities.EventEntities
 {
     /// <summary>
     /// Class that represents Event model

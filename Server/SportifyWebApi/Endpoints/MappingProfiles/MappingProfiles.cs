@@ -1,6 +1,6 @@
 //using AutoMapper;
 using AutoMapper;
-using DomainEntities;
+using DomainEntities.EventEntities;
 
 namespace SportifyWebApi.Endpoints.MappingProfiles
 {

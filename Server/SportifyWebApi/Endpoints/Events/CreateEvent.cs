@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using DataServices;
-using DomainEntities;
+using DomainEntities.EventEntities;
 using Microsoft.AspNetCore.Mvc;
 using SportifyWebApi.Constants;
 using Swashbuckle.AspNetCore.Annotations;
