@@ -82,9 +82,7 @@ export default {
         }
 
         this.map.addListener('click', () => {
-          if (this.infoWindows !== undefined && this.infoWindows !== null) {
-            this.infoWindows.forEach(i => i.close());
-          }
+          this.infoWindows.forEach(i => i.close());
         });
 
         this.createMovableMarker(this.movableMarkerEnabled);

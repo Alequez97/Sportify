@@ -136,9 +136,7 @@ export default {
       const typeName = this.types.filter(t => t.id === this.typeId)[0].name.replaceAll(" ", "_");
       this.$refs.map.saveMovableMarkerPosition(properties, typeName);
       this.saveLocationDialog = false;
-      this.showAddNewLocationButton = true;
-      this.showCancelButton = false;
-      this.movableMarkerEnabled = false;
+      this.removeMovableMarker();
     },
     removeMovableMarker() {
       this.movableMarkerEnabled = false;
