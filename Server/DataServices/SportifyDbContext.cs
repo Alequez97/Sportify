@@ -23,5 +23,6 @@ namespace DataServices
         public DbSet<SportsGroundLocation> SportsGroundLocations { get; set; }
         public DbSet<SportsGroundImage> SportsGroundImages { get; set; }
         public DbSet<SportsGroundType> SportsGroundTypes { get; set; }
+        public DbSet<EventUser> EventUsers { get; set; }
     }
 }

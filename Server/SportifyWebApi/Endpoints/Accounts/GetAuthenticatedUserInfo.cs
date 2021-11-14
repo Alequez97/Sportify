@@ -26,7 +26,7 @@ namespace SportifyWebApi.Endpoints.Accounts
                 IsAdmin = User.FindAll(ClaimTypes.Role).Any(role => role.Value == UserRoles.Admin)
             };
 
-            return Ok(info);
+            return Ok(new { user = info });
         }
     }
 

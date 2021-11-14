@@ -20,7 +20,7 @@ namespace SportifyWebApi.Endpoints.Accounts
         public RegisterAdmin(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager)
         {
             _userManager = userManager;
-
+            _roleManager = roleManager;
         }
 
         [HttpPost("/api/accounts/register-admin")]
