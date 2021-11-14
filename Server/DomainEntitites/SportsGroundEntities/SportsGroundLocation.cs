@@ -24,6 +24,10 @@ namespace DomainEntities.SportsGroundEntities
         public int TypeId { get; set; }
         public SportsGroundType Type { get; set; }
 
+        [Required]
+        public int CreatorId { get; set; }
+        public User Creator { get; set; }
+
         public int GeolocationId { get; set; }
         public Geolocation Geolocation { get; set; }
 
