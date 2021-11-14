@@ -40,8 +40,21 @@ export const actions = {
         } catch (err) {
             console.log(err);
         }
+    },
+    async join({commit}, id) {
+        try {
+            await this.$axios.post('/api/events/join', { eventId: id });
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    async disjoin({commit}, id) {
+        try {
+            await this.$axios.post('api/events/disjoin', {eventId: id});
+        } catch (err) {
+            console.log(err);
+        }
     }
-
 }
 
 export const getters = {

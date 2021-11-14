@@ -44,15 +44,19 @@ export default {
   },
   methods: {
     async register() {
-      const user = {
-        email: this.email,
-        username: this.username,
-        password: this.password
-      };
+      try {
+        const registerData = {
+          username: this.username,
+          email: this.email,
+          password: this.password
+        }
 
-      await this.$store
-        .dispatch("auth/register", user)
-        .then(this.$router.push("/"));
+        const user = await this.$axios.$post("/api/accounts/register", registerData);
+        console.log(user);
+        this.$router.replace('/');
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 };

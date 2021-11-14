@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row v-for="event in events" :key="event.id" no-gutters>
       <v-col col="12">
-        <Event :event="event" />
+        <Event :event="event" @join="join"/>
       </v-col>
     </v-row>
   </v-container>
@@ -20,60 +20,6 @@ export default {
       events: []
     };
   },
-  async created() {
-    // const config = {
-    //   headers: {
-    //     Accept: 'application/json'
-    //   }
-    // };
-    // this.events = [
-    //   {
-    //     id: 1,
-    //     title: 'Basketball in Ogre',
-    //     creator: 'JS',
-    //     category: 'basketball',
-    //     venue: {
-    //       country: 'Latvia',
-    //       city: 'Ogre',
-    //       address: 'Skolas iela 1'
-    //     },
-    //     timeOfTheEvent: '30/12/1999',
-    //     description: 'We are going to play street basketball 3x3. Wanna play with us?'
-    //   },
-    //   {
-    //     id: 2,
-    //     title: 'Basketball in Ogre',
-    //     creator: 'JS',
-    //     category: 'basketball',
-    //     venue: {
-    //       country: 'Latvia',
-    //       city: 'Ogre',
-    //       address: 'Skolas iela 1'
-    //     },
-    //     timeOfTheEvent: '30/12/1999',
-    //     description: 'We are going to play street basketball 3x3. Wanna play with us?'
-    //   },
-    //   {
-    //     id: 3,
-    //     title: 'Basketball in Ogre',
-    //     creator: 'JS',
-    //     category: 'basketball',
-    //     venue: {
-    //       country: 'Latvia',
-    //       city: 'Ogre',
-    //       address: 'Skolas iela 1'
-    //     },
-    //     timeOfTheEvent: '30/12/1999',
-    //     description: 'We are going to play street basketball 3x3. Wanna play with us?'
-    //   }
-    // ];
-
-    await this.$axios.get("https://localhost:44314/api/events").then((response) => {
-        this.events = response.data;
-      }).catch((error) => {
-        console.log(error);
-      });
-  },
   head() {
     return {
       title: "Welcome to Sportify!",
@@ -85,6 +31,26 @@ export default {
         }
       ]
     };
+  },
+  async created() {
+    await this.$axios.get("https://localhost:44314/api/events").then((response) => {
+        this.events = response.data;
+      }).catch((error) => {
+        console.log(error);
+      });
+  },
+  methods: {
+    async join(eventData) {
+      if (!eventData.isGoing) {
+        await this.$store.dispatch('events/join', eventData.eventId)
+        .then(this.events.find(x => x.id === eventData.eventId).isGoing = true)
+        .catch(err => console.log(err));
+      } else {
+        await this.$store.dispatch('events/disjoin', eventData.eventId)
+        .then(this.events.find(x => x.id === eventData.eventId).isGoing = false)
+        .catch(err => console.log(err));
+      }
+    }
   }
 };
 </script>

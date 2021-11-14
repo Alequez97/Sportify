@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
@@ -35,13 +37,15 @@ namespace SportifyWebApi.Endpoints.Events
             var result = await _context.Events
                 .Select(x => new GetEventsResponse()
                 {
+                    Id = x.Id,
                     Title = x.Title,
                     CategoryName = x.Category.Name,
                     BriefDesc = x.BriefDesc,
                     CreatorName = x.Creator.UserName,
                     CreatorId = x.CreatorId,
                     TimeOfTheEvent = x.TimeOfTheEvent.ToShortDateString(),
-                    Contributors = x.EventUsers.Where(u => u.Event.Id == x.Id).Select(xx => new GetEventsResponse.GetEventsContributorDto()
+                    IsGoing = User.Identity.IsAuthenticated && x.EventUsers.Any(xx => xx.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)),
+                    Contributors = x.EventUsers.Select(xx => new GetEventsResponse.GetEventsContributorDto()
                     {
                         Id = xx.User.Id,
                         UserName = xx.User.UserName
@@ -67,6 +71,7 @@ namespace SportifyWebApi.Endpoints.Events
 
     public class GetEventsResponse
     {
+        public int Id { get; set; }
         public string Title { get; set; }
 
         public string CategoryName { get; set; }
@@ -79,6 +84,8 @@ namespace SportifyWebApi.Endpoints.Events
 
         public string CreatorName { get; set; }
         public int CreatorId { get; set; }
+
+        public bool IsGoing { get; set; }
 
         public List<GetEventsContributorDto> Contributors { get; set; }
 
