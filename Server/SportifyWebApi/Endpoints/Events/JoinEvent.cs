@@ -8,6 +8,8 @@ using DomainEntities.EventEntities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SportifyWebApi.Constants;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Events
 {
@@ -24,6 +26,7 @@ namespace SportifyWebApi.Endpoints.Events
 
         [Authorize]
         [HttpPost("/api/events/join")]
+        [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult> HandleAsync([FromBody]JoinEventRequest request, CancellationToken cancellationToken = default)
         {
             try

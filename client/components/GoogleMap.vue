@@ -12,6 +12,7 @@ export default {
     return {
       map: null,
       google: null,
+      geocoder: null,
       markers: [],
       infoWindows: [],
       newLocationMarker: null,
@@ -65,6 +66,7 @@ export default {
       .then((google) => {
         this.google = google;
         this.map = new google.maps.Map(document.getElementById("google-map"), mapOptions);
+        this.geocoder = new this.google.maps.Geocoder();
 
         if (this.showFilterButton) {
           const controlDiv = document.createElement("div");
@@ -82,6 +84,17 @@ export default {
       })
       .catch((e) => {
         console.log(e);
+      });
+
+      const addresses = [
+        'Latvia, Riga, Eksporta iela 2a',
+        'Latvia, Riga, Lenču iela 1',
+        'Latvia, Riga, Sporta iela'
+      ];
+      addresses.forEach(async (address) => {
+        const geolocation = await this.getGeolocationFromAddress(address);
+        const latLng = geolocation.geometry.location;
+        this.addMarkerToMap({ lat: latLng.lat(), lng: latLng.lng() });
       });
   },
   methods: {
@@ -173,12 +186,12 @@ export default {
     },
     getAddressFromGeolocation(latLng) {
       return new Promise((resolve, reject) => {
-        const geocoder = new this.google.maps.Geocoder();
-        geocoder
+        this.geocoder
           .geocode({ location: latLng })
           .then((response) => {
-            if (response.results[0]) {
-              const addressComponents = response.results[0].address_components;
+            const result = response.results[0];
+            if (result) {
+              const addressComponents = result.address_components;
               const fullAddress = {
                 country: addressComponents.filter(c => c.types.includes("country"))[0]?.long_name,
                 city: addressComponents.filter(c => c.types.includes("locality"))[0]?.long_name,
@@ -196,6 +209,21 @@ export default {
                 houseNumber: null
               };
               resolve(fullAddress);
+            }
+          })
+          .catch(e => reject(e));
+      });
+    },
+    getGeolocationFromAddress(address) {
+      return new Promise((resolve, reject) => {
+        this.geocoder
+          .geocode({ address })
+          .then((response) => {
+            const result = response.results[0];
+            if (result) {
+              resolve(result)
+            } else {
+              // TODO: Implement logic if address not found
             }
           })
           .catch(e => reject(e));
