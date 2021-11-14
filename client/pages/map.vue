@@ -1,12 +1,43 @@
 <template>
   <v-card height="100%" width="100%" class="mx-auto">
-    <GoogleMap :geolocations="geolocations" ref="map" v-on:mapOnLoad="mapOnLoad"/>
+    <v-dialog v-model="filterDialog" scrollable max-width="300px">
+      <v-card>
+        <v-card-title class="justify-center">Filter types</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text style="height: 400px;">
+          <v-list>
+            <v-list-item>
+              <v-switch v-model="enableAllTypesSwitch" :color="enableAllSwitchColor" :label="enableAllTypesSwitchText" :value="true" @change="enableAllTypesOnChange" inset></v-switch>
+            </v-list-item>
+            <v-list-item v-for="type in types" :key="type.id" link>
+              <v-switch v-model="enabledTypeIds" color="teal" :label="type.name" :value="type.id" @change="enableTypeOnChange" inset></v-switch>
+            </v-list-item>
+          </v-list>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-title>
+          <v-btn color="teal" text class="mx-auto" @click="filterDialog = false">
+            Close
+          </v-btn>
+        </v-card-title>
+      </v-card>
+    </v-dialog>
+
+    <GoogleMap
+      :geolocations="geolocations"
+      :enabledTypeIds="enabledTypeIds"
+      :showFilterButton="true"
+      ref="map"
+      v-on:mapOnLoad="mapOnLoad"
+      v-on:filterOnClick="filterOnClick"
+    />
+
     <v-row class="move-top" justify="center" v-if="showAddNewLocation && mapIsLoaded">
       <v-btn rounded color="primary" dark @click="addNewLocationMarker">Add new location</v-btn>
     </v-row>
     <v-row class="move-top" justify="center" v-if="showCancelButton">
       <v-btn rounded color="red accent-2" dark @click="cancelAddingNewLocation">Cancel</v-btn>
-      <v-dialog v-model="dialog" persistent max-width="600px">
+      <v-dialog v-model="saveLocationDialog" max-width="600px">
         <template #activator="{ on, attrs }">
           <v-btn rounded color="primary" dark v-bind="attrs" v-on="on" class="ml-2">
             Save
@@ -26,7 +57,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="teal" text @click="dialog = false">
+            <v-btn color="teal" text @click="saveLocationDialog = false">
               Cancel
             </v-btn>
             <v-btn color="teal" text @click="saveNewLocation()">
@@ -49,21 +80,47 @@ export default {
   data() {
     return {
       geolocations: [],
+      enabledTypeIds: [],
+      types: [],
+
+      enableAllTypesSwitch: true,
+      enableAllTypesSwitchText: 'Disable all',
+      enableAllSwitchColor: 'red',
+
       showAddNewLocation: true,
       showCancelButton: false,
       mapIsLoaded: false,
-      dialog: false,
+      saveLocationDialog: false,
+      filterDialog: false,
+
       typeId: '',
       description: '',
-      images: [],
-
-      types: []
+      images: []
     }
   },
   created() {
     this.getTypes();
   },
   methods: {
+    enableAllTypesOnChange() {
+      if (this.enableAllTypesSwitch) {
+        this.enabledTypeIds = this.types.map(t => t.id);
+        this.enableAllTypesSwitchText = 'Disable all'
+      } else {
+        this.enabledTypeIds = [];
+        this.enableAllTypesSwitchText = 'Enable all'
+      }
+    },
+    enableTypeOnChange() {
+      if (this.enabledTypeIds.length > 0) {
+        this.enableAllTypesSwitchText = 'Disable all';
+        this.enableAllTypesSwitch = true;
+      } else {
+        this.enableAllTypesSwitchText = 'Enable all';
+        this.enableAllSwitchColor = 'red';
+        this.enableAllTypesSwitch = false;
+      }
+    },
     addNewLocationMarker() {
       this.$refs.map.addNewLocationMarker();
       this.showAddNewLocation = false;
@@ -76,7 +133,7 @@ export default {
       }
       const typeName = this.types.filter(t => t.id === this.typeId)[0].name.replaceAll(" ", "_");
       this.$refs.map.saveNewLocation(properties, typeName);
-      this.dialog = false;
+      this.saveLocationDialog = false;
       this.showAddNewLocation = true;
       this.showCancelButton = false;
     },
@@ -88,6 +145,7 @@ export default {
     async getTypes() {
       await this.$axios.get("https://localhost:44314/api/map/types").then((response) => {
           this.types = response.data;
+          this.enabledTypeIds = this.types.map(t => t.id);
         }).catch((error) => {
           console.log(error);
         });
@@ -95,6 +153,12 @@ export default {
     async mapOnLoad() {
       await this.getLocationsAround();
       this.mapIsLoaded = true;
+    },
+    filterOnClick() {
+      this.filterDialog = true;
+    },
+    saveFilters() {
+      this.filterDialog = false;
     },
     async getLocationsAround() {
       // Identify where user is located

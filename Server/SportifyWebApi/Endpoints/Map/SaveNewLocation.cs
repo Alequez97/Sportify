@@ -42,7 +42,8 @@ namespace SportifyWebApi.Endpoints.Map
                 HouseNumber = request.HouseNumber,
                 TypeId = request.TypeId,
                 Geolocation = geolocation,
-                Description = request.Description
+                Description = request.Description,
+                CreatorId = 1/*Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)*/
             };
 
             _context.SportsGroundLocations.Add(location);

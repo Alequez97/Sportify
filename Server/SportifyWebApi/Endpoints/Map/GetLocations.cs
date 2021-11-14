@@ -46,7 +46,8 @@ namespace SportifyWebApi.Endpoints.Map
                 {
                     Lat = Convert.ToDouble(l.Geolocation.Latitude),
                     Lng = Convert.ToDouble(l.Geolocation.Longitude),
-                    Type = l.Type.Name,
+                    TypeId = l.Type.Id,
+                    TypeName = l.Type.Name,
                     Description = l.Description
                 };
 
@@ -75,7 +76,9 @@ namespace SportifyWebApi.Endpoints.Map
 
         public double Lng { get; set; }
 
-        public string Type { get; set; }
+        public int TypeId { get; set; }
+
+        public string TypeName { get; set; }
 
         public string Description { get; set; }
     }
