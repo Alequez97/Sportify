@@ -7,7 +7,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 
 export default {
   name: 'GoogleMap',
-  props: ['geolocations', 'enabledTypeIds', 'showFilterButton'],
+  props: ['geolocations', 'enabledTypeIds', 'showFilterButton', 'movableMarkerEnabled'],
   data() {
     return {
       map: null,
@@ -15,7 +15,7 @@ export default {
       geocoder: null,
       markers: [],
       infoWindows: [],
-      newLocationMarker: null,
+      movableMarker: null,
       currentLocation: null
     }
   },
@@ -43,6 +43,13 @@ export default {
           const filteredMarkers = this.markers.filter(m => m.typeId === typeId);
           filteredMarkers.forEach(m => m.marker.setMap(null));
         });
+      }
+    },
+    movableMarkerEnabled() {
+      if (this.movableMarkerEnabled) {
+        this.movableMarker.setMap(this.map);
+      } else {
+        this.movableMarker.setMap(null);
       }
     }
   },
@@ -79,6 +86,8 @@ export default {
             this.infoWindows.forEach(i => i.close());
           }
         });
+
+        this.createMovableMarker(this.movableMarkerEnabled);
 
         this.$emit('mapOnLoad');
       })
@@ -129,43 +138,40 @@ export default {
       this.markers.push({ marker, typeId: geolocation.typeId });
       return marker;
     },
-    addNewLocationMarker() {
-      const geolocation = { lat: this.map.getCenter().lat(), lng: this.map.getCenter().lng() };
-      this.newLocationMarker = this.addMarkerToMap(geolocation);
-      this.map.addListener('center_changed', () => {
-        if (this.newLocationMarker !== undefined && this.newLocationMarker !== null) {
-          this.newLocationMarker.setPosition(this.map.getCenter());
-        }
-      });
-    },
-    async saveNewLocation(properties, type = 'Default') {
-      if (this.newLocationMarker !== undefined && this.newLocationMarker !== null) {
-        const geolocation = {
-          lat: this.newLocationMarker.getPosition().lat(),
-          lng: this.newLocationMarker.getPosition().lng(),
-          typeId: properties.typeId
-        };
-        const fullAddress = await this.getAddressFromGeolocation(geolocation);
+    async saveMovableMarkerPosition(properties, type = 'Default') {
+      const geolocation = {
+        lat: this.movableMarker.getPosition().lat(),
+        lng: this.movableMarker.getPosition().lng(),
+        typeId: properties.typeId
+      };
+      const fullAddress = await this.getAddressFromGeolocation(geolocation);
 
-        const data = {
-          ...properties,
-          lat: geolocation.lat,
-          lng: geolocation.lng,
-          ...fullAddress
-        }
-
-        // this.geolocations.push(geolocation);
-        this.addMarkerToMap(geolocation, type);
-        this.newLocationMarker.setMap(null);
-        this.newLocationMarker = null;
-
-        await this.$axios.post("/api/map/save", data);
+      const data = {
+        ...properties,
+        lat: geolocation.lat,
+        lng: geolocation.lng,
+        ...fullAddress
       }
+
+      // this.geolocations.push(geolocation);
+      this.addMarkerToMap(geolocation, type);
+
+      await this.$axios.post("/api/map/save", data);
     },
-    cancelAddingNewLocation() {
-      if (this.newLocationMarker !== undefined && this.newLocationMarker !== null) {
-        this.newLocationMarker.setMap(null);
-        this.newLocationMarker = null;
+    createMovableMarker(enabled, iconName = 'Default') {
+      const mapCenter = this.map.getCenter();
+      const markerPosition = { lat: mapCenter.lat(), lng: mapCenter.lng() };
+      this.movableMarker = new this.google.maps.Marker({
+        position: markerPosition,
+        icon: `/icons/map/${iconName}.png`
+      });
+
+      this.map.addListener('center_changed', () => {
+        this.movableMarker.setPosition(this.map.getCenter());
+      });
+
+      if (enabled) {
+        this.movableMarker.setMap(this.map);
       }
     },
     getCurrentLocation() {
@@ -286,7 +292,8 @@ export default {
     height: 100%;
   }
   .info-window-wrapper {
-    width: 300px;
+    max-width: 300px;
+    width: 100%;
     height: 300px;
   }
   .info-window-information-wrapper {

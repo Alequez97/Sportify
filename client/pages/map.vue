@@ -27,16 +27,17 @@
       :geolocations="geolocations"
       :enabledTypeIds="enabledTypeIds"
       :showFilterButton="true"
+      :movableMarkerEnabled="movableMarkerEnabled"
       ref="map"
       v-on:mapOnLoad="mapOnLoad"
       v-on:filterOnClick="filterOnClick"
     />
 
-    <v-row class="move-top" justify="center" v-if="showAddNewLocation && mapIsLoaded">
-      <v-btn rounded color="primary" dark @click="addNewLocationMarker">Add new location</v-btn>
+    <v-row class="move-top" justify="center" v-if="showAddNewLocationButton && mapIsLoaded">
+      <v-btn rounded color="primary" dark @click="addMovableMarker">Add new location</v-btn>
     </v-row>
     <v-row class="move-top" justify="center" v-if="showCancelButton">
-      <v-btn rounded color="red accent-2" dark @click="cancelAddingNewLocation">Cancel</v-btn>
+      <v-btn rounded color="red accent-2" dark @click="removeMovableMarker">Cancel</v-btn>
       <v-dialog v-model="saveLocationDialog" max-width="600px">
         <template #activator="{ on, attrs }">
           <v-btn rounded color="primary" dark v-bind="attrs" v-on="on" class="ml-2">
@@ -87,9 +88,10 @@ export default {
       enableAllTypesSwitchText: 'Disable all',
       enableAllSwitchColor: 'red',
 
-      showAddNewLocation: true,
+      showAddNewLocationButton: true,
       showCancelButton: false,
       mapIsLoaded: false,
+      movableMarkerEnabled: false,
       saveLocationDialog: false,
       filterDialog: false,
 
@@ -121,9 +123,9 @@ export default {
         this.enableAllTypesSwitch = false;
       }
     },
-    addNewLocationMarker() {
-      this.$refs.map.addNewLocationMarker();
-      this.showAddNewLocation = false;
+    addMovableMarker() {
+      this.movableMarkerEnabled = true;
+      this.showAddNewLocationButton = false;
       this.showCancelButton = true;
     },
     saveNewLocation() {
@@ -132,14 +134,15 @@ export default {
         description: this.description
       }
       const typeName = this.types.filter(t => t.id === this.typeId)[0].name.replaceAll(" ", "_");
-      this.$refs.map.saveNewLocation(properties, typeName);
+      this.$refs.map.saveMovableMarkerPosition(properties, typeName);
       this.saveLocationDialog = false;
-      this.showAddNewLocation = true;
+      this.showAddNewLocationButton = true;
       this.showCancelButton = false;
+      this.movableMarkerEnabled = false;
     },
-    cancelAddingNewLocation() {
-      this.$refs.map.cancelAddingNewLocation();
-      this.showAddNewLocation = true;
+    removeMovableMarker() {
+      this.movableMarkerEnabled = false;
+      this.showAddNewLocationButton = true;
       this.showCancelButton = false;
     },
     async getTypes() {
