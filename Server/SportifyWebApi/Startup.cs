@@ -67,7 +67,7 @@ namespace SportifyWebApi
             {
                 opt.AddPolicy("CorsPolicy", policy =>
                 {
-                    policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
+                    policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000", "http://192.168.8.166:8000");
                 });
             });
         }

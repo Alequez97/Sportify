@@ -4,10 +4,12 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
+using Ardalis.Specification.EntityFrameworkCore;
 using DataServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SportifyWebApi.Specifications;
 
 namespace SportifyWebApi.Endpoints.Events
 {
@@ -29,9 +31,9 @@ namespace SportifyWebApi.Endpoints.Events
             try
             {
                 int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                var record = _context.EventUsers.Where(x => x.EventId == request.EventId && x.UserId == userId).FirstOrDefault();
+                var record = _context.EventUsers.WithSpecification(new EventUserByIdSpec(request.EventId, userId)).FirstOrDefault();
 
-                _context.EventUsers.Remove(record);
+                record.IsGoing = false;
 
                 await _context.SaveChangesAsync();
 
