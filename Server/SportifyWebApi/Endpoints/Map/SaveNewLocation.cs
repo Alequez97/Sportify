@@ -28,8 +28,8 @@ namespace SportifyWebApi.Endpoints.Map
         {
             var geolocation = new Geolocation()
             {
-                Latitude = request.Lat.ToString(),
-                Longitude = request.Lng.ToString()
+                Latitude = request.Lat,
+                Longitude = request.Lng
             };
             _context.Geolocations.Add(geolocation);
 

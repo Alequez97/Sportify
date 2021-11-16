@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,23 +28,18 @@ namespace SportifyWebApi.Endpoints.Map
             var locations = _context.SportsGroundLocations
                 .Include(s => s.Geolocation)
                 .Include(s => s.Type)
-                .Where(s => s.Country == request.Country);
+                .Where(s => s.Geolocation.Latitude > request.Lat - request.Delta 
+                         && s.Geolocation.Latitude < request.Lat + request.Delta
+                         && s.Geolocation.Longitude > request.Lng - request.Delta
+                         && s.Geolocation.Longitude < request.Lng + request.Delta);
 
-            if (request.City != null)
-            {
-                locations = locations.Where(l => l.City == request.City);
-            }
-            if (request.District != null)
-            {
-                locations = locations.Where(l => l.District == request.District);
-            }
             var locationsList = await locations.ToListAsync();
 
             var responseList = locationsList.Select(l => {
                 var response = new SportsGroundGetLocationsResponse()
                 {
-                    Lat = Convert.ToDouble(l.Geolocation.Latitude),
-                    Lng = Convert.ToDouble(l.Geolocation.Longitude),
+                    Lat = l.Geolocation.Latitude,
+                    Lng = l.Geolocation.Longitude,
                     TypeId = l.Type.Id,
                     TypeName = l.Type.Name,
                     Description = l.Description
@@ -60,14 +54,14 @@ namespace SportifyWebApi.Endpoints.Map
 
     public class SportsGroundGetLocationsRequest
     {
-        [FromQuery(Name = "country")] 
-        public string Country { get; set; }
+        [FromQuery(Name = "lat")] 
+        public double Lat { get; set; }
 
-        [FromQuery(Name = "city")] 
-        public string City { get; set; }
+        [FromQuery(Name = "lng")] 
+        public double Lng { get; set; }
 
-        [FromQuery(Name = "district")] 
-        public string District { get; set; }
+        [FromQuery(Name = "delta")] 
+        public double Delta { get; set; }
     }
 
     public class SportsGroundGetLocationsResponse

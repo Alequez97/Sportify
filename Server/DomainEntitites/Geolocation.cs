@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace DomainEntities
 {
@@ -8,9 +8,9 @@ namespace DomainEntities
     public class Geolocation : EntityBase
     {
         [Required]
-        public string Latitude { get; set; }
+        public double Latitude { get; set; }
 
         [Required]
-        public string Longitude { get; set; }
+        public double Longitude { get; set; }
     }
 }
