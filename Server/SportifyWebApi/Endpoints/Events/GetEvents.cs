@@ -44,7 +44,7 @@ namespace SportifyWebApi.Endpoints.Events
                     CreatorName = x.Creator.UserName,
                     CreatorId = x.CreatorId,
                     TimeOfTheEvent = x.TimeOfTheEvent.ToShortDateString(),
-                    IsGoing = User.Identity.IsAuthenticated && x.EventUsers.Any(xx => xx.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)),
+                    IsGoing = User.Identity.IsAuthenticated && x.EventUsers.Any(xx => (xx.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value) && xx.IsGoing)),
                     Contributors = x.EventUsers.Select(xx => new GetEventsResponse.GetEventsContributorDto()
                     {
                         Id = xx.User.Id,

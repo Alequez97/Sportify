@@ -65,7 +65,7 @@ export default {
       if (!this.event.isGoing) {
         return { color: 'green', text: "Join" };
       } else {
-        return { color: 'red', text: "Disjoin" };
+        return { color: 'red', text: "Drop" };
       }
     }
   },

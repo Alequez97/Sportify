@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
+using Ardalis.Specification.EntityFrameworkCore;
 using DataServices;
 using DomainEntities.EventEntities;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SportifyWebApi.Constants;
 using Swashbuckle.AspNetCore.Annotations;
+using SportifyWebApi.Specifications;
 
 namespace SportifyWebApi.Endpoints.Events
 {
@@ -31,11 +34,22 @@ namespace SportifyWebApi.Endpoints.Events
         {
             try
             {
-                _context.EventUsers.Add(new EventUser
+                int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var record = _context.EventUsers.WithSpecification(new EventUserByIdSpec(request.EventId, userId)).FirstOrDefault();
+
+                if(record != null)
                 {
-                    EventId = request.EventId,
-                    UserId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)
-                });
+                    record.IsGoing = true;
+                }
+                else
+                {
+                    _context.EventUsers.Add(new EventUser
+                    {
+                        EventId = request.EventId,
+                        UserId = userId,
+                        IsGoing = true
+                    });
+                }
 
                 await _context.SaveChangesAsync();
 
