@@ -7,9 +7,9 @@ if ($Launch)
 }
 
 #Lauch PS in project's folder
-$Workspace = Split-Path -Path $MyInvocation.MyCommand.Path
-$Workspace = [System.IO.Path]::GetFullPath("$Workspace\..\..").TrimEnd("\\")
-Set-Location $Workspace
+$SportifyBaseDir = Split-Path -Path $MyInvocation.MyCommand.Path
+$SportifyBaseDir = [System.IO.Path]::GetFullPath("$SportifyBaseDir\..\..").TrimEnd("\\")
+Set-Location $SportifyBaseDir
 
 $ErrorActionPreference = "Stop"
 $InformationPreference = "Continue"
@@ -22,25 +22,25 @@ function Add-Migration
     )
 
     Install-Ef-Tool-If-Not-Exists
-    Set-Location $Workspace/Server/DataServices
+    Set-Location $SportifyBaseDir/Server/DataServices
     dotnet ef migrations add $MigrationName
-    Set-Location ../..
+    Set-Location $SportifyBaseDir
 }
 
 function Undo-Migration
 {
     Install-Ef-Tool-If-Not-Exists
-    Set-Location $Workspace/Server/DataServices
+    Set-Location $SportifyBaseDir/Server/DataServices
     dotnet ef migrations remove
-    Set-Location ../..
+    Set-Location $SportifyBaseDir
 }
 
 function Database-Update
 {
     Install-Ef-Tool-If-Not-Exists
-    Set-Location $Workspace/Server/DataServices
+    Set-Location $SportifyBaseDir/Server/DataServices
     dotnet ef database update 
-    Set-Location ../..
+    Set-Location $SportifyBaseDir
 }
 
 function Install-Ef-Tool-If-Not-Exists
@@ -59,8 +59,25 @@ function Install-Ef-Tool-If-Not-Exists
 function Seed-Database
 {
     Set-Location ./ConfigFiles/SeedScript
+    $CurrentLocation = Get-Location
+    Remove-Directory-If-Exists "$CurrentLocation\bin"
+    Remove-Directory-If-Exists "$CurrentLocation\obj"
     dotnet run -c Release
-    Set-Location ../..
+    Set-Location $SportifyBaseDir
+}
+
+function Remove-Directory-If-Exists
+{
+    param(
+        [Parameter(Position=0,mandatory=$true)]
+        [String]$path
+    )
+
+    if (Test-Path -Path $path)
+    {
+        Write-Host "Removing $path" -ForegroundColor Yellow 
+        Remove-Item -Path $path -Force -Recurse
+    }
 }
 
 function Write-Help
