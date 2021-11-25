@@ -14,58 +14,58 @@
           </v-card-title>
           <v-card-text>
             <v-form ref="eventForm">
-              <v-text-field 
-                v-model="title" 
-                :rules="titleRules" 
-                label="Title" color="teal" 
-                append-icon="mdi-pencil" 
+              <v-text-field
+                v-model="title"
+                :rules="titleRules"
+                label="Title" color="teal"
+                append-icon="mdi-pencil"
               />
-              <v-select 
-                v-model="categoryId" 
-                :items="categories" 
-                :rules="categoryRules" 
-                label="Category" item-text="name" 
-                item-value="id" 
+              <v-select
+                v-model="categoryId"
+                :items="categories"
+                :rules="categoryRules"
+                label="Category" item-text="name"
+                item-value="id"
                 color="teal"
               />
-              <v-text-field 
-                v-model="briefDesc" 
-                :rules="briefDescRules" 
-                label="Brief Description" 
-                color="teal" 
+              <v-text-field
+                v-model="briefDesc"
+                :rules="briefDescRules"
+                label="Brief Description"
+                color="teal"
                 append-icon="mdi-information-outline"
               />
-              <v-textarea 
-                v-model="description" 
-                :rules="descriptionRules" 
-                label="Description" 
+              <v-textarea
+                v-model="description"
+                :rules="descriptionRules"
+                label="Description"
                 color="teal"
               />
-              <v-select 
-                v-model="countryId" 
-                :rules="countryRules" 
-                :items="countries" 
-                label="Country" 
-                item-text="name" 
-                item-value="id" 
-                color="teal" 
-                @change="onCountrySelect()" 
+              <v-select
+                v-model="countryId"
+                :rules="countryRules"
+                :items="countries"
+                label="Country"
+                item-text="name"
+                item-value="id"
+                color="teal"
+                @change="onCountrySelect()"
               />
-              <v-select 
-                v-model="cityId" 
-                :rules="cityRules" 
-                :items="cities" 
-                label="City" 
-                item-text="name" 
-                item-value="id" 
-                color="teal" 
-                :disabled="!countrySelected" 
+              <v-select
+                v-model="cityId"
+                :rules="cityRules"
+                :items="cities"
+                label="City"
+                item-text="name"
+                item-value="id"
+                color="teal"
+                :disabled="!countrySelected"
               />
-              <v-text-field 
-                v-model="address" 
-                :rules="addressRules" 
-                label="Address" 
-                color="teal" 
+              <v-text-field
+                v-model="address"
+                :rules="addressRules"
+                label="Address"
+                color="teal"
                 append-icon="mdi-map-marker-outline"
               />
               <PopupDatePicker @bindDate="bindDate"/>
