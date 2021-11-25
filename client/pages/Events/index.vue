@@ -15,11 +15,11 @@ export default {
   components: {
     Event
   },
-  data() {
-    return {
-      events: []
-    };
-  },
+  // data() {
+  //   return {
+  //     events: []
+  //   };
+  // },
   head() {
     return {
       title: "Welcome to Sportify!",
@@ -33,22 +33,19 @@ export default {
     };
   },
   async created() {
-    await this.$axios.get("https://localhost:44314/api/events").then((response) => {
-        this.events = response.data;
-      }).catch((error) => {
-        console.log(error);
-      });
+    await this.$store.dispatch('events/fetchEvents');
+  },
+  computed: {
+    events() {
+      return this.$store.getters['events/getEvents'];
+    }
   },
   methods: {
     async join(eventData) {
       if (!eventData.isGoing) {
-        await this.$store.dispatch('events/join', eventData.eventId)
-        .then(this.events.find(x => x.id === eventData.eventId).isGoing = true)
-        .catch(err => console.log(err));
+        await this.$store.dispatch('events/join', eventData.eventId);
       } else {
-        await this.$store.dispatch('events/disjoin', eventData.eventId)
-        .then(this.events.find(x => x.id === eventData.eventId).isGoing = false)
-        .catch(err => console.log(err));
+        await this.$store.dispatch('events/disjoin', eventData.eventId);
       }
     }
   }

@@ -1,8 +1,8 @@
 <template>
   <nav>
     <v-app-bar color="teal" dense dark app>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title class="pl-0" app>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"/>
+      <v-toolbar-title class="pl-0">
         <NuxtLink to="/">
           Sportify
         </NuxtLink>
@@ -35,7 +35,7 @@
       </div>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" class="teal lighten-5" disable-resize-watcher absolute temporary app>
+    <v-navigation-drawer v-model="drawer" class="teal lighten-5" disable-resize-watcher fixed temporary app>
       <v-container>
         <div v-if="isAuthenticated">
           <v-row class="mt-0">

@@ -18,3 +18,15 @@ export default {
   }
 };
 </script>
+
+<style>
+a.nuxt-link-exact-active {
+  color: #fff;
+}
+
+a,
+a:visited {
+  text-decoration: none;
+  color: inherit;
+}
+</style>

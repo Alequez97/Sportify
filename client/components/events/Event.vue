@@ -7,7 +7,7 @@
   >
     <v-container>
       <v-row justify="center" align="center">
-        <v-col cols="8">
+        <v-col cols="8" class="pr-0 ">
           <v-card-title class="py-0 mb-2">
             <p class="text-lg-h5 text-h6 my-0">
               {{ event.title }}
@@ -19,7 +19,7 @@
               {{ event.venue.address }}
             </div>
             <div class="text-lg-subtitle-1 font-weight-regular my-0">
-              {{ event.timeOfTheEvent }}
+              {{ localDate }}
             </div>
             <div class="text-lg-subtitle-1 font-weight-regular mb-2">
               Creator: {{ event.creatorName }}
@@ -30,9 +30,38 @@
             <div class="text-lg-h5 text-h6 mb-0">
               Contributors
             </div>
-            <v-avatar v-for="n in 4" :key="n" size="40" color="indigo" class="mb-2 mr-1">
-              <img src="kot_fleks.jpg" alt="John">
-            </v-avatar>
+            <div v-if="contributorsExist > 3" class="mb-0">
+              <div>
+                <v-tooltip v-for="cont in event.contributors.slice(0,3)" :key="cont.id" top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-avatar v-bind="attrs" v-on="on" size="35" color="teal lighten-2" class="mt-1 mb-2 mr-2">
+                      <v-icon dark>
+                        mdi-account-circle
+                      </v-icon>
+                    </v-avatar>
+                  </template>
+                <span>{{cont.username}}</span>
+                </v-tooltip>
+              </div>
+              <PopupContributors :count="contributorsExist - 3" :contributors="event.contributors"/>
+            </div>
+            <div v-else-if="contributorsExist">
+              <div>
+                <v-tooltip v-for="cont in event.contributors.slice(0,3)" :key="cont.id" top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-avatar v-bind="attrs" v-on="on" size="35" color="teal lighten-2" class="mt-1 mb-2 mr-2">
+                      <v-icon dark>
+                        mdi-account-circle
+                      </v-icon>
+                    </v-avatar>
+                  </template>
+                  <span>{{cont.username}}</span>
+                </v-tooltip>
+              </div>
+            </div>
+            <div v-else>
+              <div class="text-lg-subtitle-1 font-weight-regular mb-2">Be the first</div>
+            </div>
           </v-card-text>
           <v-card-actions class="py-0">
             <v-btn class="text-subtitle-1" nuxt :to="'/events/' + event.id" color="deep-purple" text rounded>
@@ -52,6 +81,8 @@
 </template>
 
 <script>
+import PopupContributors from './PopupContributors.vue';
+
 export default {
   name: 'Event',
   props: {
@@ -60,6 +91,9 @@ export default {
       default: null
     }
   },
+  components: {
+    PopupContributors
+  },
   computed: {
     actionText() {
       if (!this.event.isGoing) {
@@ -67,28 +101,29 @@ export default {
       } else {
         return { color: 'red', text: "Drop" };
       }
+    },
+    isAuthenticated() {
+      return this.$store.getters.isAuthenticated;
+    },
+    contributorsExist() {
+      return this.event.contributors.length;
+    },
+    localDate() {
+      return new Date(this.event.date).toLocaleString('en-GB', {hour12: false});
     }
   },
   methods: {
     handleJoin(eventId, isGoing) {
-      const eventData = {
-        eventId,
-        isGoing
+      if (this.isAuthenticated) {
+        const eventData = {
+          eventId,
+          isGoing
+        }
+        this.$emit('join', eventData);
+      } else {
+        this.$router.push('login');
       }
-      this.$emit('join', eventData);
     }
   }
 };
 </script>
-
-<style>
-a.nuxt-link-exact-active {
-  color: #fff;
-}
-
-a,
-a:visited {
-  text-decoration: none;
-  color: inherit;
-}
-</style>

@@ -43,12 +43,12 @@ namespace SportifyWebApi.Endpoints.Events
                     BriefDesc = x.BriefDesc,
                     CreatorName = x.Creator.UserName,
                     CreatorId = x.CreatorId,
-                    TimeOfTheEvent = x.TimeOfTheEvent.ToShortDateString(),
+                    Date = DateTime.SpecifyKind(x.Date, DateTimeKind.Utc).ToString("o"),
                     IsGoing = User.Identity.IsAuthenticated && x.EventUsers.Any(xx => (xx.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value) && xx.IsGoing)),
-                    Contributors = x.EventUsers.Select(xx => new GetEventsResponse.GetEventsContributorDto()
+                    Contributors = x.EventUsers.Where(i => i.IsGoing == true).Select(xx => new GetEventsResponse.GetEventsContributorDto()
                     {
                         Id = xx.User.Id,
-                        UserName = xx.User.UserName
+                        Username = xx.User.UserName
                     }).ToList(),
                     Venue = new GetEventsResponse.GetEventsVenueDto()
                     {
@@ -80,7 +80,7 @@ namespace SportifyWebApi.Endpoints.Events
 
         public GetEventsVenueDto Venue { get; set; }
 
-        public string TimeOfTheEvent { get; set; }
+        public string Date { get; set; }
 
         public string CreatorName { get; set; }
         public int CreatorId { get; set; }
@@ -92,7 +92,7 @@ namespace SportifyWebApi.Endpoints.Events
         public class GetEventsContributorDto
         {
             public int Id { get; set; }
-            public string UserName { get; set; }
+            public string Username { get; set; }
         }
 
         public class GetEventsVenueDto

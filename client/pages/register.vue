@@ -53,7 +53,7 @@ export default {
 
         const user = await this.$axios.$post("/api/accounts/register", registerData);
         console.log(user);
-        this.$router.replace('/');
+        this.$router.replace('/events');
       } catch (err) {
         console.log(err);
       }

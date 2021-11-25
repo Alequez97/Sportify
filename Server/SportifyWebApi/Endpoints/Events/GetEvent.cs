@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using DataServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SportifyWebApi.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -25,7 +27,26 @@ namespace SportifyWebApi.Endpoints.Events
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult<GetEventResponse>> HandleAsync([FromRoute] GetEventRequest request, CancellationToken cancellationToken = default)
         {
-            var @event = await _context.Events.FindAsync(request.Id);
+            var @event = await _context.Events.Where(e => e.Id == request.Id).Select(x => new GetEventResponse { 
+                Title = x.Title,
+                CategoryName = x.Category.Name,
+                BriefDesc = x.BriefDesc,
+                Description = x.Description,
+                Venue = new GetEventResponse.GetEventVenueDto()
+                {
+                    Country = x.Venue.Country.Name,
+                    City = x.Venue.City.Name,
+                    Address = x.Venue.Address
+                },
+                Date = DateTime.SpecifyKind(x.Date, DateTimeKind.Utc).ToString("o"),
+                CreatorUsername = x.Creator.UserName,
+                CreatorId = x.CreatorId,
+                Contributors = x.EventUsers.Where(i => i.IsGoing == true).Select(xx => new GetEventResponse.GetEventContributorDto()
+                {
+                    Id = xx.User.Id,
+                    Username = xx.User.UserName
+                }).ToList()
+            }).FirstOrDefaultAsync();
 
             return @event != null ? Ok(@event) : NotFound();
         }
@@ -49,7 +70,9 @@ namespace SportifyWebApi.Endpoints.Events
 
         public GetEventVenueDto Venue { get; set; }
 
-        public DateTime TimeOfTheEvent { get; set; }
+        public string Date { get; set; }
+
+        public string CreatorUsername { get; set; }
 
         public int CreatorId { get; set; }
 
@@ -57,8 +80,8 @@ namespace SportifyWebApi.Endpoints.Events
 
         public class GetEventContributorDto
         {
-            public string Email { get; set; }
-            //and so on
+            public int Id { get; set; }
+            public string Username { get; set; }
         }
 
         public class GetEventVenueDto

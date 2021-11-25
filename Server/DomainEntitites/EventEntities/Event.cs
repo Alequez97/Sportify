@@ -29,7 +29,7 @@ namespace DomainEntities.EventEntities
         public Venue Venue { get; set; }
 
         [Required]
-        public DateTime TimeOfTheEvent { get; set; }
+        public DateTime Date { get; set; }
 
         [Required]
         public int CreatorId { get; set; }

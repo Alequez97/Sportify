@@ -40,7 +40,7 @@ namespace SportifyWebApi.Endpoints.Events
                     CityId = request.CityId,
                     Address = request.Address
                 },
-                TimeOfTheEvent = request.TimeOfTheEvent,
+                Date = request.Date,
                 CreatorId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)
             };
 
@@ -75,6 +75,6 @@ namespace SportifyWebApi.Endpoints.Events
 
         public string Address { get; set; }
 
-        public DateTime TimeOfTheEvent { get; set; }
+        public DateTime Date { get; set; }
     }
 }

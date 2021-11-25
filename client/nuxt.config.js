@@ -1,3 +1,6 @@
+// import path from 'path'
+// import fs from 'fs'
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -17,10 +20,13 @@ export default {
   },
 
   //Uncomment this if you want to test on mobile/tablet. As URL use: {yourIPaddress}:8000
-  // server: {
-  //   port: 8000,
-  //   host: '0.0.0.0'
-  // },
+  server: {
+    // https: {
+    //   key: fs.readFileSync(path.resolve('C:/Users/jurij/Desktop/cert/CA', 'localhost.key')),
+    //   cert: fs.readFileSync(path.resolve('C:/Users/jurij/Desktop/cert/CA', 'localhost.crt'))
+    // },
+    // host: '0.0.0.0'
+  },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
@@ -72,8 +78,12 @@ export default {
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
+  // axios: {
+  //   baseURL: 'http://192.168.8.166:6000'
+  // },
+
   axios: {
-    baseURL: 'https://localhost:3000'
+    baseURL: 'https://localhost:44314'
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

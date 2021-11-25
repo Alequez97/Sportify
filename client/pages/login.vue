@@ -49,7 +49,7 @@ export default {
         const response = await this.$auth.loginWith("local", {
           data: loginData
         });
-        this.$router.replace("/");
+        this.$router.replace("/events");
         console.log(response);
       } catch (err) {
         console.log(err);
