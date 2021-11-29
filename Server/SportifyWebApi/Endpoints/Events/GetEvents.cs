@@ -5,10 +5,12 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
+using Ardalis.Specification.EntityFrameworkCore;
 using DataServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportifyWebApi.Constants;
+using SportifyWebApi.Specifications;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Events
@@ -28,36 +30,30 @@ namespace SportifyWebApi.Endpoints.Events
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult<GetEventsResponse>> HandleAsync([FromRoute] GetEventsRequest request, CancellationToken cancellationToken = default)
         {
-            //var q = _context.Events.Include(v => v.Venue);
-            //if (!string.IsNullOrEmpty(request.SortBy))
-            //{
-            //    //q = q.OrderBy(x=)
-            //}
-
             var result = await _context.Events
+                .WithSpecification(new FilterEventsSpec(request.CategoryId, request.CountryId, request.CityId))
                 .Select(x => new GetEventsResponse()
+            {
+                Id = x.Id,
+                Title = x.Title,
+                CategoryName = x.Category.Name,
+                BriefDesc = x.BriefDesc,
+                CreatorName = x.Creator.UserName,
+                CreatorId = x.CreatorId,
+                Date = DateTime.SpecifyKind(x.Date, DateTimeKind.Utc).ToString("o"),
+                IsGoing = User.Identity.IsAuthenticated && x.EventUsers.Any(xx => (xx.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value) && xx.IsGoing)),
+                Contributors = x.EventUsers.Where(i => i.IsGoing == true).Select(xx => new GetEventsResponse.GetEventsContributorDto()
                 {
-                    Id = x.Id,
-                    Title = x.Title,
-                    CategoryName = x.Category.Name,
-                    BriefDesc = x.BriefDesc,
-                    CreatorName = x.Creator.UserName,
-                    CreatorId = x.CreatorId,
-                    Date = DateTime.SpecifyKind(x.Date, DateTimeKind.Utc).ToString("o"),
-                    IsGoing = User.Identity.IsAuthenticated && x.EventUsers.Any(xx => (xx.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value) && xx.IsGoing)),
-                    Contributors = x.EventUsers.Where(i => i.IsGoing == true).Select(xx => new GetEventsResponse.GetEventsContributorDto()
-                    {
-                        Id = xx.User.Id,
-                        Username = xx.User.UserName
-                    }).ToList(),
-                    Venue = new GetEventsResponse.GetEventsVenueDto()
-                    {
-                        Country = x.Venue.Country.Name,
-                        City = x.Venue.City.Name,
-                        Address = x.Venue.Address
-                    }
-                })
-                .ToListAsync();
+                    Id = xx.User.Id,
+                    Username = xx.User.UserName
+                }).ToList(),
+                Venue = new GetEventsResponse.GetEventsVenueDto()
+                {
+                    Country = x.Venue.Country.Name,
+                    City = x.Venue.City.Name,
+                    Address = x.Venue.Address
+                }
+            }).ToListAsync();
 
             return Ok(result);
         }
@@ -65,8 +61,9 @@ namespace SportifyWebApi.Endpoints.Events
 
     public class GetEventsRequest
     {
-        [FromQuery(Name ="sortBy")] public string SortBy { get; set; }
-        [FromQuery(Name = "sortDesc")] public bool SortDesc { get; set; }
+        [FromQuery(Name = "categoryId")] public int CategoryId { get; set; }
+        [FromQuery(Name = "countryId")] public int CountryId { get; set; }
+        [FromQuery(Name = "cityId")] public int CityId { get; set; }
     }
 
     public class GetEventsResponse

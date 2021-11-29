@@ -3,7 +3,7 @@
     class="mx-auto my-3 rounded-lg"
     outlined
     elevation="24"
-    max-width="576px"
+    max-width="600px"
   >
     <v-container>
       <v-row justify="center" align="center">
