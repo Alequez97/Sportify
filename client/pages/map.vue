@@ -7,7 +7,7 @@
         <v-card-text style="height: 400px;">
           <v-list>
             <v-list-item>
-              <v-switch v-model="enableAllTypesSwitch" :color="enableAllSwitchColor" :label="enableAllTypesSwitchText" :value="true" @change="enableAllTypesOnChange" inset></v-switch>
+              <v-switch v-model="enableAllTypesSwitch" :label="enableAllTypesSwitchText" :value="true" @change="enableAllTypesOnChange" inset></v-switch>
             </v-list-item>
             <v-list-item v-for="type in types" :key="type.id" link>
               <v-switch v-model="enabledTypeIds" color="teal" :label="type.name" :value="type.id" @change="enableTypeOnChange" inset></v-switch>
@@ -30,6 +30,7 @@
       :movableMarkerEnabled="movableMarkerEnabled"
       ref="map"
       v-on:mapOnLoad="mapOnLoad"
+      v-on:centerChanged="centerChanged"
       v-on:filterOnClick="filterOnClick"
     />
 
@@ -81,12 +82,12 @@ export default {
   data() {
     return {
       geolocations: [],
+      fetchedGeolocations: [],
       enabledTypeIds: [],
       types: [],
 
       enableAllTypesSwitch: true,
       enableAllTypesSwitchText: 'Disable all',
-      enableAllSwitchColor: 'red',
 
       showAddNewLocationButton: true,
       showCancelButton: false,
@@ -134,7 +135,7 @@ export default {
         description: this.description
       }
       const typeName = this.types.filter(t => t.id === this.typeId)[0].name.replaceAll(" ", "_");
-      this.$refs.map.saveMovableMarkerPosition(properties, typeName);
+      this.$refs.map.saveMovableMarkerPosition(properties, typeName.replaceAll(" ", "_"));
       this.saveLocationDialog = false;
       this.removeMovableMarker();
     },
@@ -151,9 +152,12 @@ export default {
           console.log(error);
         });
     },
-    async mapOnLoad() {
-      await this.getLocationsAround();
+    async mapOnLoad(mapCenter, mapWidth) {
+      await this.getLocationsAround(mapCenter, mapWidth);
       this.mapIsLoaded = true;
+    },
+    async centerChanged(mapCenter, mapWidth) {
+      await this.getLocationsAround(mapCenter, mapWidth);
     },
     filterOnClick() {
       this.filterDialog = true;
@@ -161,13 +165,22 @@ export default {
     saveFilters() {
       this.filterDialog = false;
     },
-    async getLocationsAround() {
-      // Identify where user is located
-      await this.$axios.get("https://localhost:44314/api/map", { params: { country: 'Latvia' } }).then((response) => {
-          this.geolocations = response.data;
-        }).catch((error) => {
-          console.log(error);
-        });
+    async getLocationsAround(latLng, delta) {
+      await this.$axios.get("https://localhost:44314/api/map", { params: { lat: latLng.lat, lng: latLng.lng, delta } }).then((response) => {
+        this.addGeolocationsIfWereNotAddedBefore(response.data);
+      }).catch((error) => {
+        console.log(error);
+      });
+    },
+    addGeolocationsIfWereNotAddedBefore(geolocationArray) {
+      for (let i = 0; i < geolocationArray.length; i++) {
+        const newGeolocation = geolocationArray[i];
+        const savedGeolocation = this.fetchedGeolocations.find(g => g.id === newGeolocation.id);
+        if (savedGeolocation === undefined) {
+          this.geolocations.push(newGeolocation);
+        }
+      }
+      this.fetchedGeolocations.push(...this.geolocations);
     }
   }
 }
