@@ -2,7 +2,8 @@ export const state = () => ({
     events: [],
     categories: [],
     countries: [],
-    cities: []
+    citiesForEventForm: [],
+    citiesForEventFilters: []
 });
 
 export const mutations = {
@@ -15,8 +16,11 @@ export const mutations = {
     SET_COUNTRIES(state, value) {
         state.countries = value;
     },
-    SET_CITIES(state, value) {
-        state.cities = value;
+    SET_CITIES_FOR_EVENT_FORM(state, value) {
+        state.citiesForEventForm = value;
+    },
+    SET_CITIES_FOR_EVENT_FILTERS(state, value) {
+        state.citiesForEventFilters = value;
     },
     SET_ISGOING_TRUE(state, value) {
         const rec = state.events.find(e => e.id === value);
@@ -55,10 +59,18 @@ export const actions = {
             console.log(err);
         }
     },
-    async fetchCities({commit}, countryId) {
+    async fetchCitiesForEventForm({commit}, countryId) {
         try {
             const resp = await this.$axios.get('/api/cities/' + countryId);
-            commit('SET_CITIES', resp.data);
+            commit('SET_CITIES_FOR_EVENT_FORM', resp.data);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    async fetchCitiesForEventFilters({commit}, countryId) {
+        try {
+            const resp = await this.$axios.get('/api/cities/' + countryId);
+            commit('SET_CITIES_FOR_EVENT_FILTERS', resp.data);
         } catch (err) {
             console.log(err);
         }
@@ -100,5 +112,6 @@ export const getters = {
     getEvents: state => state.events,
     getCategories: state => state.categories,
     getCountries: state => state.countries,
-    getCities: state => state.cities
+    getCitiesForEventForm: state => state.citiesForEventForm,
+    getCitiesForEventFilters: state => state.citiesForEventFilters
 }
