@@ -36,7 +36,9 @@ namespace SportifyWebApi.Endpoints.Events
                 {
                     Country = x.Venue.Country.Name,
                     City = x.Venue.City.Name,
-                    Address = x.Venue.Address
+                    Address = x.Venue.Address,
+                    Lat = x.Venue.Geolocation.Latitude,
+                    Lng = x.Venue.Geolocation.Longitude
                 },
                 Date = DateTime.SpecifyKind(x.Date, DateTimeKind.Utc).ToString("o"),
                 CreatorUsername = x.Creator.UserName,
@@ -91,6 +93,10 @@ namespace SportifyWebApi.Endpoints.Events
             public string City { get; set; }
 
             public string Address { get; set; }
+
+            public double Lat { get; set; }
+
+            public double Lng { get; set; }
         }
     }
 }

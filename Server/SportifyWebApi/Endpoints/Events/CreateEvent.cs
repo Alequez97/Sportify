@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using DataServices;
+using DomainEntities;
 using DomainEntities.EventEntities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +39,12 @@ namespace SportifyWebApi.Endpoints.Events
                 {
                     CountryId = request.CountryId,
                     CityId = request.CityId,
-                    Address = request.Address
+                    Address = request.Address,
+                    Geolocation = new Geolocation()
+                    {
+                        Latitude = request.Lat,
+                        Longitude = request.Lng
+                    }
                 },
                 Date = request.Date,
                 CreatorId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)
@@ -74,6 +80,10 @@ namespace SportifyWebApi.Endpoints.Events
         public int CityId { get; set; }
 
         public string Address { get; set; }
+
+        public double Lat { get; set; }
+        
+        public double Lng { get; set; }
 
         public DateTime Date { get; set; }
     }

@@ -168,6 +168,8 @@ export default {
   methods: {
     async createEvent() {
       if (this.$refs.eventForm.validate()) {
+        await this.$store.dispatch('googleMap/prepare');
+        const latLng = await this.$store.dispatch('googleMap/getGeolocationFromAddressAsync', this.address);
         const eventData = {
           title: this.title,
           categoryId: this.categoryId,
@@ -176,7 +178,9 @@ export default {
           date: new Date(this.dateOfTheEvent.replace(/-/g, "/") + ' ' + this.timeOfTheEvent).toISOString(),
           countryId: this.countryId,
           cityId: this.cityId,
-          address: this.address
+          address: this.address,
+          lat: latLng.lat,
+          lng: latLng.lng
         }
 
         await this.$store.dispatch('events/createEvent', eventData);

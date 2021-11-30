@@ -3,28 +3,36 @@
 </template>
 
 <script>
-import { Loader } from '@googlemaps/js-api-loader';
-
 export default {
   name: 'GoogleMap',
-  props: ['geolocations', 'enabledTypeIds', 'showFilterButton', 'movableMarkerEnabled'],
+  props: [
+    'geolocations',
+    'enabledTypeIds',
+    'showFilterButton',
+    'movableMarkerEnabled',
+    'mapId'
+  ],
   data() {
     return {
       map: null,
       google: null,
       geocoder: null,
       markers: [],
+      markersAreShown: true,
       infoWindows: [],
       movableMarker: null,
       currentLocation: null
     }
   },
   watch: {
-    geolocations(newGeolocations) {
-      if (this.map !== undefined && this.map !== null) {
-        newGeolocations.forEach((g) => {
-          this.addMarkerToMap(g, g.typeName.replaceAll(" ", "_"));
-        });
+    async geolocations(newGeolocations) {
+      for (let i = 0; i < newGeolocations.length; i++) {
+        const newGeolocation = newGeolocations[i];
+        const drawenMarker = this.markers.find(m => m.marker.id === newGeolocation.id);
+        if (drawenMarker === undefined) {
+          console.log('Creating new marker with id ' + newGeolocations[i].id);
+          await this.addMarkerToMapAsync(newGeolocation, newGeolocation.typeName.replaceAll(" ", "_"));
+        }
       }
     },
     enabledTypeIds(newTypes, oldTypes) {
@@ -54,11 +62,8 @@ export default {
     }
   },
   async mounted() {
-    const loader = new Loader({
-      apiKey: "AIzaSyD_u7kDh3P6m58MutrCTCDsF2Oiy-jPMf0"
-    });
-
-    this.currentLocation = await this.getCurrentLocation();
+    await this.$store.dispatch('googleMap/prepare');
+    this.currentLocation = await this.$store.dispatch('googleMap/getCurrentLocationAsync');
 
     const mapOptions = {
       center: {
@@ -68,73 +73,100 @@ export default {
       zoom: 14
     };
 
-    await loader
-      .load()
-      .then((google) => {
-        this.google = google;
-        this.map = new google.maps.Map(document.getElementById("google-map"), mapOptions);
-        this.geocoder = new this.google.maps.Geocoder();
+    this.google = this.$store.getters['googleMap/getGoogleObject'];
+    this.map = new this.google.maps.Map(document.getElementById("google-map"), mapOptions);
 
-        if (this.showFilterButton) {
-          const controlDiv = document.createElement("div");
-          this.getFilterGoogleButton(controlDiv);
-          this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
-        }
+    this.google.maps.event.addListenerOnce(this.map, 'idle', () => {
+      const center = this.map.getCenter();
+      this.$emit('mapOnLoad', { lat: center.lat(), lng: center.lng() }, this.getMapWidth());
+    });
 
-        this.map.addListener('click', () => {
-          this.infoWindows.forEach(i => i.close());
-        });
+    this.geocoder = this.$store.getters['googleMap/getGeocoderObject'];
 
-        this.createMovableMarker(this.movableMarkerEnabled);
+    if (this.showFilterButton) {
+      const controlDiv = document.createElement("div");
+      this.getFilterGoogleButton(controlDiv);
+      this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
+    }
 
-        this.$emit('mapOnLoad');
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    this.map.addListener('click', () => {
+      this.infoWindows.forEach(i => i.close());
+    });
+    this.map.addListener('center_changed', () => {
+      this.movableMarker.setPosition(this.map.getCenter());
+      const center = this.map.getCenter();
+      this.$emit('centerChanged', { lat: center.lat(), lng: center.lng() }, this.getMapWidth());
+    });
+    this.map.addListener('zoom_changed', () => {
+      const zoomLevel = this.map.getZoom();
+      if (zoomLevel <= 12 && this.markersAreShown) {
+        this.hideAllMarkers();
+      }
+      if (zoomLevel > 12 && !this.markersAreShown) {
+        this.showAllMarkers();
+      }
+    });
 
-      const addresses = [
-        'Latvia, Riga, Eksporta iela 2a',
-        'Latvia, Riga, Lenču iela 1',
-        'Latvia, Riga, Sporta iela'
-      ];
-      addresses.forEach(async (address) => {
-        const geolocation = await this.getGeolocationFromAddress(address);
-        const latLng = geolocation.geometry.location;
-        this.addMarkerToMap({ lat: latLng.lat(), lng: latLng.lng() });
-      });
+    this.createMovableMarker(this.movableMarkerEnabled);
+
+      // const addresses = [
+      //   'Latvia, Riga, Eksporta iela 2a',
+      //   'Latvia, Riga, Lenču iela 1',
+      //   'Latvia, Riga, Sporta iela'
+      // ];
+      // addresses.forEach(async (address) => {
+      //   const geolocation = await this.getGeolocationFromAddressAsync(address);
+      //   const latLng = geolocation.geometry.location;
+      //   this.addMarkerToMapAsync({ lat: latLng.lat(), lng: latLng.lng() });
+      // });
   },
   methods: {
-    addMarkerToMap(geolocation, iconName = 'Default') {
-      const markerPosition = { lat: geolocation.lat, lng: geolocation.lng };
-      const marker = new this.google.maps.Marker({
-        position: markerPosition,
-        icon: `/icons/map/${iconName}.png`
-      });
-
-      if (geolocation.description !== undefined && geolocation.description !== null) {
-        const infoWindow = new this.google.maps.InfoWindow({
-          content: this.getLocationInfoHtml(geolocation)
+    addMarkerToMapAsync(geolocation, iconName = 'Default') {
+      return new Promise((resolve) => {
+        const markerPosition = { lat: geolocation.lat, lng: geolocation.lng };
+        const marker = new this.google.maps.Marker({
+          position: markerPosition,
+          icon: `/icons/map/${iconName}.png`
         });
 
-        this.infoWindows.push(infoWindow);
-
-        const map = this.map;
-        marker.addListener("click", () => {
-          infoWindow.open({
-            anchor: marker,
-            map,
-            shouldFocus: false
+        if (geolocation.description !== undefined && geolocation.description !== null) {
+          const infoWindow = new this.google.maps.InfoWindow({
+            content: this.getLocationInfoHtml(geolocation)
           });
-        });
-      }
 
-      if (geolocation.typeId === undefined || this.enabledTypeIds.includes(geolocation.typeId)) {
+          this.infoWindows.push(infoWindow);
+
+          const map = this.map;
+          marker.addListener("click", () => {
+            infoWindow.open({
+              anchor: marker,
+              map,
+              shouldFocus: false
+            });
+          });
+        }
+
+        if (geolocation.typeId === undefined || this.enabledTypeIds.includes(geolocation.typeId)) {
+          marker.setMap(this.map);
+        }
+
+        this.markers.push({ marker, typeId: geolocation.typeId });
+        resolve(marker);
+      });
+    },
+    showAllMarkers() {
+      for (let i = 0; i < this.markers.length; i++) {
+        const marker = this.markers[i].marker;
         marker.setMap(this.map);
       }
-
-      this.markers.push({ marker, typeId: geolocation.typeId });
-      return marker;
+      this.markersAreShown = true;
+    },
+    hideAllMarkers() {
+      for (let i = 0; i < this.markers.length; i++) {
+        const marker = this.markers[i].marker;
+        marker.setMap(null);
+      }
+      this.markersAreShown = false;
     },
     async saveMovableMarkerPosition(properties, type = 'Default') {
       const geolocation = {
@@ -142,7 +174,7 @@ export default {
         lng: this.movableMarker.getPosition().lng(),
         typeId: properties.typeId
       };
-      const fullAddress = await this.getAddressFromGeolocation(geolocation);
+      const fullAddress = await this.$store.dispatch('googleMap/getAddressFromGeolocationAsync', geolocation);
 
       const data = {
         ...properties,
@@ -152,7 +184,7 @@ export default {
       }
 
       // this.geolocations.push(geolocation);
-      this.addMarkerToMap(geolocation, type);
+      this.addMarkerToMapAsync(geolocation, type);
 
       await this.$axios.post("/api/map/save", data);
     },
@@ -164,74 +196,16 @@ export default {
         icon: `/icons/map/${iconName}.png`
       });
 
-      this.map.addListener('center_changed', () => {
-        this.movableMarker.setPosition(this.map.getCenter());
-      });
-
       if (enabled) {
         this.movableMarker.setMap(this.map);
       }
     },
-    getCurrentLocation() {
-      return new Promise((resolve) => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition((position) => {
-            const currentPosition = { lat: position.coords.latitude, lng: position.coords.longitude };
-            resolve(currentPosition);
-          });
-        } else {
-          // Implement other logic if geolocation is disabled
-          const currentPositionLat = 56.81543608008677;
-          const currentPositionLng = 24.599863529284583;
-          const currentPosition = { lat: currentPositionLat, lng: currentPositionLng };
-          resolve(currentPosition);
-        }
-      });
-    },
-    getAddressFromGeolocation(latLng) {
-      return new Promise((resolve, reject) => {
-        this.geocoder
-          .geocode({ location: latLng })
-          .then((response) => {
-            const result = response.results[0];
-            if (result) {
-              const addressComponents = result.address_components;
-              const fullAddress = {
-                country: addressComponents.filter(c => c.types.includes("country"))[0]?.long_name,
-                city: addressComponents.filter(c => c.types.includes("locality"))[0]?.long_name,
-                district: addressComponents.filter(c => c.types.includes("sublocality"))[0]?.long_name,
-                street: addressComponents.filter(c => c.types.includes("route"))[0]?.long_name,
-                houseNumber: addressComponents.filter(c => c.types.includes("street_number"))[0]?.long_name
-              };
-              resolve(fullAddress);
-            } else {
-              const fullAddress = {
-                country: null,
-                city: null,
-                district: null,
-                street: null,
-                houseNumber: null
-              };
-              resolve(fullAddress);
-            }
-          })
-          .catch(e => reject(e));
-      });
-    },
-    getGeolocationFromAddress(address) {
-      return new Promise((resolve, reject) => {
-        this.geocoder
-          .geocode({ address })
-          .then((response) => {
-            const result = response.results[0];
-            if (result) {
-              resolve(result)
-            } else {
-              // TODO: Implement logic if address not found
-            }
-          })
-          .catch(e => reject(e));
-      });
+    getMapWidth() {
+      const bounds = this.map.getBounds();
+      const center = this.map.getCenter();
+      const SWCorner = bounds.getSouthWest();
+
+      return Math.abs(center.lng() - SWCorner.lng());
     },
     getFilterGoogleButton(controlDiv) {
       // Set CSS for the control border.

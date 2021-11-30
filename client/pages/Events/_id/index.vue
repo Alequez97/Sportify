@@ -37,7 +37,8 @@
 
       <v-row>
         <v-col class="col-12">
-          <v-img class="pic" src="/map.png" />
+          <div id="google-map-event-details"></div>
+          <!-- <v-img class="pic" src="/map.png" /> -->
         </v-col>
       </v-row>
     </v-container>
@@ -60,10 +61,39 @@ export default {
 
   async created() {
     try {
-      var res = await this.$axios.get(`/api/event/${this.$route.params.id}`);
-      this.event = res.data;
+      await this.$axios.get(`/api/event/${this.$route.params.id}`).then((response) => {
+        this.event = response.data;
+      });
     } catch (err) {
       console.log(err);
+    }
+  },
+  updated() {
+    this.renderEventLocationIfExists();
+  },
+  methods: {
+    async renderEventLocationIfExists() {
+      if (this.event.venue.lat !== undefined && this.event.venue.lng !== undefined) {
+        document.getElementById('google-map-event-details').style.height = '300px';
+
+        await this.$store.dispatch('googleMap/prepare');
+        const google = this.$store.getters['googleMap/getGoogleObject'];
+
+        const mapOptions = {
+          center: {
+            lat: this.event.venue.lat,
+            lng: this.event.venue.lng
+          },
+          zoom: 14
+        };
+        const map = new google.maps.Map(document.getElementById("google-map-event-details"), mapOptions);
+
+        const markerPosition = { lat: this.event.venue.lat, lng: this.event.venue.lng };
+        const marker = new google.maps.Marker({
+          position: markerPosition
+        });
+        marker.setMap(map);
+      }
     }
   }
 }

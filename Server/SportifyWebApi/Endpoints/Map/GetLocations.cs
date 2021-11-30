@@ -38,6 +38,7 @@ namespace SportifyWebApi.Endpoints.Map
             var responseList = locationsList.Select(l => {
                 var response = new SportsGroundGetLocationsResponse()
                 {
+                    Id = l.Id,
                     Lat = l.Geolocation.Latitude,
                     Lng = l.Geolocation.Longitude,
                     TypeId = l.Type.Id,
@@ -48,7 +49,7 @@ namespace SportifyWebApi.Endpoints.Map
                 return response;
             }).ToList();
 
-            return responseList.Count > 0 ? Ok(responseList) : NotFound();
+            return responseList.Count > 0 ? Ok(responseList) : Ok(new Response() { Message = "No locations where found by given parameters", Status = "Not found" });
         }
     }
 
@@ -66,6 +67,8 @@ namespace SportifyWebApi.Endpoints.Map
 
     public class SportsGroundGetLocationsResponse
     {
+        public int Id { get; set; }
+
         public double Lat { get; set; }
 
         public double Lng { get; set; }
