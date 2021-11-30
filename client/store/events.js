@@ -83,6 +83,16 @@ export const actions = {
         } catch (err) {
             console.log(err);
         }
+    },
+    async applyFilters({commit}, filterData) {
+        try {
+            debugger;
+            const resp = await this.$axios.get('api/events', { params: {categoryId: filterData.categoryId, countryId: filterData.countryId, cityId: filterData.cityId} });
+            debugger;
+            commit("SET_EVENTS", resp.data);
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
 

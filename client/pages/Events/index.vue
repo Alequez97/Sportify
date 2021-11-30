@@ -1,5 +1,6 @@
 <template>
   <v-container fluid>
+    <EventFilters />
     <v-row v-for="event in events" :key="event.id" no-gutters>
       <v-col col="12">
         <Event :event="event" @join="join"/>
@@ -10,16 +11,13 @@
 
 <script>
 import Event from "../../components/events/Event";
+import EventFilters from "../../components/events/EventFilters"
 
 export default {
   components: {
-    Event
+    Event,
+    EventFilters
   },
-  // data() {
-  //   return {
-  //     events: []
-  //   };
-  // },
   head() {
     return {
       title: "Welcome to Sportify!",
@@ -34,6 +32,8 @@ export default {
   },
   async created() {
     await this.$store.dispatch('events/fetchEvents');
+    await this.$store.dispatch('events/fetchCategories');
+    await this.$store.dispatch('events/fetchCountries');
   },
   computed: {
     events() {

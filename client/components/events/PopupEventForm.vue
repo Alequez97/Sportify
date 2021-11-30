@@ -17,14 +17,16 @@
               <v-text-field
                 v-model="title"
                 :rules="titleRules"
-                label="Title" color="teal"
+                label="Title"
+                color="teal"
                 append-icon="mdi-pencil"
               />
               <v-select
                 v-model="categoryId"
                 :items="categories"
                 :rules="categoryRules"
-                label="Category" item-text="name"
+                label="Category"
+                item-text="name"
                 item-value="id"
                 color="teal"
               />
@@ -155,10 +157,10 @@ export default {
       ]
     };
   },
-  async created(){
-    await this.$store.dispatch('events/fetchCategories');
-    await this.$store.dispatch('events/fetchCountries');
-  },
+  // async created(){
+  //   await this.$store.dispatch('events/fetchCategories');
+  //   await this.$store.dispatch('events/fetchCountries');
+  // },
   computed: {
     categories() { return this.$store.getters['events/getCategories'] },
     countries() { return this.$store.getters['events/getCountries'] },
