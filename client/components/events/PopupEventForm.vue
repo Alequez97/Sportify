@@ -21,7 +21,7 @@
                 color="teal"
                 append-icon="mdi-pencil"
               />
-              <v-select
+              <v-autocomplete
                 v-model="categoryId"
                 :items="categories"
                 :rules="categoryRules"
@@ -43,7 +43,7 @@
                 label="Description"
                 color="teal"
               />
-              <v-select
+              <v-autocomplete
                 v-model="countryId"
                 :rules="countryRules"
                 :items="countries"
@@ -53,7 +53,7 @@
                 color="teal"
                 @change="onCountrySelect()"
               />
-              <v-select
+              <v-autocomplete
                 v-model="cityId"
                 :rules="cityRules"
                 :items="cities"
@@ -70,7 +70,7 @@
                 color="teal"
                 append-icon="mdi-map-marker-outline"
               />
-              <PopupDatePicker @bindDate="bindDate"/>
+              <PopupDatePicker @bindDate="bindDate" />
               <PopupTimePicker @bindTime="bindTime" />
             </v-form>
           </v-card-text>
@@ -157,14 +157,10 @@ export default {
       ]
     };
   },
-  // async created(){
-  //   await this.$store.dispatch('events/fetchCategories');
-  //   await this.$store.dispatch('events/fetchCountries');
-  // },
   computed: {
     categories() { return this.$store.getters['events/getCategories'] },
     countries() { return this.$store.getters['events/getCountries'] },
-    cities() { return this.$store.getters['events/getCities'] },
+    cities() { return this.$store.getters['events/getCitiesForEventForm'] },
     countrySelected() {
       return this.countryId != null;
     }
@@ -194,7 +190,8 @@ export default {
       }
     },
     async onCountrySelect() {
-      await this.$store.dispatch('events/fetchCities', this.countryId);
+      this.cityId = null;
+      await this.$store.dispatch('events/fetchCitiesForEventForm', this.countryId);
     },
     cancel() {
       this.$refs.eventForm.reset();

@@ -20,7 +20,7 @@
               :items="categories"
               item-text="name"
               item-value="id"
-              :change="applyFilters()"
+              @change="applyFilters()"
               label="Category"
               clearable
               solo
@@ -32,7 +32,7 @@
               :items="countries"
               item-text="name"
               item-value="id"
-              :change="applyFilters()"
+              @change="applyFiltersForCountry()"
               label="Country"
               clearable
               solo
@@ -44,8 +44,9 @@
               :items="cities"
               item-text="name"
               item-value="id"
-              :change="applyFilters()"
+              @change="applyFilters()"
               label="City"
+              :disabled="!countrySelected"
               clearable
               solo
               hide-details
@@ -75,27 +76,38 @@ export default {
       return this.$store.getters["events/getCountries"];
     },
     cities() {
-      return this.$store.getters["events/getCities"];
+      return this.$store.getters["events/getCitiesForEventFilters"];
     },
     filtersActivated() {
       return this.showFilters;
     },
     filtersApplied() {
       return this.categoryId != null || this.countryId != null || this.cityId != null;
+    },
+    countrySelected() {
+      return this.countryId != null;
     }
   },
   methods: {
     activateFilters() {
         this.showFilters = !this.showFilters;
     },
-    applyFilters() {
+    async applyFilters() {
         const filterData = {
             categoryId: this.categoryId,
             countryId: this.countryId,
             cityId: this.cityId
         }
         debugger;
-        this.$store.dispatch("events/applyFilters", filterData);
+        await this.$store.dispatch("events/applyFilters", filterData);
+    },
+    async applyFiltersForCountry() {
+      if (this.countryId == null) {
+        this.cityId = null;
+      }
+
+      await this.$store.dispatch('events/fetchCitiesForEventFilters', this.countryId);
+      this.applyFilters();
     }
   }
 };
