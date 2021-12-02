@@ -25,12 +25,14 @@
 
     <GoogleMap
       :geolocations="geolocations"
+      :initZoomLevel=14
       :enabledTypeIds="enabledTypeIds"
       :showFilterButton="true"
       :movableMarkerEnabled="movableMarkerEnabled"
       ref="map"
       v-on:mapOnLoad="mapOnLoad"
       v-on:centerChanged="centerChanged"
+      v-on:zoomOut="zoomOut"
       v-on:filterOnClick="filterOnClick"
     />
 
@@ -82,7 +84,7 @@ export default {
   data() {
     return {
       geolocations: [],
-      fetchedGeolocations: [],
+      fetchedPositions: [],
       enabledTypeIds: [],
       types: [],
 
@@ -152,12 +154,14 @@ export default {
           console.log(error);
         });
     },
-    async mapOnLoad(mapCenter, mapWidth) {
-      await this.getLocationsAround(mapCenter, mapWidth);
-      this.mapIsLoaded = true;
+    async mapOnLoad(mapCenter, mapSize) {
+      await this.getLocationsAround(mapCenter, mapSize);
     },
-    async centerChanged(mapCenter, mapWidth) {
-      await this.getLocationsAround(mapCenter, mapWidth);
+    async zoomOut(mapCenter, mapSize) {
+      await this.getLocationsAround(mapCenter, mapSize, false);
+    },
+    async centerChanged(mapCenter, mapSize) {
+      await this.getLocationsAround(mapCenter, mapSize);
     },
     filterOnClick() {
       this.filterDialog = true;
@@ -165,22 +169,37 @@ export default {
     saveFilters() {
       this.filterDialog = false;
     },
-    async getLocationsAround(latLng, delta) {
+    async getLocationsAround(latLng, delta, checkPreviousFetch = true, digitsCount = 2) {
+      delta = delta * 2;
+      const roundFactor = Math.pow(10, digitsCount);
+      latLng = { lat: Math.round(latLng.lat * roundFactor) / roundFactor, lng: Math.round(latLng.lng * roundFactor) / roundFactor };
+
+      if (checkPreviousFetch === false) {
+        await this.fetchGeolocationsAround(latLng, delta);
+        return;
+      }
+
+      const storedPosition = this.fetchedPositions.find(pos => pos.lat === latLng.lat && pos.lng === latLng.lng);
+      if (storedPosition === undefined) {
+        this.fetchedPositions.push(latLng);
+        await this.fetchGeolocationsAround(latLng, delta);
+      }
+    },
+    async fetchGeolocationsAround(latLng, delta) {
       await this.$axios.get("https://localhost:44314/api/map", { params: { lat: latLng.lat, lng: latLng.lng, delta } }).then((response) => {
-        this.addGeolocationsIfWereNotAddedBefore(response.data);
+        this.addGeolocations(response.data);
       }).catch((error) => {
         console.log(error);
       });
     },
-    addGeolocationsIfWereNotAddedBefore(geolocationArray) {
+    addGeolocations(geolocationArray) {
       for (let i = 0; i < geolocationArray.length; i++) {
         const newGeolocation = geolocationArray[i];
-        const savedGeolocation = this.fetchedGeolocations.find(g => g.id === newGeolocation.id);
-        if (savedGeolocation === undefined) {
+        const addedGeolocation = this.geolocations.find(g => g.id === newGeolocation.id);
+        if (addedGeolocation === undefined) {
           this.geolocations.push(newGeolocation);
         }
       }
-      this.fetchedGeolocations.push(...this.geolocations);
     }
   }
 }

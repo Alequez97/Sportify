@@ -7,6 +7,7 @@ export default {
   name: 'GoogleMap',
   props: [
     'geolocations',
+    'initZoomLevel',
     'enabledTypeIds',
     'showFilterButton',
     'movableMarkerEnabled',
@@ -15,9 +16,11 @@ export default {
   data() {
     return {
       map: null,
+      currentZoomLevel: null,
       google: null,
       geocoder: null,
       markers: [],
+      renderedGeolocationsIds: [],
       markersAreShown: true,
       infoWindows: [],
       movableMarker: null,
@@ -25,18 +28,16 @@ export default {
     }
   },
   watch: {
-    async geolocations(newGeolocations) {
+    geolocations(newGeolocationArray) {
+      const newGeolocations = newGeolocationArray.filter(g => !this.renderedGeolocationsIds.includes(g.id));
       for (let i = 0; i < newGeolocations.length; i++) {
         const newGeolocation = newGeolocations[i];
-        const drawenMarker = this.markers.find(m => m.marker.id === newGeolocation.id);
-        if (drawenMarker === undefined) {
-          console.log('Creating new marker with id ' + newGeolocations[i].id);
-          await this.addMarkerToMapAsync(newGeolocation, newGeolocation.typeName.replaceAll(" ", "_"));
-        }
+        console.log('Creating new marker with id ' + newGeolocations[i].id);
+        this.addMarkerToMapAsync(newGeolocation, newGeolocation.typeName.replaceAll(" ", "_"));
       }
     },
     enabledTypeIds(newTypes, oldTypes) {
-      const wasEnabled = newTypes.length > oldTypes.length;
+      const wasEnabled = newTypes.length >= oldTypes.length;
       if (wasEnabled) {
         const lastSelectTypeIds = newTypes.filter(x => !oldTypes.includes(x));
 
@@ -61,6 +62,9 @@ export default {
       }
     }
   },
+  created() {
+    this.currentZoomLevel = this.initZoomLevel;
+  },
   async mounted() {
     await this.$store.dispatch('googleMap/prepare');
     this.currentLocation = await this.$store.dispatch('googleMap/getCurrentLocationAsync');
@@ -70,7 +74,7 @@ export default {
         lat: this.currentLocation.lat,
         lng: this.currentLocation.lng
       },
-      zoom: 14
+      zoom: this.currentZoomLevel
     };
 
     this.google = this.$store.getters['googleMap/getGoogleObject'];
@@ -78,7 +82,7 @@ export default {
 
     this.google.maps.event.addListenerOnce(this.map, 'idle', () => {
       const center = this.map.getCenter();
-      this.$emit('mapOnLoad', { lat: center.lat(), lng: center.lng() }, this.getMapWidth());
+      this.$emit('mapOnLoad', { lat: center.lat(), lng: center.lng() }, this.getMapSize());
     });
 
     this.geocoder = this.$store.getters['googleMap/getGeocoderObject'];
@@ -93,18 +97,26 @@ export default {
       this.infoWindows.forEach(i => i.close());
     });
     this.map.addListener('center_changed', () => {
-      this.movableMarker.setPosition(this.map.getCenter());
       const center = this.map.getCenter();
-      this.$emit('centerChanged', { lat: center.lat(), lng: center.lng() }, this.getMapWidth());
+      this.movableMarker.setPosition(center);
+      this.$emit('centerChanged', { lat: center.lat(), lng: center.lng() }, this.getMapSize());
     });
     this.map.addListener('zoom_changed', () => {
-      const zoomLevel = this.map.getZoom();
-      if (zoomLevel <= 12 && this.markersAreShown) {
+      const newZoomLevel = this.map.getZoom();
+      const center = this.map.getCenter();
+
+      if (newZoomLevel < this.currentZoomLevel) {
+        this.$emit('zoomOut', { lat: center.lat(), lng: center.lng() }, this.getMapSize());
+      }
+
+      if (newZoomLevel <= 11 && this.markersAreShown) {
         this.hideAllMarkers();
       }
-      if (zoomLevel > 12 && !this.markersAreShown) {
+      if (newZoomLevel > 11 && !this.markersAreShown) {
         this.showAllMarkers();
       }
+
+      this.currentZoomLevel = newZoomLevel;
     });
 
     this.createMovableMarker(this.movableMarkerEnabled);
@@ -150,6 +162,7 @@ export default {
           marker.setMap(this.map);
         }
 
+        this.renderedGeolocationsIds.push(geolocation.id);
         this.markers.push({ marker, typeId: geolocation.typeId });
         resolve(marker);
       });
@@ -200,12 +213,15 @@ export default {
         this.movableMarker.setMap(this.map);
       }
     },
-    getMapWidth() {
+    getMapSize() {
       const bounds = this.map.getBounds();
       const center = this.map.getCenter();
       const SWCorner = bounds.getSouthWest();
 
-      return Math.abs(center.lng() - SWCorner.lng());
+      const size1 = Math.abs(center.lng() - SWCorner.lng());
+      const size2 = Math.abs(center.lat() - SWCorner.lat());
+
+      return size1 > size2 ? size1 : size2;
     },
     getFilterGoogleButton(controlDiv) {
       // Set CSS for the control border.
