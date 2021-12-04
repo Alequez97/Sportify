@@ -156,6 +156,7 @@ export default {
     },
     async mapOnLoad(mapCenter, mapSize) {
       await this.getLocationsAround(mapCenter, mapSize);
+      this.mapIsLoaded = true;
     },
     async zoomOut(mapCenter, mapSize) {
       await this.getLocationsAround(mapCenter, mapSize, false);
