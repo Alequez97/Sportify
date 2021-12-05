@@ -449,7 +449,7 @@ namespace DataServices.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_SportsGroundLocations_LatLng",
                 table: "SportsGroundLocations",
-                columns: new[] { "Latitude", "Longtitude" });
+                columns: new[] { "Latitude", "Longitude" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Venues_CityId",
