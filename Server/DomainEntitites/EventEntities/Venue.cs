@@ -13,7 +13,8 @@ namespace DomainEntities.EventEntities
 
         public string Address { get; set; }
 
-        public int? GeolocationId { get; set; }
-        public Geolocation Geolocation { get; set; }
+        public double Latitude { get; set; }
+
+        public double Longitude { get; set; }
     }
 }

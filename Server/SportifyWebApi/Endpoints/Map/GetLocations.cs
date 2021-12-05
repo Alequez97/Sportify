@@ -26,12 +26,11 @@ namespace SportifyWebApi.Endpoints.Map
         public override async Task<ActionResult<SportsGroundGetLocationsResponse>> HandleAsync([FromRoute] SportsGroundGetLocationsRequest request, CancellationToken cancellationToken = default)
         {
             var locations = _context.SportsGroundLocations
-                .Include(s => s.Geolocation)
                 .Include(s => s.Type)
-                .Where(s => s.Geolocation.Latitude > request.Lat - request.Delta 
-                         && s.Geolocation.Latitude < request.Lat + request.Delta
-                         && s.Geolocation.Longitude > request.Lng - request.Delta
-                         && s.Geolocation.Longitude < request.Lng + request.Delta);
+                .Where(s => s.Latitude > request.Lat - request.Delta 
+                         && s.Latitude < request.Lat + request.Delta
+                         && s.Longitude > request.Lng - request.Delta
+                         && s.Longitude < request.Lng + request.Delta);
 
             var locationsList = await locations.ToListAsync();
 
@@ -39,8 +38,8 @@ namespace SportifyWebApi.Endpoints.Map
                 var response = new SportsGroundGetLocationsResponse()
                 {
                     Id = l.Id,
-                    Lat = l.Geolocation.Latitude,
-                    Lng = l.Geolocation.Longitude,
+                    Lat = l.Latitude,
+                    Lng = l.Longitude,
                     TypeId = l.Type.Id,
                     TypeName = l.Type.Name,
                     Description = l.Description

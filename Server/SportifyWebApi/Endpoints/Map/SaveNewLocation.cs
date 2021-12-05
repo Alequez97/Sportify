@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using DataServices;
-using DomainEntities;
 using DomainEntities.SportsGroundEntities;
 using Microsoft.AspNetCore.Mvc;
 using SportifyWebApi.Constants;
@@ -26,13 +25,6 @@ namespace SportifyWebApi.Endpoints.Map
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Map })]
         public override async Task<ActionResult> HandleAsync([FromBody] SportsGroundSaveNewLocationRequest request, CancellationToken cancellationToken = default)
         {
-            var geolocation = new Geolocation()
-            {
-                Latitude = request.Lat,
-                Longitude = request.Lng
-            };
-            _context.Geolocations.Add(geolocation);
-
             var location = new SportsGroundLocation()
             {
                 Country = request.Country,
@@ -41,7 +33,8 @@ namespace SportifyWebApi.Endpoints.Map
                 Street = request.Street,
                 HouseNumber = request.HouseNumber,
                 TypeId = request.TypeId,
-                Geolocation = geolocation,
+                Latitude = request.Lat,
+                Longitude = request.Lng,
                 Description = request.Description,
                 CreatorId = 1/*Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)*/
             };
