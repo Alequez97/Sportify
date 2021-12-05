@@ -25,7 +25,7 @@ namespace SportifyWebApi.Endpoints.Category
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult<GetCategoriesResponse>> HandleAsync(CancellationToken cancellationToken = default)
         {
-            var res = await _context.Categories.Select(x => new GetCategoriesResponse()
+            var res = await _context.EventCategories.Select(x => new GetCategoriesResponse()
             {
                 Id = x.Id,
                 Name = x.Name

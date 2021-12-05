@@ -16,7 +16,7 @@ namespace DataServices
         }
         public DbSet<Event> Events { get; set; }
         public DbSet<Venue> Venues { get; set; }
-        public DbSet<EventCategory> Categories { get; set; }
+        public DbSet<EventCategory> EventCategories { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<SportsGroundLocation> SportsGroundLocations { get; set; }

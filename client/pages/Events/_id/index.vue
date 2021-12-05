@@ -81,9 +81,10 @@ export default {
 
         const mapOptions = {
           center: {
-            lat: this.event.venue.lat,
+            lat: this.event.venue.lat - 0.00001,
             lng: this.event.venue.lng
           },
+          draggable: false,
           zoom: 14
         };
         const map = new google.maps.Map(document.getElementById("google-map-event-details"), mapOptions);
