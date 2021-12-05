@@ -172,9 +172,14 @@ export default {
 
         const country = this.countries.find(c => c.id === this.countryId);
         const city = this.cities.find(c => c.id === this.cityId);
-        const fullAddress = country + ", " + city + ", " + this.address
+        const fullAddress = country.name + ", " + city.name + ", " + this.address;
 
-        const latLng = await this.$store.dispatch('googleMap/getGeolocationFromAddressAsync', fullAddress);
+        let latLng;
+        try {
+          latLng = await this.$store.dispatch('googleMap/getGeolocationFromAddressAsync', fullAddress);
+        } catch (error) {
+          latLng = { lat: undefined, lng: undefined };
+        }
         const eventData = {
           title: this.title,
           categoryId: this.categoryId,

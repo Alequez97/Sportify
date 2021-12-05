@@ -44,7 +44,7 @@ export const actions = {
                 const latlng = { lat: location.lat(), lng: location.lng() };
                 resolve(latlng)
               } else {
-                // TODO: Implement logic if address not found
+                resolve({ lat: undefined, lng: undefined });
               }
             })
             .catch(e => reject(e));
