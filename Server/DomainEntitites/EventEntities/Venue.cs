@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace DomainEntities.EventEntities
 {
     /// <summary>
@@ -11,6 +13,8 @@ namespace DomainEntities.EventEntities
         public int CityId { get; set; }
         public City City { get; set; }
 
+        [Required]
+        [MaxLength(200)]
         public string Address { get; set; }
 
         public double Latitude { get; set; }

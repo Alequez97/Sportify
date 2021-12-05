@@ -18,10 +18,13 @@ namespace DomainEntities.SportsGroundEntities
 
         public string HouseNumber { get; set; }
 
+        [MaxLength(500)]        
         public string Description { get; set; }
-
+        
+        [Required]
         public double Latitude { get; set; }
 
+        [Required]
         public double Longitude { get; set; }
 
         [Required]
