@@ -2,8 +2,9 @@
   <v-card class="mx-auto" max-width="800">
     <v-container>
       <v-row v-if="event && event.venue">
-        <v-col class="col-lg-6 col-12 my-auto">
-          <v-img :src="'/' + event.categoryName + '.png'" />
+        <v-col class="col-lg-6 col-12">
+          <v-img contain max-width="100%" max-height="280px" :src="'/' + event.categoryName + '.png'" />
+          <!-- <v-img contain max-height="300px" class="photo" src="/audi.jpg" /> -->
         </v-col>
 
         <v-col class="col-lg-6 col-12 my-auto">
@@ -35,10 +36,15 @@
         </v-col>
       </v-row>
 
-      <v-row>
+      <v-row class="mt-0">
         <v-col class="col-12">
           <div id="google-map-event-details"></div>
-          <!-- <v-img class="pic" src="/map.png" /> -->
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col class="col-12">
+          <v-img src="/chatPreview.png"></v-img>
         </v-col>
       </v-row>
     </v-container>
