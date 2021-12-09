@@ -10,23 +10,30 @@
           </v-card-text>
 
           <v-card-text class="pt-0">
-            <v-form class="px-6">
-              <v-text-field v-model="email" label="Email" color="teal" />
-              <v-text-field v-model="username" label="Username" color="teal" />
+            <v-form class="px-6" @submit.prevent="register">
+              <v-text-field
+                v-model="email"
+                label="Email"
+                color="teal"
+              />
+              <v-text-field
+                v-model="username"
+                label="Username"
+                color="teal"
+              />
               <v-text-field
                 v-model="password"
                 type="password"
                 label="Password"
                 color="teal"
               />
+              <v-card-actions class="px-10">
+                <v-btn color="teal" block outlined type="submit">
+                  Sign Up
+                </v-btn>
+              </v-card-actions>
             </v-form>
           </v-card-text>
-
-          <v-card-actions class="px-10 mb-5">
-            <v-btn color="teal" block outlined @click="register()">
-              Sign Up
-            </v-btn>
-          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>

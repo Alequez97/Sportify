@@ -18,11 +18,11 @@
                 label="Password"
                 color="teal"
               />
-          <v-card-actions class="px-10">
-            <v-btn color="teal" block outlined type="login">
-              Sign In
-            </v-btn>
-          </v-card-actions>
+            <v-card-actions class="px-10">
+              <v-btn color="teal" block outlined type="submit">
+                Sign In
+              </v-btn>
+            </v-card-actions>
             </v-form>
           </v-card-text>
         </v-card>

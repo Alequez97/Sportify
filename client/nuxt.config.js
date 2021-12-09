@@ -17,10 +17,10 @@ export default {
   },
 
   //Uncomment this if you want to test on mobile/tablet. As URL use: {yourIPaddress}:8000
-  server: {
-    host: '0.0.0.0',
-    timing: false
-  },
+  // server: {
+  //   host: '0.0.0.0',
+  //   timing: false
+  // },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [

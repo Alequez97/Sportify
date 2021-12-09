@@ -1,7 +1,7 @@
 <template>
   <v-dialog ref="dialog" v-model="modal" :return-value.sync="time" persistent width="290px">
     <template v-slot:activator="{ on, attrs }">
-      <v-text-field v-model="time" :rules="timeRules" label="Picker in dialog" append-icon="mdi-clock-time-four-outline" color="teal" readonly v-bind="attrs" v-on="on"></v-text-field>
+      <v-text-field v-model="time" :rules="timeRules" label="Сhoose time" append-icon="mdi-clock-time-four-outline" color="teal" readonly v-bind="attrs" v-on="on"></v-text-field>
     </template>
     <v-time-picker v-if="modal" v-model="time"  format="24hr" color="teal" full-width>
       <v-spacer></v-spacer>
