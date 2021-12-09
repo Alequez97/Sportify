@@ -1,9 +1,9 @@
 <template>
   <v-container fluid>
-    <EventFilters />
+    <EventFilters v-if="events.length" />
     <v-row v-for="event in events" :key="event.id" no-gutters>
       <v-col col="12">
-        <Event :event="event" @join="join"/>
+        <Event :event="event" @join="join" />
       </v-col>
     </v-row>
   </v-container>
@@ -30,15 +30,15 @@ export default {
       ]
     };
   },
-  async created() {
-    await this.$store.dispatch('events/fetchEvents');
-    await this.$store.dispatch('events/fetchCategories');
-    await this.$store.dispatch('events/fetchCountries');
-  },
   computed: {
     events() {
       return this.$store.getters['events/getEvents'];
     }
+  },
+  async created() {
+    await this.$store.dispatch('events/fetchEvents');
+    await this.$store.dispatch('events/fetchCategories');
+    await this.$store.dispatch('events/fetchCountries');
   },
   methods: {
     async join(eventData) {

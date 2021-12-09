@@ -44,8 +44,8 @@
                 color="teal"
               />
               <v-autocomplete
-                autocomplete="nope"
                 v-model="countryId"
+                autocomplete="nope"
                 :rules="countryRules"
                 :items="countries"
                 label="Country"
@@ -55,8 +55,8 @@
                 @change="onCountrySelect()"
               />
               <v-autocomplete
-                autocomplete="nope"
                 v-model="cityId"
+                autocomplete="nope"
                 :rules="cityRules"
                 :items="cities"
                 label="City"
@@ -66,8 +66,8 @@
                 :disabled="!countrySelected"
               />
               <v-text-field
-                autocomplete="nope"
                 v-model="address"
+                autocomplete="nope"
                 :rules="addressRules"
                 label="Address"
                 color="teal"
@@ -87,7 +87,7 @@
             </v-btn>
           </v-card-actions>
         </v-card>
-    </v-dialog>
+      </v-dialog>
     </v-col>
   </v-row>
 </template>

@@ -8,52 +8,54 @@
         max-width="600px"
       >
         <v-card-title class="pa-0">
-            <v-btn block large @click="activateFilters()">
-                Filters
-                <v-icon :color="filtersApplied ? 'red' : 'blue'" right>mdi-filter</v-icon>
-            </v-btn>
+          <v-btn block large @click="activateFilters()">
+            Filters
+            <v-icon :color="filtersApplied ? 'red' : 'blue'" right>
+              mdi-filter
+            </v-icon>
+          </v-btn>
         </v-card-title>
         <div v-if="filtersActivated">
           <v-card-text>
             <v-autocomplete
-              autocomplete="nope"
               v-model="categoryId"
+              autocomplete="nope"
               :items="categories"
               item-text="name"
               item-value="id"
-              @change="applyFilters()"
               label="Category"
               clearable
               solo
               hide-details
               class="my-3"
-            ></v-autocomplete>
+              @change="applyFilters()"
+            />
             <v-autocomplete
-              autocomplete="nope"
               v-model="countryId"
+              autocomplete="nope"
               :items="countries"
               item-text="name"
               item-value="id"
-              @change="applyFiltersForCountry()"
               label="Country"
               clearable
               solo
               hide-details
               class="my-3"
-            ></v-autocomplete>
+              @change="applyFiltersForCountry()"
+            />
             <v-autocomplete
-              autocomplete="nope"
               v-model="cityId"
+              autocomplete="nope"
               :items="cities"
               item-text="name"
               item-value="id"
-              @change="applyFilters()"
               label="City"
               :disabled="!countrySelected"
               clearable
               solo
               hide-details
-            ></v-autocomplete>
+              @change="applyFilters()"
+            />
           </v-card-text>
         </div>
       </v-card>
@@ -69,7 +71,7 @@ export default {
       categoryId: null,
       countryId: null,
       cityId: null
-    };
+    }
   },
   computed: {
     categories() {
@@ -85,7 +87,9 @@ export default {
       return this.showFilters;
     },
     filtersApplied() {
-      return this.categoryId != null || this.countryId != null || this.cityId != null;
+      return (
+        this.categoryId != null || this.countryId != null || this.cityId != null
+      );
     },
     countrySelected() {
       return this.countryId != null;
@@ -93,23 +97,25 @@ export default {
   },
   methods: {
     activateFilters() {
-        this.showFilters = !this.showFilters;
+      this.showFilters = !this.showFilters;
     },
     async applyFilters() {
-        const filterData = {
-            categoryId: this.categoryId,
-            countryId: this.countryId,
-            cityId: this.cityId
-        }
-        debugger;
-        await this.$store.dispatch("events/applyFilters", filterData);
+      const filterData = {
+        categoryId: this.categoryId,
+        countryId: this.countryId,
+        cityId: this.cityId
+      }
+      await this.$store.dispatch("events/applyFilters", filterData);
     },
     async applyFiltersForCountry() {
       if (this.countryId == null) {
         this.cityId = null;
       }
 
-      await this.$store.dispatch('events/fetchCitiesForEventFilters', this.countryId);
+      await this.$store.dispatch(
+        "events/fetchCitiesForEventFilters",
+        this.countryId
+      );
       this.applyFilters();
     }
   }
