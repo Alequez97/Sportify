@@ -10,6 +10,7 @@ namespace DomainEntities.EventEntities
     public class Event : EntityBase
     {
         [Required]
+        [MaxLength(100)]
         public string Title { get; set; }
 
         [Required]
@@ -17,11 +18,11 @@ namespace DomainEntities.EventEntities
         public EventCategory Category { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(150)]
         public string BriefDesc { get; set; }
 
         [Required]
-        [MaxLength(1000)]
+        [MaxLength(2000)]
         public string Description { get; set; }
 
         [Required]

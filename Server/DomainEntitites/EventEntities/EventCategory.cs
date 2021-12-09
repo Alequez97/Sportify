@@ -8,6 +8,7 @@ namespace DomainEntities.EventEntities
     public class EventCategory : EntityBase
     {
         [Required]
+        [MaxLength(100)]
         public string Name { get; set; }
     }
 }

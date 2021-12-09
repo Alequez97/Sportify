@@ -4,6 +4,7 @@ namespace DomainEntities.SportsGroundEntities
 {
     public class SportsGroundImage : EntityBase
     {
+        [Required]
         public string Path { get; set; }
 
         [Required]

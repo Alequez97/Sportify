@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace DomainEntities
 {
     /// <summary>
@@ -5,6 +7,8 @@ namespace DomainEntities
     /// </summary>
     public class City : EntityBase
     {
+        [Required]
+        [MaxLength(100)]
         public string Name { get; set; }
 
         public Country Country { get; set; }

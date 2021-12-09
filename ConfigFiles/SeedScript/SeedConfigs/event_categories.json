@@ -1,5 +1,5 @@
 ﻿{
-  "TableName": "Categories",
+  "TableName": "EventCategories",
   "ColumnNames": "Name",
   "InsertOnlyIfEmpty": true,
   "ListOfRows": [
