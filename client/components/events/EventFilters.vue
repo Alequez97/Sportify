@@ -16,6 +16,7 @@
         <div v-if="filtersActivated">
           <v-card-text>
             <v-autocomplete
+              autocomplete="nope"
               v-model="categoryId"
               :items="categories"
               item-text="name"
@@ -28,6 +29,7 @@
               class="my-3"
             ></v-autocomplete>
             <v-autocomplete
+              autocomplete="nope"
               v-model="countryId"
               :items="countries"
               item-text="name"
@@ -40,6 +42,7 @@
               class="my-3"
             ></v-autocomplete>
             <v-autocomplete
+              autocomplete="nope"
               v-model="cityId"
               :items="cities"
               item-text="name"
