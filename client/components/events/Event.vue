@@ -75,6 +75,7 @@
         <v-btn class="text-subtitle-1" text rounded :color="actionText.color" @click="handleJoin(event.id, event.isGoing)">
           {{ actionText.text }}
         </v-btn>
+        <v-spacer></v-spacer>
         <div v-if="event.isCreator">
           <v-btn text rounded color="teal" @click="editEvent()">
             <v-icon>
