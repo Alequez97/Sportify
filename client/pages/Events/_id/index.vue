@@ -4,7 +4,6 @@
       <v-row v-if="event && event.venue">
         <v-col class="col-lg-6 col-12">
           <v-img contain max-width="100%" max-height="280px" :src="'/' + event.categoryName + '.png'" />
-          <!-- <v-img contain max-height="300px" class="photo" src="/audi.jpg" /> -->
         </v-col>
 
         <v-col class="col-lg-6 col-12 my-auto">

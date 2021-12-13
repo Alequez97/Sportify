@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using AutoMapper;
 using DataServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SportifyWebApi.Constants;
 using Swashbuckle.AspNetCore.Annotations;
@@ -23,6 +24,7 @@ namespace SportifyWebApi.Endpoints.Events
             _mapper = mapper;
         }
 
+        [Authorize]
         [HttpPut("/api/event/edit/{id}")]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult> HandleAsync([FromBody] EditEventRequest request, CancellationToken cancellationToken = default)

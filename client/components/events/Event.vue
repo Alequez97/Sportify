@@ -63,19 +63,31 @@
               <div class="text-lg-subtitle-1 font-weight-regular mb-2">Be the first</div>
             </div>
           </v-card-text>
-          <v-card-actions class="py-0">
-            <v-btn class="text-subtitle-1" nuxt :to="'/events/' + event.id" color="deep-purple" text rounded>
-              Show
-            </v-btn>
-            <v-btn class="text-subtitle-1" text rounded :color="actionText.color" @click="handleJoin(event.id, event.isGoing)">
-              {{ actionText.text }}
-            </v-btn>
-          </v-card-actions>
         </v-col>
         <v-col cols="4">
           <v-img lazy-src="lazy-load.png" :src="event.categoryName + '.png'" />
         </v-col>
       </v-row>
+      <v-card-actions class="py-0">
+        <v-btn class="text-subtitle-1" nuxt :to="'/events/' + event.id" color="deep-purple" text rounded>
+          Show
+        </v-btn>
+        <v-btn class="text-subtitle-1" text rounded :color="actionText.color" @click="handleJoin(event.id, event.isGoing)">
+          {{ actionText.text }}
+        </v-btn>
+        <div v-if="event.isCreator">
+          <v-btn text rounded color="teal" @click="editEvent()">
+            <v-icon>
+              mdi-pencil
+            </v-icon>
+          </v-btn>
+          <v-btn text rounded color="red" @click="deleteEvent(event.id)">
+            <v-icon>
+              mdi-delete
+            </v-icon>
+          </v-btn>
+        </div>
+      </v-card-actions>
     </v-container>
   </v-card>
 </template>
@@ -123,6 +135,10 @@ export default {
       } else {
         this.$router.push('login');
       }
+    },
+    async deleteEvent(eventId) {
+      debugger;
+      await this.$store.dispatch("events/deleteEvent", eventId);
     }
   }
 };

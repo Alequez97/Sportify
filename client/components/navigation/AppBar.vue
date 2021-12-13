@@ -60,9 +60,13 @@
         </div>
       </v-container>
       <v-list nav dense>
-        <v-list-item-group
-          active-class="teal--text"
-        >
+        <v-list-item-group active-class="teal--text">
+          <v-list-item v-if="isAuthenticated" router :to="`/users/${userInfo.username}`">
+            <v-list-item-icon>
+              <v-icon>mdi-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>My profile</v-list-item-title>
+          </v-list-item>
           <v-list-item v-for="link in links" :key="link.text" router :to="link.route">
             <v-list-item-icon>
               <v-icon>{{ link.icon }}</v-icon>

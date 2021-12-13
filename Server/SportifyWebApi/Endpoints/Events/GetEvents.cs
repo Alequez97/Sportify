@@ -42,6 +42,7 @@ namespace SportifyWebApi.Endpoints.Events
                 CreatorId = x.CreatorId,
                 Date = DateTime.SpecifyKind(x.Date, DateTimeKind.Utc).ToString("o"),
                 IsGoing = User.Identity.IsAuthenticated && x.EventUsers.Any(xx => (xx.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value) && xx.IsGoing)),
+                IsCreator = User.Identity.IsAuthenticated && x.CreatorId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value),
                 Contributors = x.EventUsers.Where(i => i.IsGoing == true).Select(xx => new GetEventsResponse.GetEventsContributorDto()
                 {
                     Id = xx.User.Id,
@@ -83,6 +84,8 @@ namespace SportifyWebApi.Endpoints.Events
         public int CreatorId { get; set; }
 
         public bool IsGoing { get; set; }
+
+        public bool IsCreator { get; set; }
 
         public List<GetEventsContributorDto> Contributors { get; set; }
 
