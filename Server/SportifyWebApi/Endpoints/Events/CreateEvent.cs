@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,6 +29,8 @@ namespace SportifyWebApi.Endpoints.Events
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult> HandleAsync([FromBody] CreateEventRequest request, CancellationToken cancellationToken = default)
         {
+            int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
             var @event = new Event()
             {
                 Title = request.Title,
@@ -43,7 +46,8 @@ namespace SportifyWebApi.Endpoints.Events
                     Longitude = request.Lng
                 },
                 Date = request.Date,
-                CreatorId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                CreatorId = userId,
+                EventUsers = request.IsGoing ? new List<EventUser> { new EventUser() { IsGoing = true, UserId = userId } } : null
             };
 
             _context.Events.Add(@event);
@@ -82,5 +86,7 @@ namespace SportifyWebApi.Endpoints.Events
         public double Lng { get; set; }
 
         public DateTime Date { get; set; }
+
+        public bool IsGoing { get; set; }
     }
 }

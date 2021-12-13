@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <EventFilters v-if="events.length" />
+    <EventFilters />
     <v-row v-for="event in events" :key="event.id" no-gutters>
       <v-col col="12">
         <Event :event="event" @join="join" />

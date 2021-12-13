@@ -75,6 +75,11 @@
               />
               <PopupDatePicker @bindDate="bindDate" />
               <PopupTimePicker @bindTime="bindTime" />
+              <v-checkbox
+                v-model="isGoing"
+                :label="`I'm going`"
+                color="teal"
+              />
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -157,7 +162,9 @@ export default {
       timeOfTheEvent: null,
       timeOfTheEventRules: [
         v => v != null || 'Date is required'
-      ]
+      ],
+
+      isGoing: false
     };
   },
   computed: {
@@ -193,12 +200,14 @@ export default {
           cityId: this.cityId,
           address: this.address,
           lat: latLng.lat,
-          lng: latLng.lng
+          lng: latLng.lng,
+          isGoing: this.isGoing
         }
 
         await this.$store.dispatch('events/createEvent', eventData);
 
-        this.$refs.eventForm.reset();
+        this.$refs.eventForm.reset(); //reset => all data fields become null!!!
+        this.isGoing = false; //kostili :D
         this.dialog = false;
       }
     },
