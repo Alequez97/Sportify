@@ -206,8 +206,8 @@ export default {
 
         await this.$store.dispatch('events/createEvent', eventData);
 
-        this.$refs.eventForm.reset(); //reset => all data fields become null!!!
-        this.isGoing = false; //kostili :D
+        this.$refs.eventForm.reset(); // reset => all Data fields become null!!!
+        this.isGoing = false; // kostili :D
         this.dialog = false;
       }
     },

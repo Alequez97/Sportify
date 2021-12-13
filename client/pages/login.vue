@@ -10,19 +10,25 @@
           </v-card-text>
 
           <v-card-text class="pt-0">
-            <v-form @submit.prevent="login" class="px-6">
-              <v-text-field v-model="username" label="Username" color="teal" />
+            <v-form ref="loginForm" class="px-6" @submit.prevent="login">
+              <v-text-field
+                v-model="username"
+                :rules="usernameRules"
+                label="Username"
+                color="teal"
+              />
               <v-text-field
                 v-model="password"
+                :rules="passwordRules"
                 type="password"
                 label="Password"
                 color="teal"
               />
-            <v-card-actions class="px-10">
-              <v-btn color="teal" block outlined type="submit">
-                Sign In
-              </v-btn>
-            </v-card-actions>
+              <v-card-actions class="px-10">
+                <v-btn color="teal" block outlined type="submit">
+                  Sign In
+                </v-btn>
+              </v-card-actions>
             </v-form>
           </v-card-text>
         </v-card>
@@ -35,24 +41,33 @@
 export default {
   data() {
     return {
-      username: '',
-      password: ''
-    }
+      username: "",
+      usernameRules: [
+        v => !!v || "Username is required"
+      ],
+
+      password: "",
+      passwordRules: [
+        v => !!v || "Password is required"
+      ]
+    };
   },
   methods: {
     async login() {
-      try {
-        const loginData = {
-          username: this.username,
-          password: this.password
+      if (this.$refs.loginForm.validate()) {
+        try {
+          const loginData = {
+            username: this.username,
+            password: this.password
+          };
+          const response = await this.$auth.loginWith("local", {
+            data: loginData
+          });
+          this.$router.replace("/events");
+          console.log(response);
+        } catch (err) {
+          console.log(err);
         }
-        const response = await this.$auth.loginWith("local", {
-          data: loginData
-        });
-        this.$router.replace("/events");
-        console.log(response);
-      } catch (err) {
-        console.log(err);
       }
     }
   }

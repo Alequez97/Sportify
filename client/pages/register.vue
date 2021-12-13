@@ -10,19 +10,22 @@
           </v-card-text>
 
           <v-card-text class="pt-0">
-            <v-form class="px-6" @submit.prevent="register">
+            <v-form ref="registerForm" class="px-6" @submit.prevent="register">
               <v-text-field
                 v-model="email"
+                :rules="emailRules"
                 label="Email"
                 color="teal"
               />
               <v-text-field
                 v-model="username"
+                :rules="usernameRules"
                 label="Username"
                 color="teal"
               />
               <v-text-field
                 v-model="password"
+                :rules="passwordRules"
                 type="password"
                 label="Password"
                 color="teal"
@@ -45,24 +48,43 @@ export default {
   data() {
     return {
       email: '',
+      emailRules: [
+        v => !!v || "Email is required",
+        v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || "Email is not valid"
+      ],
+
       username: '',
-      password: ''
+      usernameRules: [
+        v => !!v || "Username is required"
+      ],
+
+      password: '',
+      passwordRules: [
+        v => !!v || "Password is required",
+        v => (v && v.length >= 6) || "Minimum length is 6 characters",
+        v => /\d/.test(v) || "Digit is required",
+        v => /\W/.test(v) || "Non-Alphanumeric is required",
+        v => /[A-Z]/.test(v) || "Upper is required",
+        v => /[a-z]/.test(v) || "Lower is required"
+      ]
     }
   },
   methods: {
     async register() {
-      try {
-        const registerData = {
-          username: this.username,
-          email: this.email,
-          password: this.password
-        }
+      if (this.$refs.registerForm.validate()){
+        try {
+          const registerData = {
+            username: this.username,
+            email: this.email,
+            password: this.password
+          }
 
-        const user = await this.$axios.$post("/api/accounts/register", registerData);
-        console.log(user);
-        this.$router.replace('/events');
-      } catch (err) {
-        console.log(err);
+          const user = await this.$axios.$post("/api/accounts/register", registerData);
+          console.log(user);
+          this.$router.replace('/events');
+        } catch (err) {
+          console.log(err);
+        }
       }
     }
   }
