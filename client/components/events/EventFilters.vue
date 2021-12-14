@@ -28,6 +28,8 @@
               solo
               hide-details
               class="my-3"
+              color="teal"
+              item-color="teal"
               @change="applyFilters()"
             />
             <v-autocomplete
@@ -41,6 +43,8 @@
               solo
               hide-details
               class="my-3"
+              color="teal"
+              item-color="teal"
               @change="applyFiltersForCountry()"
             />
             <v-autocomplete
@@ -54,6 +58,8 @@
               clearable
               solo
               hide-details
+              color="teal"
+              item-color="teal"
               @change="applyFilters()"
             />
           </v-card-text>
