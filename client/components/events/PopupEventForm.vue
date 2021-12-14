@@ -175,6 +175,10 @@ export default {
       return this.countryId != null;
     }
   },
+  async created() {
+    // await this.$store.dispatch('events/fetchCategories');
+    // await this.$store.dispatch('events/fetchCountries');
+  },
   methods: {
     async createEvent() {
       if (this.$refs.eventForm.validate()) {
@@ -208,6 +212,7 @@ export default {
 
         this.$refs.eventForm.reset(); // reset => all Data fields become null!!!
         this.isGoing = false; // kostili :D
+
         this.dialog = false;
       }
     },

@@ -25,7 +25,7 @@
               Creator: {{ event.creatorName }}
             </div>
             <div class="text-lg-subtitle-1 font-weight-regular mb-2">
-              {{ event.description }}
+              {{ event.briefDesc }}
             </div>
             <div class="text-lg-h5 text-h6 mb-0">
               Contributors
@@ -69,9 +69,6 @@
         </v-col>
       </v-row>
       <v-card-actions class="py-0">
-        <v-btn class="text-subtitle-1" nuxt :to="'/events/' + event.id" color="deep-purple" text rounded>
-          Show
-        </v-btn>
         <v-btn class="text-subtitle-1" text rounded :color="actionText.color" @click="handleJoin(event.id, event.isGoing)">
           {{ actionText.text }}
         </v-btn>
@@ -88,7 +85,24 @@
             </v-icon>
           </v-btn>
         </div>
+        <v-btn icon @click="show = !show">
+          <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+        </v-btn>
       </v-card-actions>
+      <v-expand-transition>
+        <div v-show="show">
+          <v-divider></v-divider>
+          <v-card-text>
+            <div class="text-lg-h5 text-h6 my-0">
+              Description
+            </div>
+            <div>
+              {{ event.description }}
+            </div>
+          </v-card-text>
+          <div :id="`google-map-event-details-${event.id}`"></div>
+        </div>
+      </v-expand-transition>
     </v-container>
   </v-card>
 </template>
@@ -106,6 +120,11 @@ export default {
   },
   components: {
     PopupContributors
+  },
+  data() {
+    return {
+      show: false
+    }
   },
   computed: {
     actionText() {
@@ -125,6 +144,9 @@ export default {
       return new Date(this.event.date).toLocaleString('en-GB', {hour12: false});
     }
   },
+  updated() {
+    this.renderEventLocationIfExists();
+  },
   methods: {
     handleJoin(eventId, isGoing) {
       if (this.isAuthenticated) {
@@ -140,6 +162,30 @@ export default {
     async deleteEvent(eventId) {
       debugger;
       await this.$store.dispatch("events/deleteEvent", eventId);
+    },
+    async renderEventLocationIfExists() {
+      if (this.event.venue.lat !== undefined && this.event.venue.lng !== undefined) {
+        document.getElementById(`google-map-event-details-${this.event.id}`).style.height = '300px';
+
+        await this.$store.dispatch('googleMap/prepare');
+        const google = this.$store.getters['googleMap/getGoogleObject'];
+
+        const mapOptions = {
+          center: {
+            lat: this.event.venue.lat - 0.00001,
+            lng: this.event.venue.lng
+          },
+          draggable: false,
+          zoom: 14
+        };
+        const map = new google.maps.Map(document.getElementById(`google-map-event-details-${this.event.id}`), mapOptions);
+
+        const markerPosition = { lat: this.event.venue.lat, lng: this.event.venue.lng };
+        const marker = new google.maps.Marker({
+          position: markerPosition
+        });
+        marker.setMap(map);
+      }
     }
   }
 };

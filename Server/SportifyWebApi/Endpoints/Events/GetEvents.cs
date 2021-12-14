@@ -38,6 +38,7 @@ namespace SportifyWebApi.Endpoints.Events
                 Title = x.Title,
                 CategoryName = x.Category.Name,
                 BriefDesc = x.BriefDesc,
+                Description = x.Description,
                 CreatorName = x.Creator.UserName,
                 CreatorId = x.CreatorId,
                 Date = DateTime.SpecifyKind(x.Date, DateTimeKind.Utc).ToString("o"),
@@ -52,7 +53,9 @@ namespace SportifyWebApi.Endpoints.Events
                 {
                     Country = x.Venue.Country.Name,
                     City = x.Venue.City.Name,
-                    Address = x.Venue.Address
+                    Address = x.Venue.Address,
+                    Lat = x.Venue.Latitude,
+                    Lng = x.Venue.Longitude
                 }
             }).ToListAsync();
 
@@ -75,6 +78,8 @@ namespace SportifyWebApi.Endpoints.Events
         public string CategoryName { get; set; }
 
         public string BriefDesc { get; set; }
+
+        public string Description { get; set; }
 
         public GetEventsVenueDto Venue { get; set; }
 
@@ -102,6 +107,10 @@ namespace SportifyWebApi.Endpoints.Events
             public string City { get; set; }
 
             public string Address { get; set; }
+
+            public double Lat { get; set; }
+
+            public double Lng { get; set; }
         }
     }
 }

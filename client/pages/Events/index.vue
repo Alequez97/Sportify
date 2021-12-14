@@ -37,8 +37,8 @@ export default {
   },
   async created() {
     await this.$store.dispatch('events/fetchEvents');
-    await this.$store.dispatch('events/fetchCategories');
-    await this.$store.dispatch('events/fetchCountries');
+    // await this.$store.dispatch('events/fetchCategories');
+    // await this.$store.dispatch('events/fetchCountries');
   },
   methods: {
     async join(eventData) {
