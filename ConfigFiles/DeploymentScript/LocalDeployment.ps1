@@ -6,11 +6,15 @@ if ($Launch)
     Exit
 }
 
-#Lauch PS in project's folder
+# Lauch PS in project's folder
 $SportifyBaseDir = Split-Path -Path $MyInvocation.MyCommand.Path
 $SportifyBaseDir = [System.IO.Path]::GetFullPath("$SportifyBaseDir\..\..").TrimEnd("\\")
 Set-Location $SportifyBaseDir
 
+# Connection strings
+$localDbConnectionStringTemplate = "Server=(localdb)\mssqllocaldb;Database={0};Trusted_Connection=True"
+
+# Actions
 $ErrorActionPreference = "Stop"
 $InformationPreference = "Continue"
 
@@ -35,11 +39,63 @@ function Undo-Migration
     Set-Location $SportifyBaseDir
 }
 
-function Database-Update
+function Update-Database
 {
     Install-Ef-Tool-If-Not-Exists
     Set-Location $SportifyBaseDir/Server/DataServices
     dotnet ef database update 
+    Set-Location $SportifyBaseDir
+}
+
+function Setup-Database([Switch]$Force)
+{
+    $moduleIsInstalled = Get-Module -ListAvailable -Name "sqlserver"
+    if (!$moduleIsInstalled)
+    {
+        Write-Host "SqlServer module needs to be installed" -ForegroundColor yellow
+        Install-Module "sqlserver"
+    } 
+    
+    Import-Module "sqlserver"
+    $masterConnectionString = [string]::Format($localDbConnectionStringTemplate, "master")
+    $sportifyDbConnectionString = [string]::Format($localDbConnectionStringTemplate, "sportify_db")
+
+    $masterDatabase = Get-SqlDatabase -ConnectionString $masterConnectionString
+    $sportifyDb = Get-SqlDatabase -ConnectionString $sportifyDbConnectionString
+
+    if ($null -eq $sportifyDb)
+    {
+        Write-Host "Setting up new database..."
+        Database-Update
+        Seed-Database
+        Write-Host "Done!!!" -ForegroundColor lightgreen
+        return
+    }
+
+    if ($null -ne $sportifyDb -and $Force)
+    {
+        Write-Host "Processing old database delete..."
+        $masterDatabase.ExecuteNonQuery("ALTER DATABASE sportify_db SET SINGLE_USER WITH ROLLBACK IMMEDIATE")
+        $masterDatabase.ExecuteNonQuery("ALTER DATABASE sportify_db SET MULTI_USER WITH ROLLBACK IMMEDIATE")
+        $sportifyDb.Drop()
+        Write-Host "Setting up new database..."
+        Database-Update
+        Seed-Database
+        Write-Host "Done!!!" -ForegroundColor lightgreen
+        return
+    }
+   
+    Write-Error "Database already exists. Use -Force flag to reset database"
+}
+
+
+function Seed-Database
+{
+    Set-Location ./ConfigFiles/SeedScript
+    $CurrentLocation = Get-Location
+    Remove-Directory-If-Exists "$CurrentLocation\bin"
+    Remove-Directory-If-Exists "$CurrentLocation\obj"
+    dotnet run -c Release
     Set-Location $SportifyBaseDir
 }
 
@@ -54,16 +110,6 @@ function Install-Ef-Tool-If-Not-Exists
     {
         Write-Host "dotnet-ef tool already installed" -ForegroundColor Yellow 
     }
-}
-
-function Seed-Database
-{
-    Set-Location ./ConfigFiles/SeedScript
-    $CurrentLocation = Get-Location
-    Remove-Directory-If-Exists "$CurrentLocation\bin"
-    Remove-Directory-If-Exists "$CurrentLocation\obj"
-    dotnet run -c Release
-    Set-Location $SportifyBaseDir
 }
 
 function Remove-Directory-If-Exists
@@ -85,12 +131,16 @@ function Write-Help
     Write-Output "*** Local Deployment avaliable commands ***"
     Write-Output "am           (Add-Migration)      Creates migration in DataServices project"
     Write-Output "um           (Undo-Migration)     Removes last migration"
-    Write-Output "db-update    (Database-Update)    Updates database from migration in DataServices project"
+    Write-Output "setup-db     (Setup-Database)     Setup blank database. -Force to recreate if db exists"
+    Write-Output "update-db    (Update-Database)    Applies all migration changes if exists"
     Write-Output "seed         (Seed-Database)      Seeds database"
+    Write-Output "help         (Write-Help)         Writes this helpdesk"
 }
 
 Set-Alias am Add-Migration
 Set-Alias um Undo-Migration
-Set-Alias db-update Database-Update
+Set-Alias setup-db Setup-Database
+Set-Alias update-db Database-Update
 Set-Alias seed Seed-Database
+Set-Alias help Write-Help
 Write-Help
