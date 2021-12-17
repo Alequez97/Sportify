@@ -188,7 +188,6 @@ export default {
         typeId: properties.typeId
       };
       const fullAddress = await this.$store.dispatch('googleMap/getAddressFromGeolocationAsync', geolocation);
-
       const data = {
         ...properties,
         lat: geolocation.lat,
@@ -196,10 +195,21 @@ export default {
         ...fullAddress
       }
 
-      // this.geolocations.push(geolocation);
+      const fd = new FormData();
+      fd.append('typeId', data.typeId);
+      data?.images.forEach(image => fd.append('images', image, image.name));
+      fd.append('description', data.description);
+      fd.append('lat', data.lat);
+      fd.append('lng', data.lng);
+      fd.append('country', data.country);
+      fd.append('city', data.city);
+      fd.append('district', data.district);
+      fd.append('street', data.street);
+      fd.append('houseNumber', data.houseNumber);
+
       this.addMarkerToMapAsync(geolocation, type);
 
-      await this.$axios.post("/api/map/save", data);
+      await this.$axios.post("/api/map/save", fd);
     },
     createMovableMarker(enabled, iconName = 'Default') {
       const mapCenter = this.map.getCenter();
@@ -255,6 +265,14 @@ export default {
       });
     },
     getLocationInfoHtml(geolocation) {
+      let imagesHtml = '';
+      if (geolocation.images !== null && geolocation.images !== undefined) {
+        for (let i = 0; i < geolocation.images.length; i++) {
+          const imagePath = geolocation.images[i];
+          imagesHtml += "<img class=\"info-window-image\" src=\"images\\sportsGroundImages\\" + imagePath + "\">"
+        }
+      }
+
       const infoHtml =
       "<div class=\"info-window-wrapper\">" +
         "<div class=\"info-window-information-wrapper\">" +
@@ -262,9 +280,7 @@ export default {
           "<p class=\"infow-window-description\">" + geolocation.description + "</h3>" +
         "</div>" +
         "<div class=\"info-window-images-wrapper\">" +
-          "<img class=\"info-window-image\" src=\"/images/sportsGroundImages/test1.jpg\">" +
-          "<img class=\"info-window-image\" src=\"/images/sportsGroundImages/test2.jpg\">" +
-          "<img class=\"info-window-image\" src=\"/images/sportsGroundImages/test3.jpg\">" +
+          imagesHtml +
         "</div>" +
       "</div>"
 
@@ -282,7 +298,7 @@ export default {
   .info-window-wrapper {
     max-width: 300px;
     width: 100%;
-    height: 300px;
+    height: 100%;
   }
   .info-window-information-wrapper {
     text-align: center;

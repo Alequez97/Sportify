@@ -56,7 +56,7 @@
             <v-form>
               <v-select v-model="typeId" :items="types" label="Type" item-text="name" item-value="id" color="teal" />
               <v-textarea v-model="description" label="Description" color="teal" />
-              <v-file-input v-model="images" multiple chips counter />
+              <v-file-input v-model="images" multiple chips counter name="images" />
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -134,9 +134,10 @@ export default {
     saveNewLocation() {
       const properties = {
         typeId: this.typeId,
-        description: this.description
+        description: this.description,
+        images: this.images
       }
-      const typeName = this.types.filter(t => t.id === this.typeId)[0].name.replaceAll(" ", "_");
+      const typeName = this.types.filter(t => t.id === this.typeId)[0].name;
       this.$refs.map.saveMovableMarkerPosition(properties, typeName.replaceAll(" ", "_"));
       this.saveLocationDialog = false;
       this.removeMovableMarker();

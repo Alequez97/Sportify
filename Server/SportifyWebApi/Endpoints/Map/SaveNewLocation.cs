@@ -1,11 +1,17 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using DataServices;
 using DomainEntities.SportsGroundEntities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SportifyWebApi.Constants;
+using SportifyWebApi.Services;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Map
@@ -15,15 +21,18 @@ namespace SportifyWebApi.Endpoints.Map
         .WithoutResponse
     {
         private readonly SportifyDbContext _context;
+        private readonly IStorageService _storageservice;
 
-        public SaveNewLocation(SportifyDbContext context)
+        public SaveNewLocation(SportifyDbContext context, IStorageService storageService)
         {
             _context = context;
+            _storageservice = storageService;
         }
 
         [HttpPost("api/map/save")]
+        [Authorize]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Map })]
-        public override async Task<ActionResult> HandleAsync([FromBody] SportsGroundSaveNewLocationRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult> HandleAsync([FromForm] SportsGroundSaveNewLocationRequest request, CancellationToken cancellationToken = default)
         {
             var location = new SportsGroundLocation()
             {
@@ -36,8 +45,21 @@ namespace SportifyWebApi.Endpoints.Map
                 Latitude = request.Lat,
                 Longitude = request.Lng,
                 Description = request.Description,
-                CreatorId = 1/*Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)*/
+                CreatorId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)
             };
+
+            if (request.Images != null)
+            {
+                location.Images = new List<SportsGroundImage>();
+                foreach (var requestImage in request.Images)
+                {
+                    var savedFilePath = await _storageservice.UploadAsync(requestImage);
+                    if (savedFilePath != null)
+                    {
+                        location.Images.Add(new SportsGroundImage() { Path = Path.GetFileName(savedFilePath) });
+                    }
+                }
+            }
 
             _context.SportsGroundLocations.Add(location);
 
@@ -73,5 +95,7 @@ namespace SportifyWebApi.Endpoints.Map
         public double Lat { get; set; }
 
         public double Lng { get; set; }
+
+        public List<IFormFile> Images { get; set; }
     }
 }

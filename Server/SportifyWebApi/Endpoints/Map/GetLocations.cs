@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,6 +28,7 @@ namespace SportifyWebApi.Endpoints.Map
         {
             var locations = _context.SportsGroundLocations
                 .Include(s => s.Type)
+                .Include(s => s.Images)
                 .Where(s => s.Latitude > request.Lat - request.Delta 
                          && s.Latitude < request.Lat + request.Delta
                          && s.Longitude > request.Lng - request.Delta
@@ -42,7 +44,8 @@ namespace SportifyWebApi.Endpoints.Map
                     Lng = l.Longitude,
                     TypeId = l.Type.Id,
                     TypeName = l.Type.Name,
-                    Description = l.Description
+                    Description = l.Description,
+                    Images = l.Images?.Select(image => image.Path).ToList()
                 };
 
                 return response;
@@ -77,5 +80,7 @@ namespace SportifyWebApi.Endpoints.Map
         public string TypeName { get; set; }
 
         public string Description { get; set; }
+
+        public List<string> Images { get; set; }
     }
 }

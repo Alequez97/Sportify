@@ -1,3 +1,4 @@
+using System.IO;
 using System.Text;
 using DataServices;
 using DomainEntities;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SportifyWebApi.Endpoints.MappingProfiles;
+using SportifyWebApi.Services;
 
 namespace SportifyWebApi
 {
@@ -35,6 +37,8 @@ namespace SportifyWebApi
             });
 
             services.AddDbContext<SportifyDbContext>();
+
+            services.AddTransient<IStorageService>(x => new FileSystemStorageService(Directory.GetCurrentDirectory() + "\\..\\..\\client\\static\\images\\sportsGroundImages", true));
 
             services.AddIdentity<User, IdentityRole<int>>()
                 .AddEntityFrameworkStores<SportifyDbContext>()
@@ -61,7 +65,6 @@ namespace SportifyWebApi
 
             //services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
-
 
             services.AddCors(opt =>
             {
