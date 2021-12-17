@@ -66,7 +66,7 @@ function Setup-Database([Switch]$Force)
     if ($null -eq $sportifyDb)
     {
         Write-Host "Setting up new database..."
-        Database-Update
+        Update-Database
         Seed-Database
         Write-Host "Done!!!" -ForegroundColor lightgreen
         return
@@ -79,7 +79,7 @@ function Setup-Database([Switch]$Force)
         $masterDatabase.ExecuteNonQuery("ALTER DATABASE sportify_db SET MULTI_USER WITH ROLLBACK IMMEDIATE")
         $sportifyDb.Drop()
         Write-Host "Setting up new database..."
-        Database-Update
+        Update-Database
         Seed-Database
         Write-Host "Done!!!" -ForegroundColor lightgreen
         return
