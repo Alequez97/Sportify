@@ -68,7 +68,7 @@ function Setup-Database([Switch]$Force)
         Write-Host "Setting up new database..."
         Update-Database
         Seed-Database
-        Write-Host "Done!!!" -ForegroundColor lightgreen
+        Write-Host "Done!!!" -ForegroundColor Green
         return
     }
 
@@ -81,7 +81,7 @@ function Setup-Database([Switch]$Force)
         Write-Host "Setting up new database..."
         Update-Database
         Seed-Database
-        Write-Host "Done!!!" -ForegroundColor lightgreen
+        Write-Host "Done!!!" -ForegroundColor Green
         return
     }
    
