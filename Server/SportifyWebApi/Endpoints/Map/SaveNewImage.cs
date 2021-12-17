@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,24 +32,35 @@ namespace SportifyWebApi.Endpoints.Map
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Map })]
         public override async Task<ActionResult> HandleAsync([FromForm] SportsGroundSaveNewLocationImageRequest request, CancellationToken cancellationToken = default)
         {
-            foreach (var image in request.Images)
+            try
             {
-                var storedPath = await _storageService.UploadAsync(image);
-                var imageModel = new SportsGroundImage()
+                foreach (var image in request.Images)
                 {
-                    SportsGroundLocationId = 1,
-                    Path = Path.GetFileName(storedPath)
-                };
-                _context.SportsGroundImages.Add(imageModel);
-                await _context.SaveChangesAsync();
+                    var storedPath = await _storageService.UploadAsync(image);
+                    var imageModel = new SportsGroundImage()
+                    {
+                        SportsGroundLocationId = request.LocationId,
+                        Path = Path.GetFileName(storedPath)
+                    };
+                    _context.SportsGroundImages.Add(imageModel);
+                    await _context.SaveChangesAsync();
+                }
+
+                return Ok();
+            }
+            catch
+            {
+                //TODO: Log exception
+                return StatusCode(500, new Response() { Message = "Server was not able to save images" });
             }
             
-            return Ok();
         }
     }
 
     public class SportsGroundSaveNewLocationImageRequest
     {
+        public int LocationId { get; set; }
+
         public List<IFormFile> Images { get; set; }
     }
 }
