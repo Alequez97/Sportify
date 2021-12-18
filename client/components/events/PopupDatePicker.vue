@@ -14,6 +14,12 @@
 <script>
 export default {
   name: "PopupDatePicker",
+  props: {
+    dateOfTheEvent: {
+      type: String,
+      default: ''
+    }
+  },
   data: () => ({
     date: null,
     dateRules: [
@@ -25,6 +31,11 @@ export default {
   computed: {
     minDate() {
       return (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10);
+    }
+  },
+  created() {
+    if (this.dateOfTheEvent !== '') {
+      this.date = this.dateOfTheEvent;
     }
   },
   methods: {

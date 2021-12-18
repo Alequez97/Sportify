@@ -36,6 +36,7 @@ namespace SportifyWebApi.Endpoints.Events
             {
                 Id = x.Id,
                 Title = x.Title,
+                CategoryId = x.CategoryId,
                 CategoryName = x.Category.Name,
                 BriefDesc = x.BriefDesc,
                 Description = x.Description,
@@ -51,7 +52,9 @@ namespace SportifyWebApi.Endpoints.Events
                 }).ToList(),
                 Venue = new GetEventsResponse.GetEventsVenueDto()
                 {
+                    CountryId = x.Venue.CountryId,
                     Country = x.Venue.Country.Name,
+                    CityId = x.Venue.CityId,
                     City = x.Venue.City.Name,
                     Address = x.Venue.Address,
                     Lat = x.Venue.Latitude,
@@ -75,6 +78,7 @@ namespace SportifyWebApi.Endpoints.Events
         public int Id { get; set; }
         public string Title { get; set; }
 
+        public int CategoryId { get; set; }
         public string CategoryName { get; set; }
 
         public string BriefDesc { get; set; }
@@ -102,8 +106,10 @@ namespace SportifyWebApi.Endpoints.Events
 
         public class GetEventsVenueDto
         {
+            public int CountryId { get; set; }
             public string Country { get; set; }
 
+            public int CityId { get; set; }
             public string City { get; set; }
 
             public string Address { get; set; }

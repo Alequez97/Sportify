@@ -74,11 +74,12 @@
         </v-btn>
         <v-spacer></v-spacer>
         <div v-if="event.isCreator">
-          <v-btn text rounded color="teal" @click="editEvent()">
+          <!-- <v-btn text rounded color="teal" @click="editEvent()">
             <v-icon>
               mdi-pencil
             </v-icon>
-          </v-btn>
+          </v-btn> -->
+          <PopupEventForm formTitle="Edit Event" :event="event"/>
           <v-btn text rounded color="red" @click="deleteEvent(event.id)">
             <v-icon>
               mdi-delete
@@ -108,7 +109,8 @@
 </template>
 
 <script>
-import PopupContributors from './PopupContributors.vue';
+import PopupContributors from "./PopupContributors";
+import PopupEventForm from "./PopupEventForm"
 
 export default {
   name: 'Event',
@@ -119,6 +121,7 @@ export default {
     }
   },
   components: {
+    PopupEventForm,
     PopupContributors
   },
   data() {

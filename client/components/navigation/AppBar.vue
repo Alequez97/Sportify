@@ -48,8 +48,11 @@
               </p>
             </v-col>
           </v-row>
-
-          <PopupEventForm />
+          <v-row class="mb-0 mt-3">
+            <v-col justify="center" align="center">
+              <PopupEventForm formTitle="Create Event" />
+            </v-col>
+          </v-row>
         </div>
         <div v-else>
           <v-row justify="center" class="mb-0 mt-3">

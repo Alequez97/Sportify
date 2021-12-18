@@ -1,11 +1,14 @@
 using System;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
-using AutoMapper;
 using DataServices;
+using DomainEntities.EventEntities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SportifyWebApi.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -16,12 +19,10 @@ namespace SportifyWebApi.Endpoints.Events
         .WithoutResponse
     {
         private readonly SportifyDbContext _context;
-        private IMapper _mapper;
 
-        public EditEvent(SportifyDbContext context, IMapper mapper)
+        public EditEvent(SportifyDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         [Authorize]
@@ -29,9 +30,41 @@ namespace SportifyWebApi.Endpoints.Events
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult> HandleAsync([FromBody] EditEventRequest request, CancellationToken cancellationToken = default)
         {
-            var @event = await _context.Events.FindAsync(request.Id);
+            int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var @event = await _context.Events
+                .Where(e => e.Id == request.Id)
+                .Include(v => v.Venue)
+                .Include(v => v.EventUsers.Where(u => u.UserId == userId))
+                .FirstOrDefaultAsync();
 
-            _mapper.Map(request, @event);
+            if(@event != null)
+            {
+                @event.Title = request.Title;
+                @event.Description = request.Description;
+                @event.BriefDesc = request.BriefDesc;
+                @event.CategoryId = request.CategoryId;
+                @event.Venue.CountryId = request.CountryId;
+                @event.Venue.CityId = request.CityId;
+                @event.Venue.Address = request.Address;
+                @event.Date = request.Date;
+                @event.Venue.Latitude = request.Lat;
+                @event.Venue.Longitude = request.Lng;
+                if(@event.EventUsers.Count == 0 && request.IsGoing == true)
+                {
+                    @event.EventUsers
+                    .Add(new EventUser()
+                    {
+                        EventId = request.Id,
+                        UserId = userId,
+                        IsGoing = true
+                    });
+                }
+                else
+                {
+                    var record = @event.EventUsers.FirstOrDefault();
+                    if (record != null) record.IsGoing = request.IsGoing;
+                }
+            }
 
             try
             {
@@ -48,7 +81,7 @@ namespace SportifyWebApi.Endpoints.Events
 
     public class EditEventRequest
     {
-        [FromRoute] 
+        [FromRoute]
         public int Id { get; set; }
 
         [FromBody]
@@ -73,6 +106,15 @@ namespace SportifyWebApi.Endpoints.Events
         public string Address { get; set; }
 
         [FromBody]
-        public DateTime TimeOfTheEvent { get; set; }
+        public double Lat { get; set; }
+
+        [FromBody]
+        public double Lng { get; set; }
+
+        [FromBody]
+        public DateTime Date { get; set; }
+
+        [FromBody]
+        public bool IsGoing { get; set; }
     }
 }

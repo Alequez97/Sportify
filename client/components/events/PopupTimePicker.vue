@@ -18,6 +18,12 @@ export default {};
 <script>
 export default {
   name: 'PopupTimePicker',
+  props: {
+    timeOfTheEvent: {
+      type: String,
+      default: ''
+    },
+  },
   data() {
     return {
       time: null,
@@ -26,6 +32,11 @@ export default {
       ],
       modal: false,
     };
+  },
+  created() {
+    if (this.timeOfTheEvent !== '') {
+      this.time = this.timeOfTheEvent;
+    }
   },
   methods: {
       saveTime() {
