@@ -65,7 +65,7 @@
           </v-card-text>
         </v-col>
         <v-col cols="4">
-          <v-img lazy-src="lazy-load.png" :src="event.categoryName + '.png'" />
+          <v-img lazy-src="/lazy-load.png" :src="'/' + event.categoryName + '.png'" />
         </v-col>
       </v-row>
       <v-card-actions class="py-0">
