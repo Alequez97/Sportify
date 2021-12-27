@@ -32,7 +32,7 @@ export default {
       const newGeolocations = newGeolocationArray.filter(g => !this.renderedGeolocationsIds.includes(g.id));
       for (let i = 0; i < newGeolocations.length; i++) {
         const newGeolocation = newGeolocations[i];
-        console.log('Creating new marker with id ' + newGeolocations[i].id);
+        console.log('Creating new marker with id ' + newGeolocations[i].id); // TODO: Remove console log
         this.addMarkerToMapAsync(newGeolocation, newGeolocation.typeName.replaceAll(" ", "_"));
       }
     },

@@ -167,7 +167,6 @@ export default {
       await this.$axios.post("/api/map/save", fd).then((response) => {
         this.showSnackbar('Location successfully uploaded', "success");
         const typeName = this.types.filter(t => t.id === this.typeId)[0].name;
-        console.log(response.data);
         const newGeolocation = {
           description: this.description,
           id: response.data.id,
