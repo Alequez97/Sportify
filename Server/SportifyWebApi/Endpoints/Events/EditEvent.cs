@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -37,7 +38,7 @@ namespace SportifyWebApi.Endpoints.Events
                 .Include(v => v.EventUsers.Where(u => u.UserId == userId))
                 .FirstOrDefaultAsync();
 
-            if(@event != null)
+            if (@event != null)
             {
                 @event.Title = request.Title;
                 @event.Description = request.Description;
@@ -49,7 +50,7 @@ namespace SportifyWebApi.Endpoints.Events
                 @event.Date = request.Date;
                 @event.Venue.Latitude = request.Lat;
                 @event.Venue.Longitude = request.Lng;
-                if(@event.EventUsers.Count == 0 && request.IsGoing == true)
+                if (@event.EventUsers.Count == 0 && request.IsGoing == true)
                 {
                     @event.EventUsers
                     .Add(new EventUser()
@@ -64,45 +65,54 @@ namespace SportifyWebApi.Endpoints.Events
                     var record = @event.EventUsers.FirstOrDefault();
                     if (record != null) record.IsGoing = request.IsGoing;
                 }
-            }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch(Exception)
-            {
-                return BadRequest();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+
+                return Ok();
             }
             
-            return Ok();
+            return NotFound();   
         }
     }
 
     public class EditEventRequest
     {
         [FromRoute]
+        [Required]
         public int Id { get; set; }
 
         [FromBody]
+        [Required]
         public string Title { get; set; }
 
         [FromBody]
+        [Required]
         public int CategoryId { get; set; }
 
         [FromBody]
+        [Required]
         public string BriefDesc { get; set; }
 
         [FromBody]
         public string Description { get; set; }
 
         [FromBody]
+        [Required]
         public int CountryId { get; set; }
 
         [FromBody]
+        [Required]
         public int CityId { get; set; }
 
         [FromBody]
+        [Required]
         public string Address { get; set; }
 
         [FromBody]
@@ -112,9 +122,11 @@ namespace SportifyWebApi.Endpoints.Events
         public double Lng { get; set; }
 
         [FromBody]
+        [Required]
         public DateTime Date { get; set; }
 
         [FromBody]
+        [Required]
         public bool IsGoing { get; set; }
     }
 }

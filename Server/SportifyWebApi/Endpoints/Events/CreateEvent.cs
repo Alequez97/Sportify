@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,9 +57,9 @@ namespace SportifyWebApi.Endpoints.Events
             {
                 await _context.SaveChangesAsync();
             }
-            catch(Exception ex)
+            catch(Exception) //TODO: logging
             {
-                return BadRequest(ex);
+                return StatusCode(500);
             }
 
             return Ok();
@@ -67,26 +68,34 @@ namespace SportifyWebApi.Endpoints.Events
 
     public class CreateEventRequest
     {
+        [Required]
         public string Title { get; set; }
 
+        [Required]
         public int CategoryId { get; set; }
 
+        [Required]
         public string BriefDesc { get; set; }
 
         public string Description { get; set; }
 
+        [Required]
         public int CountryId { get; set; }
 
+        [Required]
         public int CityId { get; set; }
 
+        [Required]
         public string Address { get; set; }
 
         public double Lat { get; set; }
         
         public double Lng { get; set; }
 
+        [Required]
         public DateTime Date { get; set; }
 
+        [Required]
         public bool IsGoing { get; set; }
     }
 }

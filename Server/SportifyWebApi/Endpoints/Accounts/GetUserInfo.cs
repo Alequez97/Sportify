@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,6 +40,7 @@ namespace SportifyWebApi.Endpoints.Accounts
 
     public class GetUserInfoRequest
     {
+        [Required]
         public string UserName { get; set; }
     }
     
