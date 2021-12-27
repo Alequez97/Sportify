@@ -32,7 +32,7 @@ export default {
       const newGeolocations = newGeolocationArray.filter(g => !this.renderedGeolocationsIds.includes(g.id));
       for (let i = 0; i < newGeolocations.length; i++) {
         const newGeolocation = newGeolocations[i];
-        console.log('Creating new marker with id ' + newGeolocations[i].id);
+        console.log('Creating new marker with id ' + newGeolocations[i].id); // TODO: Remove console log
         this.addMarkerToMapAsync(newGeolocation, newGeolocation.typeName.replaceAll(" ", "_"));
       }
     },
@@ -181,35 +181,13 @@ export default {
       }
       this.markersAreShown = false;
     },
-    async saveMovableMarkerPosition(properties, type = 'Default') {
-      const geolocation = {
+    getMovableMarkerPosition() {
+      const position = {
         lat: this.movableMarker.getPosition().lat(),
-        lng: this.movableMarker.getPosition().lng(),
-        typeId: properties.typeId
+        lng: this.movableMarker.getPosition().lng()
       };
-      const fullAddress = await this.$store.dispatch('googleMap/getAddressFromGeolocationAsync', geolocation);
-      const data = {
-        ...properties,
-        lat: geolocation.lat,
-        lng: geolocation.lng,
-        ...fullAddress
-      }
 
-      const fd = new FormData();
-      fd.append('typeId', data.typeId);
-      data?.images.forEach(image => fd.append('images', image, image.name));
-      fd.append('description', data.description);
-      fd.append('lat', data.lat);
-      fd.append('lng', data.lng);
-      fd.append('country', data.country);
-      fd.append('city', data.city);
-      fd.append('district', data.district);
-      fd.append('street', data.street);
-      fd.append('houseNumber', data.houseNumber);
-
-      this.addMarkerToMapAsync(geolocation, type);
-
-      await this.$axios.post("/api/map/save", fd);
+      return position;
     },
     createMovableMarker(enabled, iconName = 'Default') {
       const mapCenter = this.map.getCenter();
@@ -269,7 +247,8 @@ export default {
       if (geolocation.images !== null && geolocation.images !== undefined) {
         for (let i = 0; i < geolocation.images.length; i++) {
           const imagePath = geolocation.images[i];
-          imagesHtml += "<img class=\"info-window-image\" src=\"images\\sportsGroundImages\\" + imagePath + "\">"
+          const imageSource = "images\\sportsGroundImages\\" + imagePath;
+          imagesHtml += "<a href=\"" + imageSource + "\"><img class=\"info-window-image\" src=\"" + imageSource + "\"></a>"
         }
       }
 
@@ -291,6 +270,10 @@ export default {
 </script>
 
 <style>
+ #google-map-wrapper {
+    width: 100%;
+    height: 100%;
+  }
   #google-map {
     width: 100%;
     height: 100%;

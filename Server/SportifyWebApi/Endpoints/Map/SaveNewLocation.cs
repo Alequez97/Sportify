@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SportifyWebApi.Constants;
+using SportifyWebApi.Models;
 using SportifyWebApi.Services;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -18,7 +20,7 @@ namespace SportifyWebApi.Endpoints.Map
 {
     public class SaveNewLocation : BaseAsyncEndpoint
         .WithRequest<SportsGroundSaveNewLocationRequest>
-        .WithoutResponse
+        .WithResponse<SportsGroundSaveNewLocationResponse>
     {
         private readonly SportifyDbContext _context;
         private readonly IStorageService _storageservice;
@@ -32,7 +34,7 @@ namespace SportifyWebApi.Endpoints.Map
         [HttpPost("api/map/save")]
         [Authorize]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Map })]
-        public override async Task<ActionResult> HandleAsync([FromForm] SportsGroundSaveNewLocationRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<SportsGroundSaveNewLocationResponse>> HandleAsync([FromForm] SportsGroundSaveNewLocationRequest request, CancellationToken cancellationToken = default)
         {
             var location = new SportsGroundLocation()
             {
@@ -67,12 +69,20 @@ namespace SportifyWebApi.Endpoints.Map
             {
                 await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch
             {
-                return BadRequest(ex);
+                // TODO: Log exception
+                return StatusCode(500);
             }
 
-            return Ok();
+            var response = new SportsGroundSaveNewLocationResponse()
+            {
+                Id = location.Id,
+                Images = location.Images.Select(image => image.Path).ToList(),
+                Message = "New location successfully saved",
+                Status = ResponseStatus.Success
+            };
+            return Ok(response);
         }
     }
 
@@ -97,5 +107,12 @@ namespace SportifyWebApi.Endpoints.Map
         public double Lng { get; set; }
 
         public List<IFormFile> Images { get; set; }
+    }
+
+    public class SportsGroundSaveNewLocationResponse : ResponseBase
+    {
+        public int Id { get; set; }
+
+        public List<string> Images { get; set; }
     }
 }

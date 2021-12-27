@@ -8,6 +8,7 @@ using DomainEntities.SportsGroundEntities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SportifyWebApi.Constants;
+using SportifyWebApi.Models;
 using SportifyWebApi.Services;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -49,7 +50,7 @@ namespace SportifyWebApi.Endpoints.Map
             catch
             {
                 //TODO: Log exception
-                return StatusCode(500, new Response() { Message = "Server was not able to save images" });
+                return StatusCode(500, new ResponseBase() { Message = "Server was not able to save images" });
             }
             
         }

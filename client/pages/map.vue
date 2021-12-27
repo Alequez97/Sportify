@@ -36,7 +36,14 @@
       v-on:filterOnClick="filterOnClick"
     />
 
-    <v-row class="move-top" justify="center" v-if="showAddNewLocationButton && mapIsLoaded">
+    <v-snackbar :color="snackbarColor" v-model="responseSnackbar" :timeout="3000">
+      {{ responseMessage }}
+      <template v-slot:action="{ attrs }">
+        <v-icon v-bind="attrs" dark right @click="responseSnackbar = false">mdi-close</v-icon>
+      </template>
+    </v-snackbar>
+
+    <v-row class="move-top" justify="center" v-if="showAddNewLocationButton && mapIsLoaded && !responseSnackbar">
       <v-btn rounded color="primary" dark @click="addMovableMarker">Add new location</v-btn>
     </v-row>
     <v-row class="move-top" justify="center" v-if="showCancelButton">
@@ -56,7 +63,7 @@
             <v-form>
               <v-select v-model="typeId" :items="types" label="Type" item-text="name" item-value="id" color="teal" />
               <v-textarea v-model="description" label="Description" color="teal" />
-              <v-file-input v-model="images" multiple chips counter name="images" />
+              <v-file-input v-model="images" multiple chips counter prepend-icon="mdi-camera" />
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -100,7 +107,17 @@ export default {
 
       typeId: '',
       description: '',
-      images: []
+      images: [],
+
+      responseMessage: '',
+      snackbarColor: "success",
+      responseSnackbar: false,
+
+      rules: {
+        required(fieldName) {
+          return v => !!v || `${fieldName} is required`;
+        }
+      }
     }
   },
   created() {
@@ -131,16 +148,60 @@ export default {
       this.showAddNewLocationButton = false;
       this.showCancelButton = true;
     },
-    saveNewLocation() {
-      const properties = {
-        typeId: this.typeId,
-        description: this.description,
-        images: this.images
-      }
-      const typeName = this.types.filter(t => t.id === this.typeId)[0].name;
-      this.$refs.map.saveMovableMarkerPosition(properties, typeName.replaceAll(" ", "_"));
+    async saveNewLocation() {
+      const latLng = this.$refs.map.getMovableMarkerPosition();
+      const fullAddress = await this.$store.dispatch('googleMap/getAddressFromGeolocationAsync', latLng);
+
+      const fd = new FormData();
+      fd.append('typeId', this.typeId);
+      this.images.forEach(image => fd.append('images', image, image.name));
+      fd.append('description', this.description);
+      fd.append('lat', latLng.lat);
+      fd.append('lng', latLng.lng);
+      fd.append('country', fullAddress.country);
+      fd.append('city', fullAddress.city);
+      fd.append('district', fullAddress.district);
+      fd.append('street', fullAddress.street);
+      fd.append('houseNumber', fullAddress.houseNumber);
+
+      await this.$axios.post("/api/map/save", fd).then((response) => {
+        this.showSnackbar('Location successfully uploaded', "success");
+        const typeName = this.types.filter(t => t.id === this.typeId)[0].name;
+        const newGeolocation = {
+          description: this.description,
+          id: response.data.id,
+          images: response.data?.images,
+          lat: latLng.lat,
+          lng: latLng.lng,
+          typeId: this.typeId,
+          typeName
+        }
+        this.geolocations.push(newGeolocation);
+        this.resetFormData();
+      }).catch((error) => {
+        if (error.response) {
+          if (error.response.status === 401) {
+            this.showSnackbar('Login to add new location', "red");
+          } else {
+            this.showSnackbar('Non 401 error occured...', "red");
+          }
+        } else {
+          this.showSnackbar('Error. Check your network connection or try again later', "red");
+        }
+      });
+
       this.saveLocationDialog = false;
       this.removeMovableMarker();
+    },
+    showSnackbar(message, color) {
+      this.responseMessage = message;
+      this.snackbarColor = color;
+      this.responseSnackbar = true;
+    },
+    resetFormData() {
+      this.typeId = '';
+      this.description = '';
+      this.images = [];
     },
     removeMovableMarker() {
       this.movableMarkerEnabled = false;
