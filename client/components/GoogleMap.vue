@@ -189,10 +189,6 @@ export default {
 
       return position;
     },
-    async saveMovableMarkerPositionOnMap(type = 'Default') {
-      const latLng = this.getMovableMarkerPosition();
-      await this.addMarkerToMapAsync(latLng, type);
-    },
     createMovableMarker(enabled, iconName = 'Default') {
       const mapCenter = this.map.getCenter();
       const markerPosition = { lat: mapCenter.lat(), lng: mapCenter.lng() };

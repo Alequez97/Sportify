@@ -111,7 +111,13 @@ export default {
 
       responseMessage: '',
       snackbarColor: "success",
-      responseSnackbar: false
+      responseSnackbar: false,
+
+      rules: {
+        required(fieldName) {
+          return v => !!v || `${fieldName} is required`;
+        }
+      }
     }
   },
   created() {
@@ -159,10 +165,20 @@ export default {
       fd.append('houseNumber', fullAddress.houseNumber);
 
       await this.$axios.post("/api/map/save", fd).then((response) => {
-        console.log(response);
         this.showSnackbar('Location successfully uploaded', "success");
         const typeName = this.types.filter(t => t.id === this.typeId)[0].name;
-        this.$refs.map.saveMovableMarkerPositionOnMap(typeName.replaceAll(" ", "_"));
+        console.log(response.data);
+        const newGeolocation = {
+          description: this.description,
+          id: response.data.id,
+          images: response.data?.images,
+          lat: latLng.lat,
+          lng: latLng.lng,
+          typeId: this.typeId,
+          typeName
+        }
+        this.geolocations.push(newGeolocation);
+        this.resetFormData();
       }).catch((error) => {
         if (error.response) {
           if (error.response.status === 401) {
@@ -182,6 +198,11 @@ export default {
       this.responseMessage = message;
       this.snackbarColor = color;
       this.responseSnackbar = true;
+    },
+    resetFormData() {
+      this.typeId = '';
+      this.description = '';
+      this.images = [];
     },
     removeMovableMarker() {
       this.movableMarkerEnabled = false;

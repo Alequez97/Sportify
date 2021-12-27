@@ -1,6 +1,6 @@
-namespace SportifyWebApi
+namespace SportifyWebApi.Models
 {
-    public class Response
+    public class ResponseBase
     {
         public string Message { get; set; }
 

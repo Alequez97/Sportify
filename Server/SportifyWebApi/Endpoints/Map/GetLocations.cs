@@ -7,6 +7,7 @@ using DataServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportifyWebApi.Constants;
+using SportifyWebApi.Models;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Map
@@ -51,7 +52,7 @@ namespace SportifyWebApi.Endpoints.Map
                 return response;
             }).ToList();
 
-            return responseList.Count > 0 ? Ok(responseList) : Ok(new Response() { Message = "No locations where found by given parameters", Status = "Not found" });
+            return responseList.Count > 0 ? Ok(responseList) : Ok(new ResponseBase() { Message = "No locations where found by given parameters", Status = ResponseStatus.NotFound });
         }
     }
 
