@@ -8,6 +8,7 @@ export default {
   props: [
     'geolocations',
     'initZoomLevel',
+    'detailedInfoZoomLevel',
     'enabledTypeIds',
     'showFilterButton',
     'movableMarkerEnabled',
@@ -37,6 +38,10 @@ export default {
       }
     },
     enabledTypeIds(newTypes, oldTypes) {
+      if (this.map?.getZoom() < this.detailedInfoZoomLevel) { // If zoom level is small no need to rerender icons
+        return;
+      }
+
       const wasEnabled = newTypes.length >= oldTypes.length;
       if (wasEnabled) {
         const lastSelectTypeIds = newTypes.filter(x => !oldTypes.includes(x));
@@ -78,46 +83,16 @@ export default {
     };
 
     this.google = this.$store.getters['googleMap/getGoogleObject'];
+    this.geocoder = this.$store.getters['googleMap/getGeocoderObject'];
     this.map = new this.google.maps.Map(document.getElementById("google-map"), mapOptions);
 
-    this.google.maps.event.addListenerOnce(this.map, 'idle', () => {
-      const center = this.map.getCenter();
-      this.$emit('mapOnLoad', { lat: center.lat(), lng: center.lng() }, this.getMapSize());
-    });
-
-    this.geocoder = this.$store.getters['googleMap/getGeocoderObject'];
+    this.registerMapListeners();
 
     if (this.showFilterButton) {
       const controlDiv = document.createElement("div");
       this.getFilterGoogleButton(controlDiv);
       this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
     }
-
-    this.map.addListener('click', () => {
-      this.infoWindows.forEach(i => i.close());
-    });
-    this.map.addListener('center_changed', () => {
-      const center = this.map.getCenter();
-      this.movableMarker.setPosition(center);
-      this.$emit('centerChanged', { lat: center.lat(), lng: center.lng() }, this.getMapSize());
-    });
-    this.map.addListener('zoom_changed', () => {
-      const newZoomLevel = this.map.getZoom();
-      const center = this.map.getCenter();
-
-      if (newZoomLevel < this.currentZoomLevel) {
-        this.$emit('zoomOut', { lat: center.lat(), lng: center.lng() }, this.getMapSize());
-      }
-
-      if (newZoomLevel <= 11 && this.markersAreShown) {
-        this.hideAllMarkers();
-      }
-      if (newZoomLevel > 11 && !this.markersAreShown) {
-        this.showAllMarkers();
-      }
-
-      this.currentZoomLevel = newZoomLevel;
-    });
 
     this.createMovableMarker(this.movableMarkerEnabled);
 
@@ -133,6 +108,42 @@ export default {
       // });
   },
   methods: {
+    registerMapListeners() {
+      this.google.maps.event.addListenerOnce(this.map, 'idle', () => {
+        const center = this.map.getCenter();
+        this.$emit('mapOnLoad', { lat: center.lat(), lng: center.lng() }, this.map.getZoom(), this.getMapSize());
+      });
+
+      this.map.addListener('click', () => {
+        this.infoWindows.forEach(i => i.close());
+      });
+
+      this.map.addListener('center_changed', () => {
+        const center = this.map.getCenter();
+        this.movableMarker.setPosition(center);
+        this.$emit('centerChanged', { lat: center.lat(), lng: center.lng() }, this.map.getZoom(), this.getMapSize());
+      });
+
+      this.map.addListener('zoom_changed', () => {
+        const newZoomLevel = this.map.getZoom();
+        const center = this.map.getCenter();
+
+        if (newZoomLevel < this.currentZoomLevel) {
+          this.$emit('zoomOut', { lat: center.lat(), lng: center.lng() }, newZoomLevel, this.getMapSize());
+        } else {
+          this.$emit('zoomIn', { lat: center.lat(), lng: center.lng() }, newZoomLevel, this.getMapSize());
+        }
+
+        if (newZoomLevel < this.detailedInfoZoomLevel && this.markersAreShown) {
+          this.hideAllMarkers();
+        }
+        if (newZoomLevel >= this.detailedInfoZoomLevel && !this.markersAreShown) {
+          this.showAllMarkers();
+        }
+
+        this.currentZoomLevel = newZoomLevel;
+      });
+    },
     addMarkerToMapAsync(geolocation, iconName = 'Default') {
       return new Promise((resolve) => {
         const markerPosition = { lat: geolocation.lat, lng: geolocation.lng };

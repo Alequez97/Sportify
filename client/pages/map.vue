@@ -25,13 +25,15 @@
 
     <GoogleMap
       :geolocations="geolocations"
-      :initZoomLevel=14
+      :initZoomLevel="initZoomLevel"
+      :detailedInfoZoomLevel="detailedInfoZoomLevel"
       :enabledTypeIds="enabledTypeIds"
       :showFilterButton="true"
       :movableMarkerEnabled="movableMarkerEnabled"
       ref="map"
       v-on:mapOnLoad="mapOnLoad"
       v-on:centerChanged="centerChanged"
+      v-on:zoomIn="zoomIn"
       v-on:zoomOut="zoomOut"
       v-on:filterOnClick="filterOnClick"
     />
@@ -94,6 +96,9 @@ export default {
       fetchedPositions: [],
       enabledTypeIds: [],
       types: [],
+
+      detailedInfoZoomLevel: 12,
+      initZoomLevel: 14,
 
       enableAllTypesSwitch: true,
       enableAllTypesSwitchText: 'Disable all',
@@ -218,15 +223,26 @@ export default {
           console.log(error);
         });
     },
-    async mapOnLoad(mapCenter, mapSize) {
-      await this.getLocationsAround(mapCenter, mapSize);
+    async mapOnLoad(mapCenter, zoomLevel, mapSize) {
+      if (zoomLevel >= this.detailedInfoZoomLevel) {
+        await this.getLocationsAround(mapCenter, mapSize, false);
+      }
       this.mapIsLoaded = true;
     },
-    async zoomOut(mapCenter, mapSize) {
-      await this.getLocationsAround(mapCenter, mapSize, false);
+    async zoomIn(mapCenter, newZoomLevel, mapSize) {
+      if (newZoomLevel >= this.detailedInfoZoomLevel) {
+        await this.getLocationsAround(mapCenter, mapSize, false);
+      }
     },
-    async centerChanged(mapCenter, mapSize) {
-      await this.getLocationsAround(mapCenter, mapSize);
+    async zoomOut(mapCenter, newZoomLevel, mapSize) {
+      if (newZoomLevel >= this.detailedInfoZoomLevel) {
+        await this.getLocationsAround(mapCenter, mapSize, false);
+      }
+    },
+    async centerChanged(mapCenter, zoomLevel, mapSize) {
+      if (zoomLevel >= this.detailedInfoZoomLevel) {
+        await this.getLocationsAround(mapCenter, mapSize, false);
+      }
     },
     filterOnClick() {
       this.filterDialog = true;
