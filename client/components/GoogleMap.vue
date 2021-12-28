@@ -170,7 +170,9 @@ export default {
     showAllMarkers() {
       for (let i = 0; i < this.markers.length; i++) {
         const marker = this.markers[i].marker;
-        marker.setMap(this.map);
+        if (this.enabledTypeIds.includes(this.markers[i].typeId)) {
+          marker.setMap(this.map);
+        }
       }
       this.markersAreShown = true;
     },
