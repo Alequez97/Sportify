@@ -1,10 +1,14 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using DataServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SportifyWebApi.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -26,26 +30,35 @@ namespace SportifyWebApi.Endpoints.Events
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult> HandleAsync([FromRoute] DeleteEventRequest request, CancellationToken cancellationToken = default)
         {
-            var @event = await _context.Events.FindAsync(request.Id);
+            int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            _context.Remove(@event);
+            var @event = await _context.Events
+                .Where(e => e.Id == request.Id && e.CreatorId == userId)
+                .FirstOrDefaultAsync();
 
-            try
+            if(@event != null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch(Exception)
-            {
-                throw;
+                try
+                {
+                    _context.Remove(@event);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+
+                return Ok();
             }
 
-            return Ok();
+            return NotFound();
         }
     }
 
     public class DeleteEventRequest
     {
         [FromRoute]
+        [Required]
         public int Id { get; set; }
     }
 }

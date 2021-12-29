@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using SportifyWebApi.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 using SportifyWebApi.Specifications;
+using System.ComponentModel.DataAnnotations;
 
 namespace SportifyWebApi.Endpoints.Events
 {
@@ -36,7 +37,11 @@ namespace SportifyWebApi.Endpoints.Events
                 int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 var record = _context.EventUsers.WithSpecification(new EventUserByIdSpec(request.EventId, userId)).FirstOrDefault();
 
-                record.IsGoing = false;
+                if (record != null)
+                {
+                    record.IsGoing = false;
+                }
+                else return NotFound();
 
                 await _context.SaveChangesAsync();
 
@@ -51,6 +56,7 @@ namespace SportifyWebApi.Endpoints.Events
 
     public class DisjoinEventRequest
     {
+        [Required]
         public int EventId { get; set; }
     }
 }

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using SportifyWebApi.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 using SportifyWebApi.Specifications;
+using System.ComponentModel.DataAnnotations;
 
 namespace SportifyWebApi.Endpoints.Events
 {
@@ -64,6 +65,7 @@ namespace SportifyWebApi.Endpoints.Events
 
     public class JoinEventRequest
     {
+        [Required]
         public int EventId { get; set; }
     }
 }
