@@ -25,13 +25,15 @@
 
     <GoogleMap
       :geolocations="geolocations"
-      :initZoomLevel=14
+      :initZoomLevel="initZoomLevel"
+      :detailedInfoZoomLevel="detailedInfoZoomLevel"
       :enabledTypeIds="enabledTypeIds"
       :showFilterButton="true"
       :movableMarkerEnabled="movableMarkerEnabled"
       ref="map"
       v-on:mapOnLoad="mapOnLoad"
       v-on:centerChanged="centerChanged"
+      v-on:zoomIn="zoomIn"
       v-on:zoomOut="zoomOut"
       v-on:filterOnClick="filterOnClick"
     />
@@ -60,8 +62,8 @@
             <span class="text-h5">Add new sports ground</span>
           </v-card-title>
           <v-card-text>
-            <v-form>
-              <v-select v-model="typeId" :items="types" label="Type" item-text="name" item-value="id" color="teal" />
+            <v-form ref="sportsGroundLocationForm">
+              <v-select v-model="typeId" :items="types" :rules="[rules.required('Type')]" label="Type" item-text="name" item-value="id" color="teal" />
               <v-textarea v-model="description" label="Description" color="teal" />
               <v-file-input v-model="images" multiple chips counter prepend-icon="mdi-camera" />
             </v-form>
@@ -94,6 +96,9 @@ export default {
       fetchedPositions: [],
       enabledTypeIds: [],
       types: [],
+
+      detailedInfoZoomLevel: 12,
+      initZoomLevel: 14,
 
       enableAllTypesSwitch: true,
       enableAllTypesSwitchText: 'Disable all',
@@ -149,49 +154,51 @@ export default {
       this.showCancelButton = true;
     },
     async saveNewLocation() {
-      const latLng = this.$refs.map.getMovableMarkerPosition();
-      const fullAddress = await this.$store.dispatch('googleMap/getAddressFromGeolocationAsync', latLng);
+      if (this.$refs.sportsGroundLocationForm.validate()) {
+        const latLng = this.$refs.map.getMovableMarkerPosition();
+        const fullAddress = await this.$store.dispatch('googleMap/getAddressFromGeolocationAsync', latLng);
 
-      const fd = new FormData();
-      fd.append('typeId', this.typeId);
-      this.images.forEach(image => fd.append('images', image, image.name));
-      fd.append('description', this.description);
-      fd.append('lat', latLng.lat);
-      fd.append('lng', latLng.lng);
-      fd.append('country', fullAddress.country);
-      fd.append('city', fullAddress.city);
-      fd.append('district', fullAddress.district);
-      fd.append('street', fullAddress.street);
-      fd.append('houseNumber', fullAddress.houseNumber);
+        const fd = new FormData();
+        fd.append('typeId', this.typeId);
+        this.images.forEach(image => fd.append('images', image, image.name));
+        fd.append('description', this.description);
+        fd.append('lat', latLng.lat);
+        fd.append('lng', latLng.lng);
+        fd.append('country', fullAddress.country);
+        fd.append('city', fullAddress.city);
+        fd.append('district', fullAddress.district);
+        fd.append('street', fullAddress.street);
+        fd.append('houseNumber', fullAddress.houseNumber);
 
-      await this.$axios.post("/api/map/save", fd).then((response) => {
-        this.showSnackbar('Location successfully uploaded', "success");
-        const typeName = this.types.filter(t => t.id === this.typeId)[0].name;
-        const newGeolocation = {
-          description: this.description,
-          id: response.data.id,
-          images: response.data?.images,
-          lat: latLng.lat,
-          lng: latLng.lng,
-          typeId: this.typeId,
-          typeName
-        }
-        this.geolocations.push(newGeolocation);
-        this.resetFormData();
-      }).catch((error) => {
-        if (error.response) {
-          if (error.response.status === 401) {
-            this.showSnackbar('Login to add new location', "red");
-          } else {
-            this.showSnackbar('Non 401 error occured...', "red");
+        await this.$axios.post("/api/map/save", fd).then((response) => {
+          this.showSnackbar('Location successfully uploaded', "success");
+          const typeName = this.types.filter(t => t.id === this.typeId)[0].name;
+          const newGeolocation = {
+            description: this.description,
+            id: response.data.id,
+            images: response.data?.images,
+            lat: latLng.lat,
+            lng: latLng.lng,
+            typeId: this.typeId,
+            typeName
           }
-        } else {
-          this.showSnackbar('Error. Check your network connection or try again later', "red");
-        }
-      });
+          this.geolocations.push(newGeolocation);
+          this.resetFormData();
+        }).catch((error) => {
+          if (error.response) {
+            if (error.response.status === 401) {
+              this.showSnackbar('Login to add new location', "red");
+            } else {
+              this.showSnackbar('Non 401 error occured...', "red");
+            }
+          } else {
+            this.showSnackbar('Error. Check your network connection or try again later', "red");
+          }
+        });
 
-      this.saveLocationDialog = false;
-      this.removeMovableMarker();
+        this.saveLocationDialog = false;
+        this.removeMovableMarker();
+      }
     },
     showSnackbar(message, color) {
       this.responseMessage = message;
@@ -216,15 +223,26 @@ export default {
           console.log(error);
         });
     },
-    async mapOnLoad(mapCenter, mapSize) {
-      await this.getLocationsAround(mapCenter, mapSize);
+    async mapOnLoad(mapCenter, zoomLevel, mapSize) {
+      if (zoomLevel >= this.detailedInfoZoomLevel) {
+        await this.getLocationsAround(mapCenter, mapSize, false);
+      }
       this.mapIsLoaded = true;
     },
-    async zoomOut(mapCenter, mapSize) {
-      await this.getLocationsAround(mapCenter, mapSize, false);
+    async zoomIn(mapCenter, newZoomLevel, mapSize) {
+      if (newZoomLevel >= this.detailedInfoZoomLevel) {
+        await this.getLocationsAround(mapCenter, mapSize, false);
+      }
     },
-    async centerChanged(mapCenter, mapSize) {
-      await this.getLocationsAround(mapCenter, mapSize);
+    async zoomOut(mapCenter, newZoomLevel, mapSize) {
+      if (newZoomLevel >= this.detailedInfoZoomLevel) {
+        await this.getLocationsAround(mapCenter, mapSize, false);
+      }
+    },
+    async centerChanged(mapCenter, zoomLevel, mapSize) {
+      if (zoomLevel >= this.detailedInfoZoomLevel) {
+        await this.getLocationsAround(mapCenter, mapSize, false);
+      }
     },
     filterOnClick() {
       this.filterDialog = true;

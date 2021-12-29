@@ -79,7 +79,7 @@ namespace SportifyWebApi.Endpoints.Map
             var response = new SportsGroundSaveNewLocationResponse()
             {
                 Id = location.Id,
-                Images = location.Images.Select(image => image.Path).ToList(),
+                Images = location.Images?.Select(image => image.Path).ToList(),
                 Message = "New location successfully saved",
                 Status = ResponseStatus.Success
             };
@@ -89,6 +89,7 @@ namespace SportifyWebApi.Endpoints.Map
 
     public class SportsGroundSaveNewLocationRequest
     {
+        [Required]
         public int TypeId { get; set; }
 
         public string Description { get; set; }
@@ -103,8 +104,10 @@ namespace SportifyWebApi.Endpoints.Map
 
         public string HouseNumber { get; set; }
 
+        [Required]
         public double Lat { get; set; }
-
+        
+        [Required]
         public double Lng { get; set; }
 
         public List<IFormFile> Images { get; set; }

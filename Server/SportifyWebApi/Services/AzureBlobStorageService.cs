@@ -21,7 +21,7 @@ namespace SportifyWebApi.Services
             using var stream = file.OpenReadStream();
             blobClient.Upload(stream);
 
-            return Task.Run<string>(() => "This is piece of shittable code. Never code like this. This sucks so much");
+            return Task.Run(() => "This is best code ever");
         }
     }
 }
