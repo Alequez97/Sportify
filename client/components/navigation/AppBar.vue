@@ -64,7 +64,7 @@
       </v-container>
       <v-list nav dense>
         <v-list-item-group active-class="teal--text">
-          <v-list-item v-if="isAuthenticated" router :to="`/users/${userInfo.username}`">
+          <v-list-item v-if="isAuthenticated" router :to="`/accounts/user-info/${userInfo.username}`">
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>

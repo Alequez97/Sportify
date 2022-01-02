@@ -78,7 +78,7 @@ export default {
   },
   async created() {
     try {
-      await this.$axios.get("api/users/" + this.$route.params.username)
+      await this.$axios.get("api/accounts/user-info/" + this.$route.params.username)
       .then((response) => { this.user = response.data });
     } catch (err) {
       console.log(err);
