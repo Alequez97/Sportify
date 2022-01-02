@@ -6,17 +6,38 @@ namespace SportifyWebApi.IntegrationTests.Constants
 
         public static class Accounts
         {
-            private static readonly string _identityBaseUrl = string.Concat(_baseUrl, "accounts");
+            private static readonly string _accountsBaseUrl = string.Concat(_baseUrl, "accounts");
 
-            public static readonly string GetAuthenticatedUserInfo = string.Concat(_identityBaseUrl, "/auth-user-info");
+            public static readonly string GetAuthenticatedUserInfo = string.Concat(_accountsBaseUrl, "/auth-user-info");
 
-            public static readonly string GetUserInfo = string.Concat(_identityBaseUrl, "/user-info/{username}");
+            public static readonly string GetUserInfo = string.Concat(_accountsBaseUrl, "/user-info/{username}");
 
-            public static readonly string Login = string.Concat(_identityBaseUrl, "/login");
+            public static readonly string Login = string.Concat(_accountsBaseUrl, "/login");
 
-            public static readonly string Register = string.Concat(_identityBaseUrl, "/register");
+            public static readonly string Register = string.Concat(_accountsBaseUrl, "/register");
 
-            public static readonly string RegisterAdmin = string.Concat(_identityBaseUrl, "/register-admin");
+            public static readonly string RegisterAdmin = string.Concat(_accountsBaseUrl, "/register-admin");
+        }
+
+        public static class Events
+        {
+            private static readonly string _eventsBaseUrl = string.Concat(_baseUrl, "events");
+
+            private static readonly string CreateEvent = string.Concat(_eventsBaseUrl, "/create");
+
+            private static readonly string DeleteEvent = string.Concat(_eventsBaseUrl, "/delete/{id}");
+
+            private static readonly string DisjoinEvent = string.Concat(_eventsBaseUrl, "/disjoin");
+
+            private static readonly string EditEvent = string.Concat(_eventsBaseUrl, "/edit/{id}");
+
+            private static readonly string GetEvent = string.Concat(_eventsBaseUrl, "/events/{id}");
+
+            private static readonly string GetEvents = _eventsBaseUrl;
+
+            private static readonly string GetEventsCategories = string.Concat(_eventsBaseUrl, "/categories");
+
+            private static readonly string JoinEvent = string.Concat(_eventsBaseUrl, "/join");
         }
 
         public static class Map

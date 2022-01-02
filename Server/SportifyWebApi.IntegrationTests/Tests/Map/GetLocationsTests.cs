@@ -11,7 +11,6 @@ namespace SportifyWebApi.IntegrationTests.Tests.Map
         private readonly string _urlWithoutDelta = $"{Constants.Endpoints.Map.GetLocations}?lat=56&lng=24";
         private readonly string _urlWithDelta = $"{Constants.Endpoints.Map.GetLocations}?lat=56&lng=24&delta=0.1";
 
-
         [Fact]
         public async Task UnauthorizedAccess()
         {
@@ -23,7 +22,6 @@ namespace SportifyWebApi.IntegrationTests.Tests.Map
         public async Task RequestWithoutDelta()
         {
             var response = await _testHttpClient.GetAsync(_urlWithoutDelta);
-            var responseString = await response.Content.ReadAsStringAsync();
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 

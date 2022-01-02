@@ -23,7 +23,7 @@ namespace SportifyWebApi.Endpoints.Events
             _context = context;
         }
 
-        [HttpGet("/api/event/{id}")]
+        [HttpGet("/api/events/{id}")]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult<GetEventResponse>> HandleAsync([FromRoute] GetEventRequest request, CancellationToken cancellationToken = default)
         {

@@ -10,18 +10,18 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Category
 {
-    public class GetEventCategories : BaseAsyncEndpoint
+    public class GetEventsCategories : BaseAsyncEndpoint
         .WithoutRequest
         .WithResponse<GetCategoriesResponse>
     {
         private readonly SportifyDbContext _context;
 
-        public GetEventCategories(SportifyDbContext context)
+        public GetEventsCategories(SportifyDbContext context)
         {
             _context = context;
         }
 
-        [HttpGet("/api/event-categories")]
+        [HttpGet("/api/events/categories")]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult<GetCategoriesResponse>> HandleAsync(CancellationToken cancellationToken = default)
         {

@@ -45,7 +45,7 @@ export const actions = {
     },
     async fetchCategories({commit}) {
         try {
-            const resp = await this.$axios.get('/api/event-categories');
+            const resp = await this.$axios.get('/api/events/categories');
             commit('SET_CATEGORIES', resp.data)
         } catch (err) {
             console.log(err);
@@ -76,12 +76,12 @@ export const actions = {
         }
     },
     async createEvent({dispatch, commit}, eventData) {
-        await this.$axios.post("/api/event/create", eventData);
+        await this.$axios.post("/api/events/create", eventData);
         await dispatch('fetchEvents');
         this.$router.push('/events');
     },
     async editEvent({dispatch}, eventData) {
-        await this.$axios.put("/api/event/edit/" + eventData.id, eventData);
+        await this.$axios.put("/api/events/edit/" + eventData.id, eventData);
         await dispatch('fetchEvents');
     },
     async join({dispatch, commit}, id) {
@@ -110,7 +110,7 @@ export const actions = {
     },
     async deleteEvent({dispatch}, eventId) {
         try {
-            await this.$axios.delete("api/event/delete/" + eventId);
+            await this.$axios.delete("api/events/delete/" + eventId);
             await dispatch('fetchEvents');
         } catch (err) {
             console.log(err);

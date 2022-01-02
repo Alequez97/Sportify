@@ -27,7 +27,7 @@ namespace SportifyWebApi.Endpoints.Events
         }
 
         [Authorize]
-        [HttpPut("/api/event/edit/{id}")]
+        [HttpPut("/api/events/edit/{id}")]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult> HandleAsync([FromBody] EditEventRequest request, CancellationToken cancellationToken = default)
         {

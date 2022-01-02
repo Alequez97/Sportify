@@ -59,7 +59,6 @@ namespace SportifyWebApi.IntegrationTests
                 Email = _email,
                 Password = _password
             };
-
             await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Accounts.Register, userModel);
             var loginResponse = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Accounts.Login, userModel);
             var loginResponseModel = await ExtractResponseModelAsync<UserResponseTestModel>(loginResponse);

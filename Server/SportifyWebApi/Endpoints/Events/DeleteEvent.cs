@@ -26,7 +26,7 @@ namespace SportifyWebApi.Endpoints.Events
         }
 
         [Authorize]
-        [HttpDelete("/api/event/delete/{id}")]
+        [HttpDelete("/api/events/delete/{id}")]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult> HandleAsync([FromRoute] DeleteEventRequest request, CancellationToken cancellationToken = default)
         {
