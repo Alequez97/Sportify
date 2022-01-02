@@ -21,7 +21,6 @@ namespace DomainEntities.EventEntities
         [MaxLength(150)]
         public string BriefDesc { get; set; }
 
-        [Required]
         [MaxLength(2000)]
         public string Description { get; set; }
 
