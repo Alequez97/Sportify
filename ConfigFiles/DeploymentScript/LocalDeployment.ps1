@@ -27,7 +27,7 @@ function Add-Migration
 
     Install-Ef-Tool-If-Not-Exists
     Set-Location $SportifyBaseDir/Server/DataServices
-    dotnet ef migrations add $MigrationName
+    dotnet ef --startup-project ../SportifyWebApi migrations add $MigrationName
     Set-Location $SportifyBaseDir
 }
 
@@ -43,7 +43,7 @@ function Update-Database
 {
     Install-Ef-Tool-If-Not-Exists
     Set-Location $SportifyBaseDir/Server/DataServices
-    dotnet ef database update 
+    dotnet ef --startup-project ../SportifyWebApi database update 
     Set-Location $SportifyBaseDir
 }
 
@@ -140,7 +140,7 @@ function Write-Help
 Set-Alias am Add-Migration
 Set-Alias um Undo-Migration
 Set-Alias setup-db Setup-Database
-Set-Alias update-db Database-Update
+Set-Alias update-db Update-Database
 Set-Alias seed Seed-Database
 Set-Alias help Write-Help
 Write-Help
