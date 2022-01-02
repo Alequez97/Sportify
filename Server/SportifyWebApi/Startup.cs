@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,7 +37,10 @@ namespace SportifyWebApi
                 c.EnableAnnotations();
             });
 
-            services.AddDbContext<SportifyDbContext>();
+            services.AddDbContext<SportifyDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("Local"));
+            });
 
             services.AddTransient<IStorageService>(x => new FileSystemStorageService(Directory.GetCurrentDirectory() + "\\..\\..\\client\\static\\images\\sportsGroundImages", true));
 

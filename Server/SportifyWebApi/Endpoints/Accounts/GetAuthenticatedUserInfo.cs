@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,14 +8,14 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Accounts
 {
-    public class GetAuthenticatedUserInfo : BaseAsyncEndpoint
+    public class GetAuthenticatedUserInfo : BaseEndpoint
         .WithoutRequest
         .WithResponse<GetAuthenticatedUserInfoResponse>
     {
         [Authorize]
-        [HttpGet("/api/accounts/info")]
+        [HttpGet("/api/accounts/auth-user-info")]
         [SwaggerOperation(Tags = new[] { "Accounts" })]
-        public override async Task<ActionResult<GetAuthenticatedUserInfoResponse>> HandleAsync(CancellationToken cancellationToken = default)
+        public override ActionResult<GetAuthenticatedUserInfoResponse> Handle()
         {
             var info = new GetAuthenticatedUserInfoResponse()
             {
@@ -33,7 +31,9 @@ namespace SportifyWebApi.Endpoints.Accounts
     public class GetAuthenticatedUserInfoResponse
     {
         public int Id { get; set; }
+
         public string Username { get; set; }
+
         public bool IsAdmin { get; set; }
     }
 }

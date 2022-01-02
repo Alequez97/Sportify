@@ -49,7 +49,7 @@ namespace SportifyWebApi.Services
 
                 return path;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //TODO: Log error
                 return null;

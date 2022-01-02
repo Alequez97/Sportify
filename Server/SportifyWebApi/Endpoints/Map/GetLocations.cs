@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,14 +59,17 @@ namespace SportifyWebApi.Endpoints.Map
 
     public class SportsGroundGetLocationsRequest
     {
-        [FromQuery(Name = "lat")] 
-        public double Lat { get; set; }
+        [Required]
+        [FromQuery]
+        public double? Lat { get; set; }
 
-        [FromQuery(Name = "lng")] 
-        public double Lng { get; set; }
+        [Required]
+        [FromQuery]
+        public double? Lng { get; set; }
 
-        [FromQuery(Name = "delta")] 
-        public double Delta { get; set; }
+        [Required]
+        [FromQuery]
+        public double? Delta { get; set; }
     }
 
     public class SportsGroundGetLocationsResponse

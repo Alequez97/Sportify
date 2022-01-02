@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
@@ -7,6 +8,7 @@ using DataServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Accounts
 {
@@ -22,11 +24,12 @@ namespace SportifyWebApi.Endpoints.Accounts
         }
 
         [Authorize]
-        [HttpGet("/api/users/{username}")]
+        [HttpGet("/api/accounts/user-info/{username}")]
+        [SwaggerOperation(Tags = new[] { "Accounts" })]
         public override async Task<ActionResult<GetUserInfoResponse>> HandleAsync([FromRoute]GetUserInfoRequest request, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users
-                .Where(u => u.NormalizedUserName.Equals(request.UserName.ToUpper()))
+                .Where(u => string.Equals(u.NormalizedUserName, request.UserName, StringComparison.CurrentCultureIgnoreCase))
                 .Select(u => new GetUserInfoResponse
                 {
                     Username = u.UserName,
