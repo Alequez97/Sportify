@@ -1,5 +1,6 @@
 using System.Net;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Xunit;
 
 namespace SportifyWebApi.IntegrationTests.Tests.Events
@@ -9,8 +10,8 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
         [Fact]
         public async Task UnauthorizedAccess()
         {
-            var response = await _testHttpClient.GetAsync(Constants.Endpoints);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var response = await _testHttpClient.GetAsync(Constants.Endpoints.Events.CreateEvent);
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         /// <summary>

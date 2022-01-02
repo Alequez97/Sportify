@@ -23,21 +23,21 @@ namespace SportifyWebApi.IntegrationTests.Constants
         {
             private static readonly string _eventsBaseUrl = string.Concat(_baseUrl, "events");
 
-            private static readonly string CreateEvent = string.Concat(_eventsBaseUrl, "/create");
+            public static readonly string CreateEvent = string.Concat(_eventsBaseUrl, "/create");
 
-            private static readonly string DeleteEvent = string.Concat(_eventsBaseUrl, "/delete/{id}");
+            public static readonly string DeleteEvent = string.Concat(_eventsBaseUrl, "/delete/{id}");
 
-            private static readonly string DisjoinEvent = string.Concat(_eventsBaseUrl, "/disjoin");
+            public static readonly string DisjoinEvent = string.Concat(_eventsBaseUrl, "/disjoin");
 
-            private static readonly string EditEvent = string.Concat(_eventsBaseUrl, "/edit/{id}");
+            public static readonly string EditEvent = string.Concat(_eventsBaseUrl, "/edit/{id}");
 
-            private static readonly string GetEvent = string.Concat(_eventsBaseUrl, "/events/{id}");
+            public static readonly string GetEvent = string.Concat(_eventsBaseUrl, "/events/{id}");
 
-            private static readonly string GetEvents = _eventsBaseUrl;
+            public static readonly string GetEvents = _eventsBaseUrl;
 
-            private static readonly string GetEventsCategories = string.Concat(_eventsBaseUrl, "/categories");
+            public static readonly string GetEventsCategories = string.Concat(_eventsBaseUrl, "/categories");
 
-            private static readonly string JoinEvent = string.Concat(_eventsBaseUrl, "/join");
+            public static readonly string JoinEvent = string.Concat(_eventsBaseUrl, "/join");
         }
 
         public static class Map
