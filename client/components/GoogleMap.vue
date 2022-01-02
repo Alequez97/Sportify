@@ -152,22 +152,20 @@ export default {
           icon: `/icons/map/${iconName}.png`
         });
 
-        if (geolocation.description !== undefined && geolocation.description !== null) {
-          const infoWindow = new this.google.maps.InfoWindow({
-            content: this.getLocationInfoHtml(geolocation)
-          });
+        const infoWindow = new this.google.maps.InfoWindow({
+          content: this.getLocationInfoHtml(geolocation)
+        });
 
-          this.infoWindows.push(infoWindow);
+        this.infoWindows.push(infoWindow);
 
-          const map = this.map;
-          marker.addListener("click", () => {
-            infoWindow.open({
-              anchor: marker,
-              map,
-              shouldFocus: false
-            });
+        const map = this.map;
+        marker.addListener("click", () => {
+          infoWindow.open({
+            anchor: marker,
+            map,
+            shouldFocus: false
           });
-        }
+        });
 
         if (geolocation.typeId === undefined || this.enabledTypeIds.includes(geolocation.typeId)) {
           marker.setMap(this.map);
@@ -266,15 +264,15 @@ export default {
       }
 
       const infoHtml =
-      "<div class=\"info-window-wrapper\">" +
-        "<div class=\"info-window-information-wrapper\">" +
-          "<h3 class=\"infow-window-header\">" + geolocation.typeName + "</h3>" +
-          "<p class=\"infow-window-description\">" + geolocation.description + "</h3>" +
-        "</div>" +
-        "<div class=\"info-window-images-wrapper\">" +
-          imagesHtml +
-        "</div>" +
-      "</div>"
+      `<div class="info-window-wrapper">
+        <div class="info-window-information-wrapper">
+          <h3 class="infow-window-header">${geolocation.typeName}</h3>
+          <p class="infow-window-description">${geolocation.description === null ? '' : geolocation.description}</h3>
+        </div>
+        <div class="info-window-images-wrapper">
+          ${imagesHtml}
+        </div>
+      </div>`
 
       return infoHtml;
     }
