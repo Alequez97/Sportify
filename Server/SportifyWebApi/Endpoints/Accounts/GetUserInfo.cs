@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
@@ -29,7 +28,7 @@ namespace SportifyWebApi.Endpoints.Accounts
         public override async Task<ActionResult<GetUserInfoResponse>> HandleAsync([FromRoute]GetUserInfoRequest request, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users
-                .Where(u => string.Equals(u.NormalizedUserName, request.UserName, StringComparison.CurrentCultureIgnoreCase))
+                .Where(u => string.Equals(u.NormalizedUserName, request.UserName))
                 .Select(u => new GetUserInfoResponse
                 {
                     Username = u.UserName,
