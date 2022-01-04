@@ -13,6 +13,7 @@ namespace SportifyWebApi.IntegrationTests
     public class SportifyWebApiIntegrationTestBase
     {
         protected readonly HttpClient _testHttpClient;
+        protected SportifyDbContext _testDbContext;
 
         private readonly string _username = "test-user";
         private readonly string _email = "test@sportify.app";
@@ -30,8 +31,8 @@ namespace SportifyWebApi.IntegrationTests
                         //
                         // Comment all lines after this comment to use real database
                         services.ReplaceDatabaseWithInMemory<SportifyDbContext>();
-                        var dbContext = services.BuildServiceProvider().GetRequiredService<SportifyDbContext>();
-                        new TestDataSeeder(dbContext).SeedData();
+                        _testDbContext = services.BuildServiceProvider().GetRequiredService<SportifyDbContext>();
+                        new TestDataSeeder(_testDbContext).SeedData();
                     });
                 });
 
