@@ -36,7 +36,12 @@ namespace SportifyWebApi.Endpoints.Events
             try
             {
                 int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                var record = _context.EventUsers.WithSpecification(new EventUserByIdSpec(request.EventId, userId)).FirstOrDefault();
+                
+                var eventExists = _context.Events.Any(e => e.Id == request.EventId);
+
+                if (!eventExists) return NotFound();
+
+                var record = _context.EventUsers.WithSpecification(new EventUserByIdSpec((int)request.EventId, userId)).FirstOrDefault();
 
                 if(record != null)
                 {
@@ -46,7 +51,7 @@ namespace SportifyWebApi.Endpoints.Events
                 {
                     _context.EventUsers.Add(new EventUser
                     {
-                        EventId = request.EventId,
+                        EventId = (int)request.EventId,
                         UserId = userId,
                         IsGoing = true
                     });
@@ -66,6 +71,6 @@ namespace SportifyWebApi.Endpoints.Events
     public class JoinEventRequest
     {
         [Required]
-        public int EventId { get; set; }
+        public int? EventId { get; set; }
     }
 }

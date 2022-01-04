@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FizzWare.NBuilder;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace SportifyWebApi.IntegrationTests.Tests.Events
@@ -39,15 +41,13 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
             var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.CreateEvent, request);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var @event = await _testHttpClient.GetAsync(Constants.Endpoints.Events.GetEvent.Replace("{id}", "1"));
-            var eventModel = await ExtractResponseModelAsync<GetEventResponse>(@event);
+            var @event = _testDbContext.Events.Include(v => v.Venue).FirstOrDefault(e => e.Id == 1);
 
-            eventModel.Title.Should().Be(request.Title);
-            eventModel.Description.Should().Be(request.Description);
-            eventModel.Venue.Address.Should().Be(request.Address);
-            eventModel.Venue.Lat.Should().Be(request.Lat);
-            eventModel.Venue.Lng.Should().Be(request.Lng);
-            eventModel.Venue.Lng.Should().Be(request.Lng);
+            @event.Title.Should().Be(request.Title);
+            @event.Description.Should().Be(request.Description);
+            @event.Venue.Address.Should().Be(request.Address);
+            @event.Venue.Latitude.Should().Be(request.Lat);
+            @event.Venue.Longitude.Should().Be(request.Lng);
         }
 
         [Fact]
@@ -59,10 +59,9 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
             var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.CreateEvent, request);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var @event = await _testHttpClient.GetAsync(Constants.Endpoints.Events.GetEvent.Replace("{id}", "1"));
-            var eventModel = await ExtractResponseModelAsync<GetEventResponse>(@event);
+            var @event = _testDbContext.Events.Include(v => v.EventUsers).FirstOrDefault(e => e.Id == 1);
 
-            eventModel.Contributors.Count.Should().BeGreaterThan(0);
+            @event.EventUsers.Count.Should().BeGreaterThan(0);
         }
 
         private class CreateEventRequest
@@ -88,46 +87,6 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
             public DateTime Date { get; set; }
 
             public bool IsGoing { get; set; }
-        }
-
-        private class GetEventResponse
-        {
-            public string Title { get; set; }
-
-            public string CategoryName { get; set; }
-
-            public string BriefDesc { get; set; }
-
-            public string Description { get; set; }
-
-            public GetEventVenueDto Venue { get; set; }
-
-            public string Date { get; set; }
-
-            public string CreatorUsername { get; set; }
-
-            public int CreatorId { get; set; }
-
-            public List<GetEventContributorDto> Contributors { get; set; }
-
-            public class GetEventContributorDto
-            {
-                public int Id { get; set; }
-                public string Username { get; set; }
-            }
-
-            public class GetEventVenueDto
-            {
-                public string Country { get; set; }
-
-                public string City { get; set; }
-
-                public string Address { get; set; }
-
-                public double Lat { get; set; }
-
-                public double Lng { get; set; }
-            }
         }
     }
 }
