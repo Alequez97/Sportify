@@ -11,6 +11,8 @@ namespace DomainEntities
         [MaxLength(100)]
         public string Name { get; set; }
 
+        [Required]
+        public int CountryId { get; set; }
         public Country Country { get; set; }
     }
 }

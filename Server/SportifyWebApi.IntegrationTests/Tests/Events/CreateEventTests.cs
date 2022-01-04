@@ -24,6 +24,5 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
         {
             Assert.True(true);
         }
-
     }
 }

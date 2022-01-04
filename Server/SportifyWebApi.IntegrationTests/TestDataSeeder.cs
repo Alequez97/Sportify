@@ -1,4 +1,6 @@
 using DataServices;
+using DomainEntities;
+using DomainEntities.EventEntities;
 using DomainEntities.SportsGroundEntities;
 
 namespace SportifyWebApi.IntegrationTests
@@ -24,6 +26,32 @@ namespace SportifyWebApi.IntegrationTests
             _dbContext.SportsGroundTypes.Add(new SportsGroundType()
             {
                 Name = "Basketball field"
+            });
+
+            _dbContext.Countries.Add(new Country()
+            {
+                Name = "Latvia"
+            });
+
+            _dbContext.Countries.Add(new Country()
+            {
+                Name = "Estonia"
+            });
+
+            _dbContext.Cities.Add(new City()
+            {
+                CountryId = 1,
+                Name = "Talin"
+            });
+
+            _dbContext.EventCategories.Add(new EventCategory()
+            {
+                Name = "Basketball"
+            });
+
+            _dbContext.EventCategories.Add(new EventCategory()
+            {
+                Name = "Voleyball"
             });
         }
     }
