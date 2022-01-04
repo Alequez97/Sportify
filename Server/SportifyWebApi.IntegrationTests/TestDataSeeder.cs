@@ -38,11 +38,6 @@ namespace SportifyWebApi.IntegrationTests
             {
                 Name = "Latvia"
             });
-
-            _dbContext.Countries.Add(new Country()
-            {
-                Name = "Estonia"
-            });
         }
 
         private void SeedCities()
@@ -52,12 +47,6 @@ namespace SportifyWebApi.IntegrationTests
                 CountryId = 1,
                 Name = "Riga"
             });
-
-            _dbContext.Cities.Add(new City()
-            {
-                CountryId = 2,
-                Name = "Talinn"
-            });
         }
 
         private void SeedEventCategories()
@@ -65,11 +54,6 @@ namespace SportifyWebApi.IntegrationTests
             _dbContext.EventCategories.Add(new EventCategory()
             {
                 Name = "Basketball"
-            });
-
-            _dbContext.EventCategories.Add(new EventCategory()
-            {
-                Name = "Voleyball"
             });
         }
     }

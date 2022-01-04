@@ -35,13 +35,13 @@ namespace SportifyWebApi.Endpoints.Events
             var @event = new Event()
             {
                 Title = request.Title,
-                CategoryId = request.CategoryId,
+                CategoryId = (int)request.CategoryId,
                 BriefDesc = request.BriefDesc,
                 Description = request.Description,
                 Venue = new Venue
                 {
-                    CountryId = request.CountryId,
-                    CityId = request.CityId,
+                    CountryId = (int)request.CountryId,
+                    CityId = (int)request.CityId,
                     Address = request.Address,
                     Latitude = request.Lat,
                     Longitude = request.Lng
@@ -72,7 +72,7 @@ namespace SportifyWebApi.Endpoints.Events
         public string Title { get; set; }
 
         [Required]
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
         [Required]
         public string BriefDesc { get; set; }
@@ -80,10 +80,10 @@ namespace SportifyWebApi.Endpoints.Events
         public string Description { get; set; }
 
         [Required]
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
 
         [Required]
-        public int CityId { get; set; }
+        public int? CityId { get; set; }
 
         [Required]
         public string Address { get; set; }
