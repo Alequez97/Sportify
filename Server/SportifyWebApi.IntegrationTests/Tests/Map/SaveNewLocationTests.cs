@@ -18,7 +18,7 @@ namespace SportifyWebApi.IntegrationTests.Tests.Map
         }
 
         [Fact]
-        public async Task TestValidLocationUpload()
+        public async Task ValidLocationUpload()
         {
             await AuthenticateAsync();
 
@@ -31,7 +31,7 @@ namespace SportifyWebApi.IntegrationTests.Tests.Map
         }
 
         [Fact]
-        public async Task TestLocationWithoutTypeIdUpload()
+        public async Task LocationWithoutTypeIdUpload()
         {
             await AuthenticateAsync();
 

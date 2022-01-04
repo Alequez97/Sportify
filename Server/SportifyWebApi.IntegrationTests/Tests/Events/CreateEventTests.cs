@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using FizzWare.NBuilder;
 using FluentAssertions;
 using Xunit;
 
@@ -10,20 +11,8 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
 {
     public class CreateEventTests : SportifyWebApiIntegrationTestBase
     {
-        CreateEventRequest request = new CreateEventRequest()
-        {
-            Title = "A",
-            CategoryId = 1,
-            BriefDesc = "A",
-            Description = "A",
-            CountryId = 1,
-            CityId = 1,
-            Address = "Skolas iela 1",
-            Lat = 1,
-            Lng = 1,
-            Date = DateTime.Now,
-            IsGoing = false
-        };
+        CreateEventRequest request = Builder<CreateEventRequest>.CreateNew()
+            .With(x => x.CategoryId = 1).Build();
 
         [Fact]
         public async Task UnauthorizedAccess()
