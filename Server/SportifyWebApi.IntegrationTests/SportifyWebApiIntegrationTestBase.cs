@@ -4,10 +4,9 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using DataServices;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json;
+using SportifyWebApi.IntegrationTests.Extensions;
 
 namespace SportifyWebApi.IntegrationTests
 {
@@ -26,12 +25,13 @@ namespace SportifyWebApi.IntegrationTests
                 {
                     builder.ConfigureServices(services =>
                     {
-                        services.RemoveAll(typeof(SportifyDbContext));
-                        services.AddDbContext<SportifyDbContext>(options => options.UseInMemoryDatabase("testDatabase"));
                         // This replaces real database with in-memory database. Real database also can be used, but in that case clean up methods will be required 
                         // if test will be run on real env
                         //
-                        // Comment two lines in ConfigureService to use real database
+                        // Comment all lines after this comment to use real database
+                        services.ReplaceDatabaseWithInMemory<SportifyDbContext>();
+                        var dbContext = services.BuildServiceProvider().GetRequiredService<SportifyDbContext>();
+                        new TestDataSeeder(dbContext).SeedData();
                     });
                 });
 

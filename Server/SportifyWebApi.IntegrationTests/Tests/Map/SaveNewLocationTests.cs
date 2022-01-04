@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http.Json;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -13,14 +13,51 @@ namespace SportifyWebApi.IntegrationTests.Tests.Map
         [Fact]
         public async Task UnauthorizedAccess()
         {
-            var requestModel = new SportsGroundSaveNewLocationRequest()
-            {
-                TypeId = 1,
-                Lat = 50,
-                Lng = 50
-            };
-            var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Map.SaveNewLocation, requestModel);
+            var response = await PostValidLocationAsync();
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
+
+        [Fact]
+        public async Task TestValidLocationUpload()
+        {
+            await AuthenticateAsync();
+
+            var response = await PostValidLocationAsync();
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var responseModel = await ExtractResponseModelAsync<SportsGroundSaveNewLocationResponse>(response);
+            responseModel.Id.Should().BeGreaterThan(0);
+            responseModel.Images.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task TestLocationWithoutTypeIdUpload()
+        {
+            await AuthenticateAsync();
+
+            var response = await PostLocationWithoutTypeIdAsync();
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        private Task<HttpResponseMessage> PostValidLocationAsync()
+        {
+            IList<KeyValuePair<string, string>> formData = new List<KeyValuePair<string, string>> {
+                { new KeyValuePair<string, string>("TypeId", "1") },
+                { new KeyValuePair<string, string>("Lat", "54") },
+                { new KeyValuePair<string, string>("Lng", "27") }
+            };
+
+            return _testHttpClient.PostAsync(Constants.Endpoints.Map.SaveNewLocation, new FormUrlEncodedContent(formData));
+        }
+
+        private Task<HttpResponseMessage> PostLocationWithoutTypeIdAsync()
+        {
+            IList<KeyValuePair<string, string>> formData = new List<KeyValuePair<string, string>> {
+                { new KeyValuePair<string, string>("Lat", "54") },
+                { new KeyValuePair<string, string>("Lng", "27") }
+            };
+
+            return _testHttpClient.PostAsync(Constants.Endpoints.Map.SaveNewLocation, new FormUrlEncodedContent(formData));
         }
 
         private class SportsGroundSaveNewLocationRequest

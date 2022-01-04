@@ -14,14 +14,14 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Map
 {
-    public class SaveNewImage : BaseAsyncEndpoint
+    public class SaveNewImages : BaseAsyncEndpoint
         .WithRequest<SportsGroundSaveNewLocationImageRequest>
         .WithoutResponse
     {
         private readonly SportifyDbContext _context;
         private readonly IStorageService _storageService;
 
-        public SaveNewImage(SportifyDbContext context, IStorageService storageService)
+        public SaveNewImages(SportifyDbContext context, IStorageService storageService)
         {
             _context = context;
             _storageService = storageService;

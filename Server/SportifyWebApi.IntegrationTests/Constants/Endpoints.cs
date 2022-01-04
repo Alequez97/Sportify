@@ -48,7 +48,7 @@ namespace SportifyWebApi.IntegrationTests.Constants
             
             public static readonly string GetSportsGroundTypes = string.Concat(_mapBaseUrl, "/types");
 
-            public static readonly string SaveNewImage = string.Concat(_mapBaseUrl, "/save-images");
+            public static readonly string SaveNewImages = string.Concat(_mapBaseUrl, "/save-images");
 
             public static readonly string SaveNewLocation = string.Concat(_mapBaseUrl, "/save");
         }

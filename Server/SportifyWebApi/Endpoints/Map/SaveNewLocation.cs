@@ -37,60 +37,61 @@ namespace SportifyWebApi.Endpoints.Map
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Map })]
         public override async Task<ActionResult<SportsGroundSaveNewLocationResponse>> HandleAsync([FromForm] SportsGroundSaveNewLocationRequest request, CancellationToken cancellationToken = default)
         {
-            var location = new SportsGroundLocation()
-            {
-                Country = request.Country,
-                City = request.City,
-                District = request.District,
-                Street = request.Street,
-                HouseNumber = request.HouseNumber,
-                TypeId = request.TypeId,
-                Latitude = request.Lat,
-                Longitude = request.Lng,
-                Description = request.Description,
-                CreatorId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)
-            };
-
-            if (request.Images != null)
-            {
-                location.Images = new List<SportsGroundImage>();
-                foreach (var requestImage in request.Images)
-                {
-                    var savedFilePath = await _storageservice.UploadAsync(requestImage);
-                    if (savedFilePath != null)
-                    {
-                        location.Images.Add(new SportsGroundImage() { Path = Path.GetFileName(savedFilePath) });
-                    }
-                }
-            }
-
-            _context.SportsGroundLocations.Add(location);
-
             try
             {
+                var location = new SportsGroundLocation()
+                {
+                    Country = request.Country,
+                    City = request.City,
+                    District = request.District,
+                    Street = request.Street,
+                    HouseNumber = request.HouseNumber,
+                    TypeId = (int)request.TypeId,
+                    Latitude = (int)request.Lat,
+                    Longitude = (int)request.Lng,
+                    Description = request.Description,
+                    CreatorId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                };
+
+                if (request.Images != null)
+                {
+                    location.Images = new List<SportsGroundImage>();
+                    foreach (var requestImage in request.Images)
+                    {
+                        var savedFilePath = await _storageservice.UploadAsync(requestImage);
+                        if (savedFilePath != null)
+                        {
+                            location.Images.Add(new SportsGroundImage() { Path = Path.GetFileName(savedFilePath) });
+                        }
+                    }
+                }
+
+                _context.SportsGroundLocations.Add(location);
+           
                 await _context.SaveChangesAsync();
+
+                var response = new SportsGroundSaveNewLocationResponse()
+                {
+                    Id = location.Id,
+                    Images = location.Images?.Select(image => image.Path).ToList(),
+                    Message = "New location successfully saved",
+                    Status = ResponseStatus.Success
+                };
+
+                return Ok(response);
             }
-            catch
+            catch (Exception ex)
             {
                 // TODO: Log exception
-                return StatusCode(500);
+                return StatusCode(500, new ResponseBase() { Message = ex.InnerException.Message, Status = "Error" });
             }
-
-            var response = new SportsGroundSaveNewLocationResponse()
-            {
-                Id = location.Id,
-                Images = location.Images?.Select(image => image.Path).ToList(),
-                Message = "New location successfully saved",
-                Status = ResponseStatus.Success
-            };
-            return Ok(response);
         }
     }
 
     public class SportsGroundSaveNewLocationRequest
     {
         [Required]
-        public int TypeId { get; set; }
+        public int? TypeId { get; set; }
 
         public string Description { get; set; }
 
@@ -105,10 +106,10 @@ namespace SportifyWebApi.Endpoints.Map
         public string HouseNumber { get; set; }
 
         [Required]
-        public double Lat { get; set; }
+        public double? Lat { get; set; }
         
         [Required]
-        public double Lng { get; set; }
+        public double? Lng { get; set; }
 
         public List<IFormFile> Images { get; set; }
     }
