@@ -17,6 +17,9 @@ namespace SportifyWebApi.IntegrationTests
         public void SeedData()
         {
             SeedSportsGroundTypes();
+            SeedCities();
+            SeedCountries();
+            SeedEventCategories();
 
             _dbContext.SaveChanges();
         }
@@ -27,7 +30,10 @@ namespace SportifyWebApi.IntegrationTests
             {
                 Name = "Basketball field"
             });
+        }
 
+        private void SeedCountries()
+        {
             _dbContext.Countries.Add(new Country()
             {
                 Name = "Latvia"
@@ -37,13 +43,25 @@ namespace SportifyWebApi.IntegrationTests
             {
                 Name = "Estonia"
             });
+        }
 
+        private void SeedCities()
+        {
             _dbContext.Cities.Add(new City()
             {
                 CountryId = 1,
-                Name = "Talin"
+                Name = "Riga"
             });
 
+            _dbContext.Cities.Add(new City()
+            {
+                CountryId = 2,
+                Name = "Talinn"
+            });
+        }
+
+        private void SeedEventCategories()
+        {
             _dbContext.EventCategories.Add(new EventCategory()
             {
                 Name = "Basketball"
