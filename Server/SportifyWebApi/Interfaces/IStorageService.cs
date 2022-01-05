@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace SportifyWebApi.Services
+namespace SportifyWebApi.Interfaces
 {
     /// <summary>
     /// Service that uploads images

@@ -8,6 +8,8 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using SportifyWebApi.IntegrationTests.Extensions;
+using SportifyWebApi.Interfaces;
+using SportifyWebApi.Services;
 
 namespace SportifyWebApi.IntegrationTests
 {
@@ -30,6 +32,7 @@ namespace SportifyWebApi.IntegrationTests
                 {
                     builder.ConfigureServices(services =>
                     {
+                        services.AddTransient<IStorageService, TestsStorageService>();
                         services.ReplaceDatabaseWithInMemory<SportifyDbContext>();
                         _testDbContext = services.BuildServiceProvider().GetRequiredService<SportifyDbContext>();
                         new TestDataSeeder(_testDbContext).SeedData();
@@ -41,7 +44,8 @@ namespace SportifyWebApi.IntegrationTests
 
         protected async Task AuthenticateAsync()
         {
-            _testHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", await GetJwtTokenAsync());
+            var token = await GetJwtTokenAsync();
+            _testHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
         }
 
         private async Task<string> GetJwtTokenAsync()

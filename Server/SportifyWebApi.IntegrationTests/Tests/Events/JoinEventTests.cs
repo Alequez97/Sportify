@@ -15,6 +15,7 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
         public async Task UnauthorizedAccess()
         {
             var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.JoinEvent, new JoinEventRequest(){ EventId = 1 });
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
