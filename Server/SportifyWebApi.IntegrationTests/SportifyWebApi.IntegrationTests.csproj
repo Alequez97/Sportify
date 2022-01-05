@@ -28,4 +28,13 @@
     <ProjectReference Include="..\SportifyWebApi\SportifyWebApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Uploads\test-upload-1.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Uploads\test-upload-2.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

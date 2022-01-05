@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
 using DataServices;
 using DomainEntities.SportsGroundEntities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SportifyWebApi.Constants;
+using SportifyWebApi.Interfaces;
 using SportifyWebApi.Models;
-using SportifyWebApi.Services;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Map
@@ -28,6 +29,7 @@ namespace SportifyWebApi.Endpoints.Map
         }
 
         [HttpPost("api/map/save-images")]
+        [Authorize]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Map })]
         public override async Task<ActionResult> HandleAsync([FromForm] SportsGroundSaveNewLocationImageRequest request, CancellationToken cancellationToken = default)
         {

@@ -1,15 +1,18 @@
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Xunit;
 
 namespace SportifyWebApi.IntegrationTests.Tests.Map
 {
-    public class SaveNewImagesTests
+    public class SaveNewImagesTests : SportifyWebApiIntegrationTestBase
     {
         [Fact]
-        public void UnauthorizedAccess()
+        public async Task UnauthorizedAccess()
         {
-            Assert.True(true);
-            //var response = await PostValidLocationAsync();
-            //response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            var response = await _testHttpClient.PostAsync(Constants.Endpoints.Map.SaveNewImages, new MultipartFormDataContent());
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Http;
+using SportifyWebApi.Interfaces;
 
 namespace SportifyWebApi.Services
 {
