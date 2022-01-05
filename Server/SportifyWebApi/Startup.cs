@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SportifyWebApi.Endpoints.MappingProfiles;
+using SportifyWebApi.Interfaces;
 using SportifyWebApi.Services;
 
 namespace SportifyWebApi

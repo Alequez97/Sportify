@@ -8,8 +8,8 @@ using DomainEntities.SportsGroundEntities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SportifyWebApi.Constants;
+using SportifyWebApi.Interfaces;
 using SportifyWebApi.Models;
-using SportifyWebApi.Services;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Map
