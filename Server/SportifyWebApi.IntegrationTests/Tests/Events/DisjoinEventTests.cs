@@ -9,45 +9,45 @@ using Xunit;
 
 namespace SportifyWebApi.IntegrationTests.Tests.Events
 {
-    public class JoinEventTests : SportifyWebApiIntegrationTestBase
+    public class DisjoinEventTests : SportifyWebApiIntegrationTestBase
     {
         [Fact]
         public async Task UnauthorizedAccess()
         {
-            var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.JoinEvent, new JoinEventRequest(){ EventId = 1 });
+            var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.DisjoinEvent, new DisjoinEventRequest() { EventId = 1 });
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
-        public async Task Join()
+        public async Task Disjoin()
         {
             await AuthenticateAsync();
 
             await PostEventAsync();
 
-            var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.JoinEvent, new JoinEventRequest() { EventId = 1 });
+            var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.DisjoinEvent, new DisjoinEventRequest() { EventId = 1 });
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var record = _testDbContext.EventUsers.FirstOrDefault();
             record.Should().NotBeNull();
-            record.IsGoing.Should().BeTrue();
+            record.IsGoing.Should().BeFalse();
         }
 
         [Fact]
-        public async Task JoinWithoutEventId()
+        public async Task DijoinWithoutEventId()
         {
             await AuthenticateAsync();
 
-            var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.JoinEvent, new object());
+            var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.DisjoinEvent, new object());
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
-        public async Task JoinWithUnpresentEventId()
+        public async Task DisjoinWithUnpresentEventId()
         {
             await AuthenticateAsync();
 
-            var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.JoinEvent, new JoinEventRequest() { EventId = 99 });
+            var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.DisjoinEvent, new DisjoinEventRequest() { EventId = 99});
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
@@ -57,15 +57,16 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
                 .With(x => x.CategoryId = 1)
                 .With(x => x.CountryId = 1)
                 .With(x => x.CityId = 1)
+                .With(x => x.IsGoing = true)
                 .Build();
 
             var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.CreateEvent, request);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
-        private class JoinEventRequest
+        private class DisjoinEventRequest
         {
-            public int EventId { get; set; }
+            public int? EventId { get; set; }
         }
 
         private class CreateEventRequest

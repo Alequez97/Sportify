@@ -5,27 +5,28 @@ using FluentAssertions;
 using SportifyWebApi.IntegrationTests.Extensions;
 using Xunit;
 
-namespace SportifyWebApi.IntegrationTests.Tests.Map
+namespace SportifyWebApi.IntegrationTests.Tests.Events
 {
-    public class GetSportsGroundTypesTests : SportifyWebApiIntegrationTestBase
+    public class GetEventsCategoriesTests : SportifyWebApiIntegrationTestBase
     {
         [Fact]
         public async Task UnauthorizedAccessAllowed()
         {
-            var response = await _testHttpClient.GetAsync(Constants.Endpoints.Map.GetSportsGroundTypes);
+            var response = await _testHttpClient.GetAsync(Constants.Endpoints.Events.GetEventsCategories);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
         [Fact]
         public async Task ResponseNotEmpty()
         {
-            var response = await _testHttpClient.GetAsync(Constants.Endpoints.Map.GetSportsGroundTypes);
-            var responseModel = await response.DeserializeResponseAsync<List<SportsGroundTypeResponse>>();
+            var response = await _testHttpClient.GetAsync(Constants.Endpoints.Events.GetEventsCategories);
+            var responseModel = await response.DeserializeResponseAsync<List<GetCategoriesResponse>>();
 
             responseModel.Should().NotBeEmpty();
+
         }
 
-        private class SportsGroundTypeResponse
+        public class GetCategoriesResponse
         {
             public int Id { get; set; }
 

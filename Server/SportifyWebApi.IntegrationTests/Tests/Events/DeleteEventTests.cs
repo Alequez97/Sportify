@@ -9,46 +9,46 @@ using Xunit;
 
 namespace SportifyWebApi.IntegrationTests.Tests.Events
 {
-    public class JoinEventTests : SportifyWebApiIntegrationTestBase
+    public class DeleteEventTests : SportifyWebApiIntegrationTestBase
     {
         [Fact]
         public async Task UnauthorizedAccess()
         {
-            var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.JoinEvent, new JoinEventRequest(){ EventId = 1 });
+            var response = await _testHttpClient.DeleteAsync(Constants.Endpoints.Events.DeleteEvent);
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
-        public async Task Join()
+        public async Task Delete()
         {
             await AuthenticateAsync();
 
             await PostEventAsync();
 
-            var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.JoinEvent, new JoinEventRequest() { EventId = 1 });
+            _testDbContext.Events.Any().Should().BeTrue();
+
+            var response = await _testHttpClient.DeleteAsync(Constants.Endpoints.Events.DeleteEvent.Replace("{id}", "1"));
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var record = _testDbContext.EventUsers.FirstOrDefault();
-            record.Should().NotBeNull();
-            record.IsGoing.Should().BeTrue();
+            _testDbContext.Events.Any().Should().BeFalse();
         }
 
         [Fact]
-        public async Task JoinWithoutEventId()
+        public async Task DeleteWithUnpresentEventId()
         {
             await AuthenticateAsync();
 
-            var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.JoinEvent, new object());
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task JoinWithUnpresentEventId()
-        {
-            await AuthenticateAsync();
-
-            var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.JoinEvent, new JoinEventRequest() { EventId = 99 });
+            var response = await _testHttpClient.DeleteAsync(Constants.Endpoints.Events.DeleteEvent.Replace("{id}", "99"));
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task DeleteWithoutEventId()
+        {
+            await AuthenticateAsync();
+
+            var response = await _testHttpClient.DeleteAsync(Constants.Endpoints.Events.DeleteEvent.Replace("{id}", ""));
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         private async Task PostEventAsync()
@@ -61,11 +61,6 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
 
             var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.CreateEvent, request);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-        }
-
-        private class JoinEventRequest
-        {
-            public int EventId { get; set; }
         }
 
         private class CreateEventRequest
