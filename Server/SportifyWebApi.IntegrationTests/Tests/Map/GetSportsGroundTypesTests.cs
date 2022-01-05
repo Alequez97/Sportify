@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using SportifyWebApi.IntegrationTests.Extensions;
 using Xunit;
 
 namespace SportifyWebApi.IntegrationTests.Tests.Map
@@ -19,7 +20,7 @@ namespace SportifyWebApi.IntegrationTests.Tests.Map
         public async Task ResponseNotEmpty()
         {
             var response = await _testHttpClient.GetAsync(Constants.Endpoints.Map.GetSportsGroundTypes);
-            var responseModel = await ExtractResponseModelAsync<List<SportsGroundTypeResponse>>(response);
+            var responseModel = await response.DeserializeResponseAsync<List<SportsGroundTypeResponse>>();
 
             responseModel.Should().NotBeEmpty();
         }

@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using SportifyWebApi.IntegrationTests.Extensions;
 using Xunit;
 
 namespace SportifyWebApi.IntegrationTests.Tests.Map
@@ -25,7 +26,7 @@ namespace SportifyWebApi.IntegrationTests.Tests.Map
             var response = await PostValidLocationAsync();
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var responseModel = await ExtractResponseModelAsync<SportsGroundSaveNewLocationResponse>(response);
+            var responseModel = await response.DeserializeResponseAsync<SportsGroundSaveNewLocationResponse>();
             responseModel.Id.Should().BeGreaterThan(0);
             responseModel.Images.Should().BeNullOrEmpty();
         }
