@@ -14,7 +14,7 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
         [Fact]
         public async Task UnauthorizedAccess()
         {
-            var response = await _testHttpClient.DeleteAsync(Constants.Endpoints.Events.DeleteEvent);
+            var response = await _testHttpClient.DeleteAsync(Constants.Endpoints.Events.DeleteEvent.Replace("{id}", "1"));
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
@@ -48,7 +48,7 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
             await AuthenticateAsync();
 
             var response = await _testHttpClient.DeleteAsync(Constants.Endpoints.Events.DeleteEvent.Replace("{id}", ""));
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
         }
 
         private async Task PostEventAsync()

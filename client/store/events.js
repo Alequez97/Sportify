@@ -81,7 +81,7 @@ export const actions = {
         this.$router.push('/events');
     },
     async editEvent({dispatch}, eventData) {
-        await this.$axios.put("/api/events/edit/" + eventData.id, eventData);
+        await this.$axios.put("/api/events/edit", eventData);
         await dispatch('fetchEvents');
     },
     async join({dispatch, commit}, id) {

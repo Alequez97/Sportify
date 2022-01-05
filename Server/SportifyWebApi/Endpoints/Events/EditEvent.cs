@@ -27,13 +27,13 @@ namespace SportifyWebApi.Endpoints.Events
         }
 
         [Authorize]
-        [HttpPut("/api/events/edit/{id}")]
+        [HttpPut("/api/events/edit")]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Events })]
         public override async Task<ActionResult> HandleAsync([FromBody] EditEventRequest request, CancellationToken cancellationToken = default)
         {
             int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var @event = await _context.Events
-                .Where(e => e.Id == request.Id)
+                .Where(e => e.Id == request.Id && e.CreatorId == userId)
                 .Include(v => v.Venue)
                 .Include(v => v.EventUsers.Where(u => u.UserId == userId))
                 .FirstOrDefaultAsync();
@@ -43,9 +43,9 @@ namespace SportifyWebApi.Endpoints.Events
                 @event.Title = request.Title;
                 @event.Description = request.Description;
                 @event.BriefDesc = request.BriefDesc;
-                @event.CategoryId = request.CategoryId;
-                @event.Venue.CountryId = request.CountryId;
-                @event.Venue.CityId = request.CityId;
+                @event.CategoryId = (int)request.CategoryId;
+                @event.Venue.CountryId = (int)request.CountryId;
+                @event.Venue.CityId = (int)request.CityId;
                 @event.Venue.Address = request.Address;
                 @event.Date = request.Date;
                 @event.Venue.Latitude = request.Lat;
@@ -55,7 +55,7 @@ namespace SportifyWebApi.Endpoints.Events
                     @event.EventUsers
                     .Add(new EventUser()
                     {
-                        EventId = request.Id,
+                        EventId = (int)request.Id,
                         UserId = userId,
                         IsGoing = true
                     });
@@ -84,9 +84,9 @@ namespace SportifyWebApi.Endpoints.Events
 
     public class EditEventRequest
     {
-        [FromRoute]
+        [FromBody]
         [Required]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [FromBody]
         [Required]
@@ -94,7 +94,7 @@ namespace SportifyWebApi.Endpoints.Events
 
         [FromBody]
         [Required]
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
         [FromBody]
         [Required]
@@ -105,11 +105,11 @@ namespace SportifyWebApi.Endpoints.Events
 
         [FromBody]
         [Required]
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
 
         [FromBody]
         [Required]
-        public int CityId { get; set; }
+        public int? CityId { get; set; }
 
         [FromBody]
         [Required]

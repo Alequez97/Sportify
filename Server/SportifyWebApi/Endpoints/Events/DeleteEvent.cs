@@ -58,7 +58,6 @@ namespace SportifyWebApi.Endpoints.Events
     public class DeleteEventRequest
     {
         [FromRoute]
-        //[Required]
         public int Id { get; set; }
     }
 }
