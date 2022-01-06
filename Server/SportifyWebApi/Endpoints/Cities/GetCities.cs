@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace SportifyWebApi.Endpoints.City
             _context = context;
         }
 
-        [HttpGet("/api/cities/{countryId}")]
+        [HttpGet("/api/cities/{countryId:int}")]
         [SwaggerOperation(Tags = new[] { SwaggerGroup.Cities })]
         public override async Task<ActionResult<GetCitiesResponse>> HandleAsync([FromRoute] GetCitiesRequest request, CancellationToken cancellationToken = default)
         {
@@ -38,7 +39,8 @@ namespace SportifyWebApi.Endpoints.City
 
     public class GetCitiesRequest
     {
-        [FromRoute] public int CountryId { get; set; }
+        [FromRoute]
+        public int CountryId { get; set; }
     }
 
     public class GetCitiesResponse

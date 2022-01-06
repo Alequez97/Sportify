@@ -11,7 +11,7 @@
         <v-divider></v-divider>
         <v-card-text class="pa-0">
           <v-list>
-            <v-list-item v-for="contr in contributors" :key="contr.id">
+            <v-list-item v-for="contr in contributors" :key="contr.id" :to="`/users/${contr.username}`">
               <v-list-item-title>
                 <v-avatar size="35" color="teal lighten-2" class="mr-2">
                   <span class="white--text text-subtitle-2 text-uppercase">{{contr.username}}</span>
