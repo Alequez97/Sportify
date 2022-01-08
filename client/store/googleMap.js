@@ -33,52 +33,46 @@ export const actions = {
             }
         }
     },
-    getGeolocationFromAddressAsync({state}, address) {
-        return new Promise((resolve, reject) => {
-          state.geocoder
-            .geocode({ address })
-            .then((response) => {
-              const result = response.results[0];
-              if (result) {
-                const location = result.geometry.location;
-                const latlng = { lat: location.lat(), lng: location.lng() };
-                resolve(latlng)
-              } else {
-                resolve({ lat: undefined, lng: undefined });
-              }
-            })
-            .catch(e => reject(e));
-        });
+    async getGeolocationFromAddressAsync({state}, address) {
+      try {
+        const response = await state.geocoder.geocode({ address })
+        const result = response.results[0];
+        if (result) {
+          const location = result.geometry.location;
+          const latlng = { lat: location.lat(), lng: location.lng() };
+          return latlng;
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
-    getAddressFromGeolocationAsync({state}, latLng) {
-        return new Promise((resolve, reject) => {
-          state.geocoder
-            .geocode({ location: latLng })
-            .then((response) => {
-              const result = response.results[0];
-              if (result) {
-                const addressComponents = result.address_components;
-                const fullAddress = {
-                  country: addressComponents.filter(c => c.types.includes("country"))[0]?.long_name,
-                  city: addressComponents.filter(c => c.types.includes("locality"))[0]?.long_name,
-                  district: addressComponents.filter(c => c.types.includes("sublocality"))[0]?.long_name,
-                  street: addressComponents.filter(c => c.types.includes("route"))[0]?.long_name,
-                  houseNumber: addressComponents.filter(c => c.types.includes("street_number"))[0]?.long_name
-                };
-                resolve(fullAddress);
-              } else {
-                const fullAddress = {
-                  country: null,
-                  city: null,
-                  district: null,
-                  street: null,
-                  houseNumber: null
-                };
-                resolve(fullAddress);
-              }
-            })
-            .catch(e => reject(e));
-        });
+    async getAddressFromGeolocationAsync({state}, latLng) {
+      try {
+        const response = await state.geocoder.geocode({ location: latLng });
+        const result = response.results[0];
+        if (result) {
+          const addressComponents = result.address_components;
+          const fullAddress = {
+            country: addressComponents.filter(c => c.types.includes("country"))[0]?.long_name,
+            city: addressComponents.filter(c => c.types.includes("locality"))[0]?.long_name,
+            district: addressComponents.filter(c => c.types.includes("sublocality"))[0]?.long_name,
+            street: addressComponents.filter(c => c.types.includes("route"))[0]?.long_name,
+            houseNumber: addressComponents.filter(c => c.types.includes("street_number"))[0]?.long_name
+          }
+          return fullAddress;
+        } else {
+          const fullAddress = {
+            country: null,
+            city: null,
+            district: null,
+            street: null,
+            houseNumber: null
+          };
+          return fullAddress;
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
     getCurrentLocationAsync() {
         return new Promise((resolve) => {
