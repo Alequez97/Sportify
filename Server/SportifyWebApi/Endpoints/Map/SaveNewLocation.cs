@@ -47,8 +47,8 @@ namespace SportifyWebApi.Endpoints.Map
                     Street = request.Street,
                     HouseNumber = request.HouseNumber,
                     TypeId = (int)request.TypeId,
-                    Latitude = (int)request.Lat,
-                    Longitude = (int)request.Lng,
+                    Latitude = (double)request.Lat,
+                    Longitude = (double)request.Lng,
                     Description = request.Description,
                     CreatorId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)
                 };
