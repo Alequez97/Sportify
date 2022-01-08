@@ -13,7 +13,10 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
     public class CreateEventTests : SportifyWebApiIntegrationTestBase
     {
         CreateEventRequest request = Builder<CreateEventRequest>.CreateNew()
-            .With(x => x.CategoryId = 1).Build();
+            .With(x => x.CategoryId = 1)
+            .With(x => x.CountryId = 1)
+            .With(x => x.CityId = 1)
+            .Build();
 
         [Fact]
         public async Task UnauthorizedAccess()

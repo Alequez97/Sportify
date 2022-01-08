@@ -2,6 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DomainEntities.SportsGroundEntities
 {
+    /// <summary>
+    /// Class that represents SportsGroundImage model
+    /// </summary>
     public class SportsGroundImage : EntityBase
     {
         [Required]

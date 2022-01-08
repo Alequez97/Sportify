@@ -32,31 +32,35 @@
             </div>
             <div v-if="contributorsExist > 3" class="mb-0">
               <div class="d-inline-flex">
-                <v-tooltip v-for="cont in event.contributors.slice(0,3)" :key="cont.id" top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-avatar v-bind="attrs" v-on="on" size="35" color="teal lighten-2" class="mt-1 mb-2 mr-2">
-                      <v-icon dark>
-                        mdi-account-circle
-                      </v-icon>
-                    </v-avatar>
-                  </template>
-                  <span>{{cont.username}}</span>
-                </v-tooltip>
+                <NuxtLink v-for="cont in event.contributors.slice(0,3)" :key="cont.id" :to="`/users/${cont.username}`">
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-avatar v-bind="attrs" v-on="on" size="35" color="teal lighten-2" class="mt-1 mb-2 mr-2">
+                        <v-icon dark>
+                          mdi-account-circle
+                        </v-icon>
+                      </v-avatar>
+                    </template>
+                    <span>{{cont.username}}</span>
+                  </v-tooltip>
+                </NuxtLink>
               </div>
               <PopupContributors :count="contributorsExist - 3" :contributors="event.contributors"/>
             </div>
             <div v-else-if="contributorsExist">
               <div>
-                <v-tooltip v-for="cont in event.contributors.slice(0,3)" :key="cont.id" top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-avatar v-bind="attrs" v-on="on" size="35" color="teal lighten-2" class="mt-1 mb-2 mr-2">
-                      <v-icon dark>
-                        mdi-account-circle
-                      </v-icon>
-                    </v-avatar>
-                  </template>
-                  <span>{{cont.username}}</span>
-                </v-tooltip>
+                <NuxtLink v-for="cont in event.contributors.slice(0,3)" :key="cont.id" :to="`/users/${cont.username}`">
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-avatar v-bind="attrs" v-on="on" size="35" color="teal lighten-2" class="mt-1 mb-2 mr-2">
+                        <v-icon dark>
+                          mdi-account-circle
+                        </v-icon>
+                      </v-avatar>
+                    </template>
+                    <span>{{cont.username}}</span>
+                  </v-tooltip>
+                </NuxtLink>
               </div>
             </div>
             <div v-else>

@@ -29,7 +29,7 @@ namespace SportifyWebApi.IntegrationTests.Constants
 
             public static readonly string DisjoinEvent = string.Concat(_eventsBaseUrl, "/disjoin");
 
-            public static readonly string EditEvent = string.Concat(_eventsBaseUrl, "/edit/{id}");
+            public static readonly string EditEvent = string.Concat(_eventsBaseUrl, "/edit");
 
             public static readonly string GetEvent = string.Concat(_eventsBaseUrl, "/{id}");
 
