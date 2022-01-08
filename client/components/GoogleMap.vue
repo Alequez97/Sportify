@@ -37,21 +37,21 @@ export default {
         this.addMarkerToMapAsync(newGeolocation, newGeolocation.typeName.replaceAll(" ", "_"));
       }
     },
-    enabledTypeIds(newTypes, oldTypes) {
+    enabledTypeIds(newTypesIds, oldTypesIds) {
       if (this.map?.getZoom() < this.detailedInfoZoomLevel) { // If zoom level is small no need to rerender icons
         return;
       }
 
-      const wasEnabled = newTypes.length >= oldTypes.length;
+      const wasEnabled = newTypesIds.length >= oldTypesIds.length;
       if (wasEnabled) {
-        const lastSelectTypeIds = newTypes.filter(x => !oldTypes.includes(x));
+        const lastSelectTypeIds = newTypesIds.filter(x => !oldTypesIds.includes(x));
 
         lastSelectTypeIds.forEach((typeId) => {
           const filteredMarkers = this.markers.filter(m => m.typeId === typeId);
           filteredMarkers.forEach(m => m.marker.setMap(this.map));
         });
       } else {
-        const lastSelectTypeIds = oldTypes.filter(x => !newTypes.includes(x));
+        const lastSelectTypeIds = oldTypesIds.filter(x => !newTypesIds.includes(x));
 
         lastSelectTypeIds.forEach((typeId) => {
           const filteredMarkers = this.markers.filter(m => m.typeId === typeId);
@@ -95,17 +95,6 @@ export default {
     }
 
     this.createMovableMarker(this.movableMarkerEnabled);
-
-      // const addresses = [
-      //   'Latvia, Riga, Eksporta iela 2a',
-      //   'Latvia, Riga, Lenču iela 1',
-      //   'Latvia, Riga, Sporta iela'
-      // ];
-      // addresses.forEach(async (address) => {
-      //   const geolocation = await this.getGeolocationFromAddressAsync(address);
-      //   const latLng = geolocation.geometry.location;
-      //   this.addMarkerToMapAsync({ lat: latLng.lat(), lng: latLng.lng() });
-      // });
   },
   methods: {
     registerMapListeners() {
