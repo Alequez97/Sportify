@@ -183,7 +183,7 @@ export default {
             typeName
           }
           this.geolocations.push(newGeolocation);
-          this.resetFormData();
+          this.$refs.sportsGroundLocationForm.reset();
         }).catch((error) => {
           if (error.response) {
             if (error.response.status === 401) {
@@ -204,11 +204,6 @@ export default {
       this.responseMessage = message;
       this.snackbarColor = color;
       this.responseSnackbar = true;
-    },
-    resetFormData() {
-      this.typeId = '';
-      this.description = '';
-      this.images = [];
     },
     removeMovableMarker() {
       this.movableMarkerEnabled = false;
