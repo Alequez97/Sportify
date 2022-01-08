@@ -225,7 +225,7 @@ export default {
     },
     async mapOnLoad(mapCenter, zoomLevel, mapSize) {
       if (zoomLevel >= this.detailedInfoZoomLevel) {
-        await this.getLocationsAround(mapCenter, mapSize, false);
+        await this.getLocationsAround(mapCenter, mapSize);
       }
       this.mapIsLoaded = true;
     },
@@ -241,7 +241,7 @@ export default {
     },
     async centerChanged(mapCenter, zoomLevel, mapSize) {
       if (zoomLevel >= this.detailedInfoZoomLevel) {
-        await this.getLocationsAround(mapCenter, mapSize, false);
+        await this.getLocationsAround(mapCenter, mapSize);
       }
     },
     filterOnClick() {
