@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,7 +41,7 @@ namespace SportifyWebApi.Endpoints.Map
                     var storedPath = await _storageService.UploadAsync(image);
                     var imageModel = new SportsGroundImage()
                     {
-                        SportsGroundLocationId = request.LocationId,
+                        SportsGroundLocationId = (int)request.LocationId,
                         Path = Path.GetFileName(storedPath)
                     };
                     _context.SportsGroundImages.Add(imageModel);
@@ -60,7 +61,8 @@ namespace SportifyWebApi.Endpoints.Map
 
     public class SportsGroundSaveNewLocationImageRequest
     {
-        public int LocationId { get; set; }
+        [Required]
+        public int? LocationId { get; set; }
 
         public List<IFormFile> Images { get; set; }
     }
