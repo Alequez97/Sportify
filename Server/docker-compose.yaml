@@ -1,0 +1,24 @@
+version: '3.1'
+services:
+  ms-sql-server:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "P@ssword1"
+      MSSQL_PID: Express
+    ports:
+    - "1433:1433"
+  sportify-web-api:
+    build: .
+    ports: 
+    - "44313:80"
+    - "44314:443"
+    depends_on:
+    - ms-sql-server
+    environment:
+      ASPNETCORE_URLS: "https://+;http://+"
+      ASPNETCORE_HTTPS_PORT": 44314
+      ASPNETCORE_ENVIRONMENT: "Development"
+    volumes:
+    - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
+    - ${USERPROFILE}\.aspnet\https\:/root/.aspnet/https
