@@ -17,7 +17,6 @@ namespace SportifyWebApi.IntegrationTests
             builder.ConfigureServices(services =>
             {
                 services.AddTransient<IStorageService, TestsStorageService>();
-                services.ReplaceDatabaseWithDockerAsync<SportifyDbContext>().Wait();
                 TestDbContext = services.BuildServiceProvider().GetRequiredService<SportifyDbContext>();
             });
         }
