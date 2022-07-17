@@ -25,12 +25,12 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
 
             await PostEventAsync();
 
-            _testDbContext.Events.Any().Should().BeTrue();
+            _appFactory.TestDbContext.Events.Any().Should().BeTrue();
 
             var response = await _testHttpClient.DeleteAsync(Constants.Endpoints.Events.DeleteEvent.Replace("{id}", "1"));
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            _testDbContext.Events.Any().Should().BeFalse();
+            _appFactory.TestDbContext.Events.Any().Should().BeFalse();
         }
 
         [Fact]

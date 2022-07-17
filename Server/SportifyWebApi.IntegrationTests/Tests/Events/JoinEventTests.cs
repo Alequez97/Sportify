@@ -28,7 +28,7 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
             var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.JoinEvent, new JoinEventRequest() { EventId = 1 });
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var record = _testDbContext.EventUsers.FirstOrDefault();
+            var record = _appFactory.TestDbContext.EventUsers.FirstOrDefault();
             record.Should().NotBeNull();
             record.IsGoing.Should().BeTrue();
         }

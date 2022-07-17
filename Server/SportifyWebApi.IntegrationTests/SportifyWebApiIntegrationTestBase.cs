@@ -3,20 +3,15 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using DataServices;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using SportifyWebApi.IntegrationTests.Extensions;
-using SportifyWebApi.Interfaces;
-using SportifyWebApi.Services;
 
 namespace SportifyWebApi.IntegrationTests
 {
     public class SportifyWebApiIntegrationTestBase
     {
         protected readonly HttpClient _testHttpClient;
-        protected SportifyDbContext _testDbContext;
+        protected readonly TestsWebApplicationFactory _appFactory;
 
         private readonly UserRequestTestModel _userModel = new UserRequestTestModel()
         {
@@ -27,19 +22,8 @@ namespace SportifyWebApi.IntegrationTests
 
         protected SportifyWebApiIntegrationTestBase()
         {
-            var appFactory = new WebApplicationFactory<Startup>()
-                .WithWebHostBuilder(builder =>
-                {
-                    builder.ConfigureServices(services =>
-                    {
-                        services.AddTransient<IStorageService, TestsStorageService>();
-                        services.ReplaceDatabaseWithInMemory<SportifyDbContext>();
-                        _testDbContext = services.BuildServiceProvider().GetRequiredService<SportifyDbContext>();
-                        new TestDataSeeder(_testDbContext).SeedData();
-                    });
-                });
-
-            _testHttpClient = appFactory.CreateClient();
+            _appFactory = new TestsWebApplicationFactory();
+            _testHttpClient = _appFactory.CreateClient();
         }
 
         protected async Task AuthenticateAsync()
@@ -52,7 +36,7 @@ namespace SportifyWebApi.IntegrationTests
         {
             await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Accounts.Register, _userModel);
 
-            var user = _testDbContext.Users.FirstOrDefault(u => u.UserName == _userModel.Username);
+            var user = _appFactory.TestDbContext.Users.FirstOrDefault(u => u.UserName == _userModel.Username);
             user.Should().NotBeNull();
 
             var loginResponse = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Accounts.Login, _userModel);

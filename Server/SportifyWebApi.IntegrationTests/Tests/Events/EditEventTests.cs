@@ -47,7 +47,7 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
             var response = await _testHttpClient.PutAsJsonAsync(Constants.Endpoints.Events.EditEvent, request);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var @event = _testDbContext.Events.FirstOrDefault();
+            var @event = _appFactory.TestDbContext.Events.FirstOrDefault();
             @event.Title.Should().Be(request.Title);
         }
 

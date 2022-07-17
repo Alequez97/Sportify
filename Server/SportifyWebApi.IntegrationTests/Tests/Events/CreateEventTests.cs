@@ -43,7 +43,7 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
             var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.CreateEvent, request);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var @event = _testDbContext.Events.Include(v => v.Venue).FirstOrDefault();
+            var @event = _appFactory.TestDbContext.Events.Include(v => v.Venue).FirstOrDefault();
 
             @event.Title.Should().Be(request.Title);
             @event.Description.Should().Be(request.Description);
@@ -61,7 +61,7 @@ namespace SportifyWebApi.IntegrationTests.Tests.Events
             var response = await _testHttpClient.PostAsJsonAsync(Constants.Endpoints.Events.CreateEvent, request);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var @event = _testDbContext.Events.Include(v => v.EventUsers).FirstOrDefault(e => e.Id == 1);
+            var @event = _appFactory.TestDbContext.Events.Include(v => v.EventUsers).FirstOrDefault(e => e.Id == 1);
 
             @event.EventUsers.Count.Should().BeGreaterThan(0);
         }
