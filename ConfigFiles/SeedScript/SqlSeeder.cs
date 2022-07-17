@@ -19,22 +19,21 @@ namespace SeedScript
 
         public SeedReport Execute(SqlSeedModel seedModel, ProgressBar progressBar, SeedReport seedReport, int insertId = 0)
         {
-            using (var sqlConnection = new SqlConnection(_connectionString))
+            try
             {
+                using var sqlConnection = new SqlConnection(_connectionString);
                 sqlConnection.Open();
 
                 if (seedModel.InsertOnlyIfEmpty)
                 {
                     var rowCountQuery = $"SELECT COUNT(*) FROM {seedModel.TableName}";
-                    using (SqlCommand command = new SqlCommand(rowCountQuery, sqlConnection))
+                    using SqlCommand command = new SqlCommand(rowCountQuery, sqlConnection);
+                    var rowCount = Convert.ToInt32(command.ExecuteScalar());
+                    if (rowCount > 0)
                     {
-                        var rowCount = Convert.ToInt32(command.ExecuteScalar());
-                        if (rowCount > 0)
-                        {
-                            progressBar.DecreaseOperationsCount(seedModel.TotalRowsCount);
-                            seedReport.SkipedSeedsMessages.Add($"Skipped {seedModel.TableName} seed because table is not empty");
-                            return seedReport;
-                        }
+                        progressBar.DecreaseOperationsCount(seedModel.TotalRowsCount);
+                        seedReport.SkipedSeedsMessages.Add($"Skipped {seedModel.TableName} seed because table is not empty");
+                        return seedReport;
                     }
                 }
 
@@ -47,32 +46,36 @@ namespace SeedScript
                     }
                     var insertQuery = string.Format(queryTemplate, string.Join(',', rowValues));
 
-                    using (SqlCommand command = new SqlCommand(insertQuery, sqlConnection))
+                    using SqlCommand command = new SqlCommand(insertQuery, sqlConnection);
+                    try
                     {
-                        try
+                        var insertedId = Convert.ToInt32(command.ExecuteScalar());
+                        progressBar.UpdateProgressBar();
+
+                        //command.ExecuteNonQuery();
+                        if (row.InnerInsertModel != null && seedModel.InsertInnerData == true)
                         {
-                            var insertedId = Convert.ToInt32(command.ExecuteScalar());
-                            progressBar.UpdateProgressBar();
-
-                            //command.ExecuteNonQuery();
-                            if (row.InnerInsertModel != null && seedModel.InsertInnerData == true)
-                            {
-                                var innerSqlSeeder = new SqlSeeder(row.InnerInsertModel.TableName, row.InnerInsertModel.ColumnNames.Split(";").ToList());
-                                innerSqlSeeder.Execute(row.InnerInsertModel, progressBar, seedReport, insertedId);
-                            }
-
-                            if (row.InnerInsertModel != null && seedModel.InsertInnerData == false)
-                            {
-                                seedReport.SkipedSeedsMessages.Add($"Skipped {row.InnerInsertModel.TableName} seed because inner insert is disabled for table {seedModel.TableName}");
-                            }
+                            var innerSqlSeeder = new SqlSeeder(row.InnerInsertModel.TableName, row.InnerInsertModel.ColumnNames.Split(";").ToList());
+                            innerSqlSeeder.Execute(row.InnerInsertModel, progressBar, seedReport, insertedId);
                         }
-                        catch (Exception e)
+
+                        if (row.InnerInsertModel != null && seedModel.InsertInnerData == false)
                         {
-                            Console.WriteLine(e.Message);
+                            seedReport.SkipedSeedsMessages.Add($"Skipped {row.InnerInsertModel.TableName} seed because inner insert is disabled for table {seedModel.TableName}");
                         }
                     }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                 }
+            } 
+            catch (Exception ex)
+            {
+                var message = ex.Message;
+                Console.WriteLine();
             }
+            
 
             return seedReport;
         }
