@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DomainEntitites\DomainEntities.csproj" />
+    <ProjectReference Include="..\Sportify.DomainEntitites\Sportify.DomainEntities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataServices\DataServices.csproj" />
+    <ProjectReference Include="..\Sportify.DataServices\Sportify.DataServices.csproj" />
   </ItemGroup>
 
 </Project>

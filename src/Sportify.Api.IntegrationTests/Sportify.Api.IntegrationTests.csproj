@@ -29,8 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataServices\DataServices.csproj" />
-    <ProjectReference Include="..\SportifyWebApi\SportifyWebApi.csproj" />
+    <ProjectReference Include="..\Sportify.DataServices\Sportify.DataServices.csproj" />
+    <ProjectReference Include="..\Sportify.Api\Sportify.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

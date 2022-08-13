@@ -3,18 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.6.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SportifyWebApi", "SportifyWebApi\SportifyWebApi.csproj", "{13247368-AE64-4F31-97A8-253D1C6BD11C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sportify.Api", "src\Sportify.Api\Sportify.Api.csproj", "{13247368-AE64-4F31-97A8-253D1C6BD11C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainEntities", "DomainEntitites\DomainEntities.csproj", "{6D447451-D703-4210-8E4A-A037C5ABFA65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sportify.DomainEntities", "src\Sportify.DomainEntitites\Sportify.DomainEntities.csproj", "{6D447451-D703-4210-8E4A-A037C5ABFA65}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataServices", "DataServices\DataServices.csproj", "{F94399E7-2989-48EE-9668-B2E591C1377A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sportify.DataServices", "src\Sportify.DataServices\Sportify.DataServices.csproj", "{F94399E7-2989-48EE-9668-B2E591C1377A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3103A156-50EE-496D-9DB9-EDDF79A09B3E}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportifyWebApi.IntegrationTests", "SportifyWebApi.IntegrationTests\SportifyWebApi.IntegrationTests.csproj", "{EA0CDB81-55CB-44CF-B8B5-DCCC310FAAB8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sportify.Api.IntegrationTests", "src\Sportify.Api.IntegrationTests\Sportify.Api.IntegrationTests.csproj", "{EA0CDB81-55CB-44CF-B8B5-DCCC310FAAB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
