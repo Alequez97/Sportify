@@ -8,9 +8,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Accounts
 {
-    public class GetAuthenticatedUserInfo : BaseEndpoint
+    public class GetAuthenticatedUserInfo : EndpointBaseSync
         .WithoutRequest
-        .WithResponse<GetAuthenticatedUserInfoResponse>
+        .WithActionResult<GetAuthenticatedUserInfoResponse>
     {
         [Authorize]
         [HttpGet("/api/accounts/auth-user-info")]

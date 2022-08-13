@@ -13,9 +13,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Events
 {
-    public class DeleteEvent : BaseAsyncEndpoint
+    public class DeleteEvent : EndpointBaseAsync
         .WithRequest<DeleteEventRequest>
-        .WithoutResponse
+        .WithActionResult
     {
         private readonly SportifyDbContext _context;
 

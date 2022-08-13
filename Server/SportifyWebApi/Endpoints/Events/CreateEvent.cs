@@ -14,9 +14,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Events
 {
-    public class CreateEvent : BaseAsyncEndpoint
+    public class CreateEvent : EndpointBaseAsync
         .WithRequest<CreateEventRequest>
-        .WithoutResponse
+        .WithActionResult
     {
         private readonly SportifyDbContext _context;
 

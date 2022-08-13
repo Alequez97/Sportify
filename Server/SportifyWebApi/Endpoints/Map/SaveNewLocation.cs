@@ -19,9 +19,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Map
 {
-    public class SaveNewLocation : BaseAsyncEndpoint
+    public class SaveNewLocation : EndpointBaseAsync
         .WithRequest<SportsGroundSaveNewLocationRequest>
-        .WithResponse<SportsGroundSaveNewLocationResponse>
+        .WithActionResult<SportsGroundSaveNewLocationResponse>
     {
         private readonly SportifyDbContext _context;
         private readonly IStorageService _storageservice;

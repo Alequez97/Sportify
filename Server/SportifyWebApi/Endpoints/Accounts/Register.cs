@@ -11,9 +11,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Accounts
 {
-    public class Register : BaseAsyncEndpoint
+    public class Register : EndpointBaseAsync
         .WithRequest<RegisterRequest>
-        .WithResponse<RegisterResponse>
+        .WithActionResult<RegisterResponse>
     {
         private readonly UserManager<User> _userManager;
 

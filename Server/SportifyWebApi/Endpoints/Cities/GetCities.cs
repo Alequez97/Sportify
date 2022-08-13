@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,9 +11,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.City
 {
-    public class GetCities : BaseAsyncEndpoint
+    public class GetCities : EndpointBaseAsync
         .WithRequest<GetCitiesRequest>
-        .WithResponse<GetCitiesResponse>
+        .WithActionResult<GetCitiesResponse>
     {
         private readonly SportifyDbContext _context;
 

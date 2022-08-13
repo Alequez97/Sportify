@@ -13,9 +13,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Map
 {
-    public class GetLocations : BaseAsyncEndpoint
+    public class GetLocations : EndpointBaseAsync
         .WithRequest<SportsGroundGetLocationsRequest>
-        .WithResponse<SportsGroundGetLocationsResponse>
+        .WithActionResult<SportsGroundGetLocationsResponse>
     {
         private readonly SportifyDbContext _context;
 

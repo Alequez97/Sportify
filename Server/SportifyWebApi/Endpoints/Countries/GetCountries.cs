@@ -10,9 +10,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Country
 {
-    public class GetCountries : BaseAsyncEndpoint
+    public class GetCountries : EndpointBaseAsync
         .WithoutRequest
-        .WithResponse<GetCountriesResponse>
+        .WithActionResult<GetCountriesResponse>
     {
         private readonly SportifyDbContext _context;
 

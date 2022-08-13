@@ -10,9 +10,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Map
 {
-    public class GetSportsGroundTypes : BaseAsyncEndpoint
+    public class GetSportsGroundTypes : EndpointBaseAsync
         .WithoutRequest
-        .WithResponse<SportsGroundTypeResponse>
+        .WithActionResult<SportsGroundTypeResponse>
     {
         private readonly SportifyDbContext _context;
 

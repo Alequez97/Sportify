@@ -16,9 +16,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SportifyWebApi.Endpoints.Events
 {
-    public class DisjoinEvent : BaseAsyncEndpoint
+    public class DisjoinEvent : EndpointBaseAsync
         .WithRequest<DisjoinEventRequest>
-        .WithoutResponse
+        .WithActionResult
     {
         private readonly SportifyDbContext _context;
 

@@ -16,9 +16,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Accounts
 {
-    public class Login : BaseAsyncEndpoint
+    public class Login : EndpointBaseAsync
         .WithRequest<LoginRequest>
-        .WithoutResponse
+        .WithActionResult
     {
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;

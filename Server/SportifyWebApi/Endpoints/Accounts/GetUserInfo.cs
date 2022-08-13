@@ -11,9 +11,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Accounts
 {
-    public class GetUserInfo : BaseAsyncEndpoint
+    public class GetUserInfo : EndpointBaseAsync
         .WithRequest<GetUserInfoRequest>
-        .WithResponse<GetUserInfoResponse>
+        .WithActionResult<GetUserInfoResponse>
     {
         private readonly SportifyDbContext _context;
 

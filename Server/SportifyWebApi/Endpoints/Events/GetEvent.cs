@@ -12,9 +12,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Events
 {
-    public class GetEvent : BaseAsyncEndpoint
+    public class GetEvent : EndpointBaseAsync
         .WithRequest<GetEventRequest>
-        .WithResponse<GetEventResponse>
+        .WithActionResult<GetEventResponse>
     {
         private readonly SportifyDbContext _context;
 
