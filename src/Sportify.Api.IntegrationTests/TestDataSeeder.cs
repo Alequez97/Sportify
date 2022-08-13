@@ -1,7 +1,7 @@
-using DataServices;
-using DomainEntities;
-using DomainEntities.EventEntities;
-using DomainEntities.SportsGroundEntities;
+using Sportify.DataServices;
+using Sportify.DomainEntities;
+using Sportify.DomainEntities.EventEntities;
+using Sportify.DomainEntities.SportsGroundEntities;
 
 namespace Sportify.Api.IntegrationTests;
 

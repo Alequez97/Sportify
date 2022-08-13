@@ -1,4 +1,4 @@
-using DataServices;
+using Sportify.DataServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
