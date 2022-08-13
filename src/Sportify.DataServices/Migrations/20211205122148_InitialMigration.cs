@@ -1,7 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DataServices.Migrations
+namespace Sportify.DataServices.Migrations
 {
     public partial class InitialMigration : Migration
     {

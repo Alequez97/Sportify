@@ -2,38 +2,38 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using SportifyWebApi.Interfaces;
+using Sportify.Api.Interfaces;
 
-namespace SportifyWebApi.Services
+namespace Sportify.Api.Services;
+
+/// <summary>
+/// This class imitates image upload for integration tests
+/// </summary>
+public class TestsStorageService : IStorageService
 {
-    /// <summary>
-    /// This class imitates image upload for integration tests
-    /// </summary>
-    public class TestsStorageService : IStorageService
+  public Task<string> UploadAsync(IFormFile file)
+  {
+    return WriteFileAsync(file);
+  }
+
+  private Task<string> WriteFileAsync(IFormFile file)
+  {
+    return Task.Run(() =>
     {
-        public Task<string> UploadAsync(IFormFile file)
-        {
-            return WriteFileAsync(file);
-        }
+      try
+      {
+        var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
+        var fileName = DateTime.Now.Ticks + extension; // Create a new Name for the file due to security reasons.
 
-        private Task<string> WriteFileAsync(IFormFile file)
-        {
-            return Task.Run(() => {
-                try
-                {
-                    var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
-                    var fileName = DateTime.Now.Ticks + extension; // Create a new Name for the file due to security reasons.
+        var path = Path.Combine("", fileName);
 
-                    var path = Path.Combine("", fileName);
-
-                    return path;
-                }
-                catch (Exception)
-                {
-                    //TODO: Log error
-                    return null;
-                }
-            });
-        }
-    }
+        return path;
+      }
+      catch (Exception)
+      {
+        //TODO: Log error
+        return null;
+      }
+    });
+  }
 }

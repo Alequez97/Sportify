@@ -1,9 +1,8 @@
-namespace SportifyWebApi.Constants
+namespace Sportify.Api.Constants;
+
+public class ResponseStatus
 {
-    public class ResponseStatus
-    {
-        public const string Success = "Success";
-        public const string NotFound = "Not found";
-        public const string Error = "Error";
-    }
+  public const string Success = "Success";
+  public const string NotFound = "Not found";
+  public const string Error = "Error";
 }

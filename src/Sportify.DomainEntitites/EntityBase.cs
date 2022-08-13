@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DomainEntities
+namespace Sportify.DomainEntities;
+
+/// <summary>
+/// Base class with Id field
+/// </summary>
+public class EntityBase
 {
-    /// <summary>
-    /// Base class with Id field
-    /// </summary>
-    public class EntityBase
-    {
-        [Key]
-        public int Id { get; set; }
-    }
+  [Key]
+  public int Id { get; set; }
 }

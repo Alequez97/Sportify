@@ -1,9 +1,8 @@
-namespace SportifyWebApi.Models
-{
-    public class ResponseBase
-    {
-        public string Message { get; set; }
+namespace Sportify.Api.Models;
 
-        public string Status { get; set; }
-    }
+public class ResponseBase
+{
+  public string Message { get; set; }
+
+  public string Status { get; set; }
 }

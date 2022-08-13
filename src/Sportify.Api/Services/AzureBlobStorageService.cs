@@ -1,28 +1,27 @@
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Http;
-using SportifyWebApi.Interfaces;
+using Sportify.Api.Interfaces;
 
-namespace SportifyWebApi.Services
+namespace Sportify.Api.Services;
+
+public class AzureBlobStorageService : IStorageService
 {
-    public class AzureBlobStorageService : IStorageService
-    {
-        private readonly BlobServiceClient _blobServiceClient;
+  private readonly BlobServiceClient _blobServiceClient;
 
-        public AzureBlobStorageService(BlobServiceClient blobServiceClient)
-        {
-            _blobServiceClient = blobServiceClient;
-        }
+  public AzureBlobStorageService(BlobServiceClient blobServiceClient)
+  {
+    _blobServiceClient = blobServiceClient;
+  }
 
-        public Task<string> UploadAsync(IFormFile file)
-        {
-            var containerClient = _blobServiceClient.GetBlobContainerClient(""); // TODO: Implement real Azure upload
-            var blobClient = containerClient.GetBlobClient(file.FileName);
+  public Task<string> UploadAsync(IFormFile file)
+  {
+    var containerClient = _blobServiceClient.GetBlobContainerClient(""); // TODO: Implement real Azure upload
+    var blobClient = containerClient.GetBlobClient(file.FileName);
 
-            using var stream = file.OpenReadStream();
-            blobClient.Upload(stream);
+    using var stream = file.OpenReadStream();
+    blobClient.Upload(stream);
 
-            return Task.Run(() => "This is best code ever");
-        }
-    }
+    return Task.Run(() => "This is best code ever");
+  }
 }

@@ -2,40 +2,39 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
-using DataServices;
+using Sportify.DataServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SportifyWebApi.Constants;
+using Sportify.Api.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace SportifyWebApi.Endpoints.Map
-{
-    public class GetSportsGroundTypes : EndpointBaseAsync
-        .WithoutRequest
-        .WithActionResult<SportsGroundTypeResponse>
-    {
-        private readonly SportifyDbContext _context;
+namespace Sportify.Api.Endpoints.Map;
 
-        public GetSportsGroundTypes(SportifyDbContext context)
-        {
-            _context = context;
-        }
+  public class GetSportsGroundTypes : EndpointBaseAsync
+      .WithoutRequest
+      .WithActionResult<SportsGroundTypeResponse>
+  {
+      private readonly SportifyDbContext _context;
 
-        [HttpGet("api/map/types")]
-        [SwaggerOperation(Tags = new[] { SwaggerGroup.Map })]
-        public override async Task<ActionResult<SportsGroundTypeResponse>> HandleAsync(CancellationToken cancellationToken = default)
-        {
-            var sportsGroundTypes = await _context.SportsGroundTypes.ToListAsync();
-            var response = sportsGroundTypes.Select(s => new SportsGroundTypeResponse() { Id = s.Id, Name = s.Name }).ToList();
+      public GetSportsGroundTypes(SportifyDbContext context)
+      {
+          _context = context;
+      }
 
-            return response.Count > 0 ? Ok(response) : NotFound();
-        }
-    }
+      [HttpGet("api/map/types")]
+      [SwaggerOperation(Tags = new[] { SwaggerGroup.Map })]
+      public override async Task<ActionResult<SportsGroundTypeResponse>> HandleAsync(CancellationToken cancellationToken = default)
+      {
+          var sportsGroundTypes = await _context.SportsGroundTypes.ToListAsync();
+          var response = sportsGroundTypes.Select(s => new SportsGroundTypeResponse() { Id = s.Id, Name = s.Name }).ToList();
 
-    public class SportsGroundTypeResponse
-    {
-        public int Id { get; set; }
+          return response.Count > 0 ? Ok(response) : NotFound();
+      }
+  }
 
-        public string Name { get; set; }
-    }
-}
+  public class SportsGroundTypeResponse
+  {
+      public int Id { get; set; }
+
+      public string Name { get; set; }
+  }

@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
-using DataServices;
-using DomainEntities;
+using Sportify.DataServices;
+using Sportify.DomainEntities;
 //using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -14,96 +14,95 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SportifyWebApi.Endpoints.MappingProfiles;
-using SportifyWebApi.Interfaces;
-using SportifyWebApi.Services;
+using Sportify.Api.Interfaces;
+using Sportify.Api.Services;
 
-namespace SportifyWebApi
+namespace Sportify.Api;
+
+public class Startup
 {
-    public class Startup
+  public Startup(IConfiguration configuration)
+  {
+    Configuration = configuration;
+  }
+
+  public IConfiguration Configuration { get; }
+
+  // This method gets called by the runtime. Use this method to add services to the container.
+  public void ConfigureServices(IServiceCollection services)
+  {
+    services.AddControllers();
+    services.AddSwaggerGen(c =>
     {
-        public Startup(IConfiguration configuration)
+      c.SwaggerDoc("v1", new OpenApiInfo { Title = "SportifyWebApi", Version = "v1" });
+      c.EnableAnnotations();
+    });
+
+    services.AddDbContext<SportifyDbContext>(options =>
+    {
+      options.UseSqlServer(Configuration.GetConnectionString("Local"));
+    });
+
+    services.AddTransient<IStorageService>(x => new FileSystemStorageService(Directory.GetCurrentDirectory() + "\\..\\..\\client\\static\\images\\sportsGroundImages", true));
+
+    services.AddIdentity<User, IdentityRole<int>>()
+        .AddEntityFrameworkStores<SportifyDbContext>()
+        .AddDefaultTokenProviders();
+
+    services.AddAuthentication(options =>
+    {
+      options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+      options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+      options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(options =>
         {
-            Configuration = configuration;
-        }
+          options.SaveToken = true;
+          options.RequireHttpsMetadata = false;
+          options.TokenValidationParameters = new TokenValidationParameters()
+          {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidAudience = Configuration["JWT:ValidAudience"],
+            ValidIssuer = Configuration["JWT:ValidIssuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
+          };
+        });
 
-        public IConfiguration Configuration { get; }
+    //services.AddMediatR(typeof(List.Handler).Assembly);
+    services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
+    services.AddCors(opt =>
+    {
+      opt.AddPolicy("CorsPolicy", policy =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SportifyWebApi", Version = "v1" });
-                c.EnableAnnotations();
-            });
+          policy.WithOrigins("http://localhost:3000", "http://192.168.0.125:3000", "http://192.168.8.166:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+        });
+    });
+  }
 
-            services.AddDbContext<SportifyDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("Local"));
-            });
-
-            services.AddTransient<IStorageService>(x => new FileSystemStorageService(Directory.GetCurrentDirectory() + "\\..\\..\\client\\static\\images\\sportsGroundImages", true));
-
-            services.AddIdentity<User, IdentityRole<int>>()
-                .AddEntityFrameworkStores<SportifyDbContext>()
-                .AddDefaultTokenProviders();
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-                {
-                    options.SaveToken = true;
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidAudience = Configuration["JWT:ValidAudience"],
-                        ValidIssuer = Configuration["JWT:ValidIssuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
-                    };
-                });
-
-            //services.AddMediatR(typeof(List.Handler).Assembly);
-            services.AddAutoMapper(typeof(MappingProfiles).Assembly);
-
-            services.AddCors(opt =>
-            {
-                opt.AddPolicy("CorsPolicy", policy =>
-                {
-                    policy.WithOrigins("http://localhost:3000", "http://192.168.0.125:3000", "http://192.168.8.166:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
-                });
-            });
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SportifyWebApi v1"));
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseCors("CorsPolicy");
-
-            app.UseAuthentication();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
+  // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+  public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+  {
+    if (env.IsDevelopment())
+    {
+      app.UseDeveloperExceptionPage();
+      app.UseSwagger();
+      app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SportifyWebApi v1"));
     }
+
+    app.UseHttpsRedirection();
+
+    app.UseRouting();
+
+    app.UseCors("CorsPolicy");
+
+    app.UseAuthentication();
+
+    app.UseAuthorization();
+
+    app.UseEndpoints(endpoints =>
+    {
+      endpoints.MapControllers();
+    });
+  }
 }

@@ -1,14 +1,13 @@
 //using AutoMapper;
 using AutoMapper;
-using DomainEntities.EventEntities;
+using Sportify.DomainEntities.EventEntities;
 
-namespace SportifyWebApi.Endpoints.MappingProfiles
+namespace SportifyWebApi.Endpoints.MappingProfiles;
+
+public class MappingProfiles : Profile
 {
-    public class MappingProfiles : Profile
-    {
-        public MappingProfiles()
-        {
-            CreateMap<Event, Event>();
-        }
-    }
+  public MappingProfiles()
+  {
+    CreateMap<Event, Event>();
+  }
 }

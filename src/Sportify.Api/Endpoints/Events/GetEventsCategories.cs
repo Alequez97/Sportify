@@ -2,10 +2,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.ApiEndpoints;
-using DataServices;
+using Sportify.DataServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SportifyWebApi.Constants;
+using Sportify.Api.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SportifyWebApi.Endpoints.Category

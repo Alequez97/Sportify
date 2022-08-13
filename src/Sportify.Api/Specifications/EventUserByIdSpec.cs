@@ -1,13 +1,12 @@
 using Ardalis.Specification;
-using DomainEntities.EventEntities;
+using Sportify.DomainEntities.EventEntities;
 
-namespace SportifyWebApi.Specifications
+namespace Sportify.Api.Specifications;
+
+public class EventUserByIdSpec : Specification<EventUser>
 {
-    public class EventUserByIdSpec : Specification<EventUser>
-    {
-        public EventUserByIdSpec(int EventId, int UserId)
-        {
-            Query.Where(x => x.EventId == EventId && x.UserId == UserId);
-        }
-    }
+  public EventUserByIdSpec(int EventId, int UserId)
+  {
+    Query.Where(x => x.EventId == EventId && x.UserId == UserId);
+  }
 }

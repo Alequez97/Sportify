@@ -2,11 +2,11 @@ using DataServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using SportifyWebApi.IntegrationTests.Extensions;
-using SportifyWebApi.Interfaces;
-using SportifyWebApi.Services;
+using Sportify.Api.IntegrationTests.Extensions;
+using Sportify.Api.Interfaces;
+using Sportify.Api.Services;
 
-namespace SportifyWebApi.IntegrationTests
+namespace Sportify.Api.IntegrationTests
 {
     public class TestsWebApplicationFactory : WebApplicationFactory<Startup>
     {

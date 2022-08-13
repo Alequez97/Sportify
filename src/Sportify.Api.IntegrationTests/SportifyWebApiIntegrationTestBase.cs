@@ -4,9 +4,9 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
-using SportifyWebApi.IntegrationTests.Extensions;
+using Sportify.Api.IntegrationTests.Extensions;
 
-namespace SportifyWebApi.IntegrationTests
+namespace Sportify.Api.IntegrationTests
 {
     public class SportifyWebApiIntegrationTestBase
     {
